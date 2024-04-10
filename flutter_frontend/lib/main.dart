@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:universe/route_generator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,59 +11,50 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      initialRoute: RouteGenerator.startup,
+      onGenerateRoute: RouteGenerator.generateRoute,
+      navigatorKey: RouteGenerator.key,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: Colors.white,
+        primaryColorLight: Colors.white,
+        primaryColorDark: Colors.white,
+        indicatorColor: Colors.white,
+        colorScheme: const ColorScheme.light(
+          primary: Colors.black,
+          secondary: Colors.grey,
+          tertiary: Colors.grey,
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        elevatedButtonTheme: const ElevatedButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(Colors.white),
+            backgroundColor: MaterialStatePropertyAll(Colors.black),
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      darkTheme: ThemeData(
+        primaryColor: Colors.black,
+        primaryColorDark: Colors.black,
+        primaryColorLight: Colors.black,
+        indicatorColor: Colors.black,
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.white,
+          secondary: Colors.grey,
+          tertiary: Colors.grey,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color.fromRGBO(16, 16, 16, 1),
+        appBarTheme:
+            const AppBarTheme(backgroundColor: Color.fromRGBO(16, 16, 16, 1)),
+        elevatedButtonTheme: const ElevatedButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStatePropertyAll(Colors.black),
+            backgroundColor: MaterialStatePropertyAll(Colors.white),
+          ),
+        ),
+      ),
     );
   }
 }

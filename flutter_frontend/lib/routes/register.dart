@@ -1,0 +1,234 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/blocs/register_bloc.dart';
+import 'package:universe/route_generator.dart';
+
+class Register extends StatelessWidget {
+  final registerBloc = RegisterBloc();
+  Register({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    RegisterState globalState = registerBloc.state;
+    final TextEditingController firstNameController = TextEditingController();
+    final TextEditingController lastNameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
+
+    return BlocProvider(
+      create: (context) => registerBloc,
+      child: Scaffold(
+        appBar: AppBar(),
+        body: BlocListener<RegisterBloc, RegisterState>(
+          listener: (context, state) {
+            if (state.state == RegisterStates.loading) {
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) => const PopScope(
+                  canPop: false,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              );
+            }
+
+            if ((state.state == RegisterStates.success ||
+                    state.state == RegisterStates.failed) &&
+                globalState.state == RegisterStates.loading) {
+              RouteGenerator.key.currentState?.pop();
+            }
+
+            if (state.state == RegisterStates.failed) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Error"),
+                  content: Text(state.error!),
+                ),
+              );
+            }
+
+            if (state.state == RegisterStates.success) {
+              RouteGenerator.key.currentState!.pop();
+              RouteGenerator.key.currentState!.pop();
+              RouteGenerator.key.currentState!
+                  .pushNamed(RouteGenerator.completeAccount);
+              showBottomSheet(
+                context: context,
+                builder: (context) => BottomSheet(
+                  onClosing: () {},
+                  builder: (context) {
+                    return Text('Logged in as ${state.userCredential!.email}');
+                  },
+                ),
+              );
+            }
+
+            globalState = state;
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                        top: 30, left: 10, right: 0, bottom: 70),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            "Welcome aboard,\nWe're thrilled to have you join us!",
+                            style: TextStyle(
+                              fontSize: 33,
+                              fontFamily: "Pacifico",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              hintText: "First name",
+                              filled: true,
+                              fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                            ),
+                            controller: firstNameController,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              hintText: "Last name",
+                              filled: true,
+                              fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                            ),
+                            controller: lastNameController,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: "Email or phone",
+                        filled: true,
+                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
+                      controller: emailController,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: "Password",
+                        filled: true,
+                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
+                      obscureText: true,
+                      controller: passwordController,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: "Confirm password",
+                        filled: true,
+                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
+                      obscureText: true,
+                      controller: confirmPasswordController,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 10, right: 10),
+                          height: 66,
+                          child: ElevatedButton(
+                            onPressed: () => registerBloc.add(
+                              RegisterEvent(
+                                  firstName: firstNameController.text,
+                                  lastName: lastNameController.text,
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                  confirmPassword:
+                                      confirmPasswordController.text),
+                            ),
+                            style: const ButtonStyle(
+                              elevation: MaterialStatePropertyAll(0),
+                              shape: MaterialStatePropertyAll(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            child: const Text("Register"),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

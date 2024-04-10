@@ -29,7 +29,7 @@ flutter_frontend/.flutter-plugins
 flutter_frontend/.flutter-plugins-dependencies
 flutter_frontend/.pub-cache/
 flutter_frontend/.pub/
-flutter_frontend/build
+flutter_frontend/build/
 
 # Symbolication related
 app.*.symbols
