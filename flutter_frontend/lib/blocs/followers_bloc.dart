@@ -22,8 +22,7 @@ class FollowersBloc extends Bloc<Object, FollowersState> {
       (event, emit) async {
         var response = await FirestoreDataProvider()
             .getUserFollowers(event.user, null, 50);
-        emit(FollowersState(
-            [...response.followers.toList(), ...state.followers]));
+        emit(FollowersState([...response.followers, ...state.followers]));
         // await Future.delayed(const Duration(seconds: 0));
         // response = await response.nextPage();
         // emit(FollowersState(

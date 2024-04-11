@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/models/post.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 
 enum HomeStates {
   loading,
@@ -9,6 +10,7 @@ enum HomeStates {
 
 class HomeState {
   HomeStates state;
+  final user = AuthenticationRepository().authenticationService.getUser()!;
   final Iterable<Post>? data;
   final String? error;
 
