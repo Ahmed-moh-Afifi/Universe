@@ -12,6 +12,14 @@ import 'package:universe/models/replies_response.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/models/user_posts_response.dart';
 
+enum Collections {
+  users,
+  followers,
+  following,
+  posts,
+  reactions,
+}
+
 class FirestoreDataProvider implements IDataProvider {
   FirestoreDataProvider._();
 
@@ -21,7 +29,7 @@ class FirestoreDataProvider implements IDataProvider {
   @override
   Future createUser(User user) async {
     await FirebaseFirestore.instance
-        .collection('users')
+        .collection(Collections.users.name)
         .withConverter(
             fromFirestore: User.fromFirestore,
             toFirestore: (value, options) => value.toFirestore())
@@ -32,9 +40,9 @@ class FirestoreDataProvider implements IDataProvider {
   @override
   Future addPost(User author, Post post) async {
     await FirebaseFirestore.instance
-        .collection('users')
+        .collection(Collections.users.name)
         .doc(author.uid)
-        .collection('posts')
+        .collection(Collections.posts.name)
         .withConverter(
           fromFirestore: Post.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
@@ -44,20 +52,34 @@ class FirestoreDataProvider implements IDataProvider {
 
   @override
   Future addFollower(User user, User follower) async {
-    await FirebaseFirestore.instance
-        .collection('users')
+    final timeStampNow = Timestamp.now();
+    final batch = FirebaseFirestore.instance.batch();
+
+    final followerReference = FirebaseFirestore.instance
+        .collection(Collections.users.name)
         .doc(user.uid)
-        .collection('followers')
+        .collection(Collections.followers.name)
         .withConverter(
           fromFirestore: Follower.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
         )
-        .add(
-          Follower(
-            userReference: follower.uid,
-            followDate: Timestamp.now(),
-          ),
-        );
+        .doc();
+    batch.set(followerReference,
+        Follower(userReference: follower.uid, followDate: timeStampNow));
+
+    final followingReference = FirebaseFirestore.instance
+        .collection(Collections.users.name)
+        .doc(follower.uid)
+        .collection(Collections.following.name)
+        .withConverter(
+          fromFirestore: Following.fromFirestore,
+          toFirestore: (value, options) => value.toFirestore(),
+        )
+        .doc();
+    batch.set(followingReference,
+        Following(userReference: user.uid, followDate: timeStampNow));
+
+    await batch.commit();
   }
 
   @override
@@ -85,7 +107,7 @@ class FirestoreDataProvider implements IDataProvider {
   @override
   Future<User> getUser(String userUid) async {
     return (await FirebaseFirestore.instance
-            .collection('users')
+            .collection(Collections.users.name)
             .doc(userUid)
             .withConverter(
               fromFirestore: User.fromFirestore,
@@ -100,9 +122,9 @@ class FirestoreDataProvider implements IDataProvider {
       User user, T? start, G limit) async {
     final docsSnapshots = start == null
         ? (await FirebaseFirestore.instance
-                .collection('users')
+                .collection(Collections.users.name)
                 .doc(user.uid)
-                .collection('followers')
+                .collection(Collections.followers.name)
                 .orderBy('followDate')
                 .limit(limit as int)
                 .withConverter(
@@ -112,9 +134,9 @@ class FirestoreDataProvider implements IDataProvider {
                 .get())
             .docs
         : (await FirebaseFirestore.instance
-                .collection('users')
+                .collection(Collections.users.name)
                 .doc(user.uid)
-                .collection('followers')
+                .collection(Collections.followers.name)
                 .orderBy('followDate')
                 .startAfterDocument(start as DocumentSnapshot<Follower>)
                 .limit(limit as int)
@@ -129,7 +151,7 @@ class FirestoreDataProvider implements IDataProvider {
     List<Follower> followersListWithUsers = [];
     for (var follower in followersIterableWithoutUsers) {
       final userSnapshot = await FirebaseFirestore.instance
-          .collection('users')
+          .collection(Collections.users.name)
           .doc(follower.userReference)
           .withConverter(
             fromFirestore: User.fromFirestore,
@@ -154,9 +176,9 @@ class FirestoreDataProvider implements IDataProvider {
       User user, T start, G limit) async {
     final docsSnapshots = start == null
         ? (await FirebaseFirestore.instance
-                .collection('users')
+                .collection(Collections.users.name)
                 .doc(user.uid)
-                .collection('following')
+                .collection(Collections.following.name)
                 .orderBy('followDate')
                 .limit(limit as int)
                 .withConverter(
@@ -166,9 +188,9 @@ class FirestoreDataProvider implements IDataProvider {
                 .get())
             .docs
         : (await FirebaseFirestore.instance
-                .collection('users')
+                .collection(Collections.users.name)
                 .doc(user.uid)
-                .collection('following')
+                .collection(Collections.following.name)
                 .orderBy('followDate')
                 .startAfterDocument(start as DocumentSnapshot<Following>)
                 .limit(limit as int)
@@ -183,7 +205,7 @@ class FirestoreDataProvider implements IDataProvider {
     final List<Following> followingsListWithUsers = [];
     for (var following in followingsIterableWithoutUsers) {
       final userSnapshot = await FirebaseFirestore.instance
-          .collection('users')
+          .collection(Collections.users.name)
           .doc(following.userReference)
           .withConverter(
             fromFirestore: User.fromFirestore,
@@ -206,9 +228,9 @@ class FirestoreDataProvider implements IDataProvider {
       User user, T start, G limit) async {
     final docsSnapshots = start == null
         ? (await FirebaseFirestore.instance
-                .collection('users')
+                .collection(Collections.users.name)
                 .doc(user.uid)
-                .collection('posts')
+                .collection(Collections.posts.name)
                 .orderBy('publishDate')
                 .limit(limit as int)
                 .withConverter(
@@ -218,9 +240,9 @@ class FirestoreDataProvider implements IDataProvider {
                 .get())
             .docs
         : (await FirebaseFirestore.instance
-                .collection('users')
+                .collection(Collections.users.name)
                 .doc(user.uid)
-                .collection('posts')
+                .collection(Collections.posts.name)
                 .orderBy('publishDate')
                 .startAfterDocument(start as DocumentSnapshot<Post>)
                 .limit(limit as int)
@@ -269,7 +291,7 @@ class FirestoreDataProvider implements IDataProvider {
     final List<Reaction> reactionsListWithUser = [];
     for (var reaction in reactionsIterableWithoutUser) {
       final userSnapshot = await FirebaseFirestore.instance
-          .collection('users')
+          .collection(Collections.users.name)
           .doc(reaction.userReference)
           .withConverter(
             fromFirestore: User.fromFirestore,
@@ -318,7 +340,7 @@ class FirestoreDataProvider implements IDataProvider {
     final List<Post> repliesListWithUsers = [];
     for (var reply in repliesIterableWithoutUsers) {
       final userSnapshot = await FirebaseFirestore.instance
-          .collection('users')
+          .collection(Collections.users.name)
           .withConverter(
             fromFirestore: User.fromFirestore,
             toFirestore: (value, options) => value.toFirestore(),
