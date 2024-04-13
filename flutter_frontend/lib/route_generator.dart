@@ -47,7 +47,7 @@ class RouteGenerator {
             transitionDuration: Duration.zero);
       case search:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => const Search(),
+            pageBuilder: (_, animation, secondaryAnimation) => Search(),
             transitionDuration: Duration.zero);
       case newPost:
         return PageRouteBuilder(

@@ -21,6 +21,7 @@ class FirebaseAuthentication implements IAuthentication {
     try {
       auth = await firebase.FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+      await auth.user!.updatePhotoURL('https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9');
     } on firebase.FirebaseAuthException catch (e) {
       switch (e.code) {
         case "email-already-in-use":
@@ -36,14 +37,14 @@ class FirebaseAuthentication implements IAuthentication {
 
     // await auth.user!.sendEmailVerification();
     if (auth.user != null) {
-      DataRepository().createUser(
+      await DataRepository().createUser(
         usr.User(
           uid: auth.user!.uid,
           firstName: firstName,
           lastName: lastName,
           email: email,
           userName: '$firstName $lastName',
-          photoUrl: auth.user!.photoURL,
+          photoUrl: 'https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9',
         ),
       );
     }

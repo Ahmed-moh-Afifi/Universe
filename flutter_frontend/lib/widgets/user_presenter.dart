@@ -32,8 +32,7 @@ class UserPresenter extends StatelessWidget {
               ),
             ),
             child: Image.network(
-              user.photoUrl ??
-                  'https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9',
+              user.photoUrl!
             ),
           ),
           trailing: ElevatedButton(

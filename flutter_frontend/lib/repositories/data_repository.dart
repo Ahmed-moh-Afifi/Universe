@@ -1,5 +1,6 @@
 import 'package:universe/apis/firestore.dart';
 import 'package:universe/interfaces/idata_provider.dart';
+import 'package:universe/models/search_users_response.dart';
 import 'package:universe/models/user.dart';
 
 class DataRepository {
@@ -15,4 +16,8 @@ class DataRepository {
   Future createUser(User user) async => await _dataProvider.createUser(user);
 
   Future<User> getUser(String userUid) => _dataProvider.getUser(userUid);
+
+  Future<SearchUsersResponse> searchUsers<T, G>(
+          String query, T start, G limit) =>
+      _dataProvider.searchUsers(query, start, limit);
 }

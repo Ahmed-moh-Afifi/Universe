@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/styles/text_styles.dart';
 
@@ -14,7 +12,7 @@ class Profile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.only(left: 10, bottom: 10, top: 2),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(

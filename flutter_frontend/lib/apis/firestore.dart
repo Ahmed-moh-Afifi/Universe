@@ -9,6 +9,7 @@ import 'package:universe/models/post.dart';
 import 'package:universe/models/reaction.dart';
 import 'package:universe/models/reactions_response.dart';
 import 'package:universe/models/replies_response.dart';
+import 'package:universe/models/search_users_response.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/models/user_posts_response.dart';
 
@@ -356,5 +357,41 @@ class FirestoreDataProvider implements IDataProvider {
             post, docsSnapshots[docsSnapshots.length - 1], limit));
 
     return response;
+  }
+
+  @override
+  Future<SearchUsersResponse> searchUsers<T, G>(
+      String query, T start, G limit) async {
+    final docsSnapshots = start == null
+        ? (await FirebaseFirestore.instance
+                .collection(Collections.users.name)
+                .withConverter(
+                  fromFirestore: User.fromFirestore,
+                  toFirestore: (value, options) => value.toFirestore(),
+                )
+                .where('firstName', arrayContains: query)
+                .orderBy('uid')
+                .limit(limit as int)
+                .get())
+            .docs
+        : (await FirebaseFirestore.instance
+                .collection(Collections.users.name)
+                .withConverter(
+                  fromFirestore: User.fromFirestore,
+                  toFirestore: (value, options) => value.toFirestore(),
+                )
+                .where('firstName', arrayContains: query)
+                .orderBy('uid')
+                .startAfterDocument(start as DocumentSnapshot<User>)
+                .limit(limit as int)
+                .get())
+            .docs;
+
+    final usersIterable = docsSnapshots.map((e) => e.data());
+    return SearchUsersResponse(
+      users: usersIterable,
+      nextPage: () =>
+          searchUsers(query, docsSnapshots[docsSnapshots.length - 1], limit),
+    );
   }
 }

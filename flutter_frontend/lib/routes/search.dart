@@ -1,38 +1,89 @@
 import 'package:flutter/material.dart';
-import 'package:universe/repositories/authentication_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/blocs/search_bloc.dart';
+import 'package:universe/route_generator.dart';
 import 'package:universe/widgets/user_presenter.dart';
 
 class Search extends StatelessWidget {
-  const Search({super.key});
+  final SearchBloc bloc = SearchBloc();
+  Search({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // const Text(
-          //   'Search',
-          //   style: TextStyle(fontSize: 30),
-          // ),
-          const TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
+    final TextEditingController searchController = TextEditingController();
+    return BlocProvider<SearchBloc>(
+      create: (context) => bloc,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // const Text(
+            //   'Search',
+            //   style: TextStyle(fontSize: 30),
+            // ),
+            TextField(
+              onSubmitted: (value) =>
+                  bloc.add(SearchEvent(searchController.text)),
+              controller: searchController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                  borderSide: BorderSide.none,
                 ),
-                borderSide: BorderSide.none,
+                filled: true,
+                fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                hintText: 'Search',
               ),
-              filled: true,
-              fillColor: Color.fromRGBO(80, 80, 80, 0.3),
-              hintText: 'Search',
             ),
-          ),
-          UserPresenter(
-            user: AuthenticationRepository().authenticationService.getUser()!,
-          ),
-        ],
+            BlocListener<SearchBloc, SearchState>(
+              listener: (context, state) {
+                if (state.state == SearchStates.loading) {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => const PopScope(
+                      canPop: false,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                }
+
+                if (state.state == SearchStates.loaded ||
+                    state.state == SearchStates.failed) {
+                  RouteGenerator.mainNavigatorkey.currentState?.pop();
+                }
+
+                if (state.state == SearchStates.failed) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Error"),
+                      content: Text(state.error!),
+                    ),
+                  );
+                }
+              },
+              child: BlocBuilder<SearchBloc, SearchState>(
+                builder: (context, state) {
+                  return state.data != null
+                      ? ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.data!.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) =>
+                              UserPresenter(user: state.data!.elementAt(index)),
+                        )
+                      : Container();
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
