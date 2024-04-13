@@ -39,7 +39,7 @@ class Register extends StatelessWidget {
             if ((state.state == RegisterStates.success ||
                     state.state == RegisterStates.failed) &&
                 globalState.state == RegisterStates.loading) {
-              RouteGenerator.key.currentState?.pop();
+              RouteGenerator.mainNavigatorkey.currentState?.pop();
             }
 
             if (state.state == RegisterStates.failed) {
@@ -53,9 +53,9 @@ class Register extends StatelessWidget {
             }
 
             if (state.state == RegisterStates.success) {
-              RouteGenerator.key.currentState!.pop();
-              RouteGenerator.key.currentState!.pop();
-              RouteGenerator.key.currentState!
+              RouteGenerator.mainNavigatorkey.currentState!.pop();
+              RouteGenerator.mainNavigatorkey.currentState!.pop();
+              RouteGenerator.mainNavigatorkey.currentState!
                   .pushNamed(RouteGenerator.completeAccount);
               showBottomSheet(
                 context: context,

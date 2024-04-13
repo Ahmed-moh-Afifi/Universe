@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: RouteGenerator.startup,
       onGenerateRoute: RouteGenerator.generateRoute,
-      navigatorKey: RouteGenerator.key,
+      navigatorKey: RouteGenerator.mainNavigatorkey,
       theme: ThemeData(
         primaryColor: Colors.white,
         primaryColorLight: Colors.white,

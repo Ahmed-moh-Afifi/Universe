@@ -1,60 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:universe/blocs/home_bloc.dart';
+import 'package:universe/route_generator.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final bloc = HomeBloc();
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        shape: const CircleBorder(),
-        onPressed: () {},
-        child: SvgPicture.asset(
-          'lib/assets/icons/edit.svg',
-          colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+    return BlocProvider<HomeBloc>(
+      create: (context) => bloc,
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Navigator(
+              initialRoute: RouteGenerator.feed,
+              onGenerateRoute: RouteGenerator.generateRoute,
+              key: RouteGenerator.homeNavigatorKey,
+            ),
+          ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        height: 60,
-        shape: const CircularNotchedRectangle(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              icon: SvgPicture.asset(
-                'lib/assets/icons/home.svg',
-                colorFilter:
-                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              ),
-              onPressed: () {},
+        floatingActionButton: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) => FloatingActionButton(
+            shape: const CircleBorder(),
+            onPressed: () => bloc.add(const Navigate(RouteGenerator.newPost)),
+            child: SvgPicture.asset(
+              state.newPostIcon,
+              colorFilter:
+                  const ColorFilter.mode(Colors.black, BlendMode.srcIn),
             ),
-            IconButton(
-              icon: SvgPicture.asset(
-                'lib/assets/icons/search.svg',
-                colorFilter:
-                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              ),
-              onPressed: () {},
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) => BottomAppBar(
+            height: 60,
+            shape: const CircularNotchedRectangle(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: SvgPicture.asset(
+                    state.homeIcon,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  ),
+                  onPressed: () =>
+                      bloc.add(const Navigate(RouteGenerator.feed)),
+                ),
+                IconButton(
+                  icon: SvgPicture.asset(
+                    state.searchIcon,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  ),
+                  onPressed: () =>
+                      bloc.add(const Navigate(RouteGenerator.search)),
+                ),
+                IconButton(
+                  icon: SvgPicture.asset(
+                    state.messagesIcon,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  ),
+                  onPressed: () =>
+                      bloc.add(const Navigate(RouteGenerator.messages)),
+                ),
+                IconButton(
+                  icon: SvgPicture.asset(
+                    state.profileIcon,
+                    colorFilter:
+                        const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  ),
+                  onPressed: () =>
+                      bloc.add(const Navigate(RouteGenerator.profile)),
+                ),
+              ],
             ),
-            IconButton(
-              icon: SvgPicture.asset(
-                'lib/assets/icons/message.svg',
-                colorFilter:
-                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              ),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: SvgPicture.asset(
-                'lib/assets/icons/user.svg',
-                colorFilter:
-                    const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              ),
-              onPressed: () {},
-            ),
-          ],
+          ),
         ),
       ),
     );

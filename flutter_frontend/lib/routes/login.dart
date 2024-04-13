@@ -20,7 +20,7 @@ class Login extends StatelessWidget {
           automaticallyImplyLeading: false,
           actions: [
             TextButton(
-              onPressed: () => RouteGenerator.key.currentState
+              onPressed: () => RouteGenerator.mainNavigatorkey.currentState
                   ?.pushNamed(RouteGenerator.registerPage),
               child: const Text("Sign up"),
             ),
@@ -43,7 +43,7 @@ class Login extends StatelessWidget {
 
             if (state.state == SignInStates.success ||
                 state.state == SignInStates.failed) {
-              RouteGenerator.key.currentState?.pop();
+              RouteGenerator.mainNavigatorkey.currentState?.pop();
             }
 
             if (state.state == SignInStates.failed) {

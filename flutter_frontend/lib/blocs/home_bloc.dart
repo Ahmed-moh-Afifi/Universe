@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/models/post.dart';
 import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/route_generator.dart';
 
 enum HomeStates {
   loading,
@@ -10,30 +10,60 @@ enum HomeStates {
 
 class HomeState {
   HomeStates state;
+  String homeIcon = 'lib/assets/icons/homeFilled.svg';
+  String searchIcon = 'lib/assets/icons/search.svg';
+  String newPostIcon = 'lib/assets/icons/edit.svg';
+  String messagesIcon = 'lib/assets/icons/message.svg';
+  String profileIcon = 'lib/assets/icons/user.svg';
   final user = AuthenticationRepository().authenticationService.getUser()!;
-  final Iterable<Post>? data;
-  final String? error;
+  String selectedRouteName = RouteGenerator.feed;
 
-  HomeState(this.state, [this.data, this.error]);
+  HomeState(this.state, [this.selectedRouteName = RouteGenerator.feed]);
 }
 
-class DataLoaded {
-  final Iterable<Post> data;
+class Navigate {
+  final String routeName;
 
-  DataLoaded(this.data);
-}
-
-class DataUpdated {
-  final Iterable<Post> data;
-
-  DataUpdated(this.data);
+  const Navigate(this.routeName);
 }
 
 class HomeBloc extends Bloc<Object, HomeState> {
-  HomeBloc() : super(HomeState(HomeStates.loading, null)) {
-    on<DataLoaded>(
-        (event, emit) => emit(HomeState(HomeStates.loaded, event.data)));
-    on<DataUpdated>(
-        (event, emit) => emit(HomeState(HomeStates.loaded, event.data)));
+  HomeBloc() : super(HomeState(HomeStates.loading, RouteGenerator.feed)) {
+    on<Navigate>(
+      (event, emit) {
+        if (state.selectedRouteName != event.routeName) {
+          emit(changeRoute(event.routeName, state));
+        }
+      },
+    );
+  }
+
+  HomeState changeRoute(String routeName, HomeState currentState) {
+    RouteGenerator.homeNavigatorKey.currentState!.pushNamed(routeName);
+    final state = HomeState(currentState.state, routeName);
+    state.homeIcon = 'lib/assets/icons/home.svg';
+    state.searchIcon = 'lib/assets/icons/search.svg';
+    state.newPostIcon = 'lib/assets/icons/edit.svg';
+    state.messagesIcon = 'lib/assets/icons/message.svg';
+    state.profileIcon = 'lib/assets/icons/user.svg';
+
+    switch (routeName) {
+      case RouteGenerator.feed:
+        state.homeIcon = 'lib/assets/icons/homeFilled.svg';
+        break;
+      case RouteGenerator.search:
+        state.searchIcon = 'lib/assets/icons/searchFilled.svg';
+        break;
+      case RouteGenerator.newPost:
+        state.newPostIcon = 'lib/assets/icons/editFilled.svg';
+        break;
+      case RouteGenerator.messages:
+        state.messagesIcon = 'lib/assets/icons/messageFilled.svg';
+        break;
+      case RouteGenerator.profile:
+        state.profileIcon = 'lib/assets/icons/userFilled.svg';
+        break;
+    }
+    return state;
   }
 }

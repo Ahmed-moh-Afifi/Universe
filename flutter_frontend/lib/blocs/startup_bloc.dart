@@ -16,10 +16,10 @@ class StartupBloc extends Bloc<Object, Object> {
   StartupBloc() : super(0) {
     on<StartupCompleted>((event, emit) {
       if (AuthenticationRepository().authenticationService.getUser() == null) {
-        RouteGenerator.key.currentState!
+        RouteGenerator.mainNavigatorkey.currentState!
             .pushReplacementNamed(RouteGenerator.loginPage);
       } else {
-        RouteGenerator.key.currentState!
+        RouteGenerator.mainNavigatorkey.currentState!
             .pushReplacementNamed(RouteGenerator.homePage);
       }
     });

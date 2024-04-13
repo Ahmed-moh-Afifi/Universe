@@ -32,7 +32,7 @@ class LoginBloc extends Bloc<Object, SignInState> {
           await AuthenticationRepository()
               .authenticationService
               .signInWithGoogle();
-          RouteGenerator.key.currentState!.pushNamedAndRemoveUntil(
+          RouteGenerator.mainNavigatorkey.currentState!.pushNamedAndRemoveUntil(
             RouteGenerator.homePage,
             (route) => false,
           );
@@ -67,7 +67,8 @@ class LoginBloc extends Bloc<Object, SignInState> {
               userCredential: user,
             );
             if (state.state == SignInStates.success) {
-              RouteGenerator.key.currentState!.pushNamedAndRemoveUntil(
+              RouteGenerator.mainNavigatorkey.currentState!
+                  .pushNamedAndRemoveUntil(
                 RouteGenerator.homePage,
                 (route) => false,
               );
