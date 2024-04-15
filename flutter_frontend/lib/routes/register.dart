@@ -12,6 +12,7 @@ class Register extends StatelessWidget {
     RegisterState globalState = registerBloc.state;
     final TextEditingController firstNameController = TextEditingController();
     final TextEditingController lastNameController = TextEditingController();
+    final TextEditingController usernameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController confirmPasswordController =
@@ -141,6 +142,23 @@ class Register extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: TextField(
                       decoration: const InputDecoration(
+                        hintText: "Username",
+                        filled: true,
+                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                      ),
+                      controller: usernameController,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: const InputDecoration(
                         hintText: "Email or phone",
                         filled: true,
                         fillColor: Color.fromRGBO(80, 80, 80, 0.3),
@@ -203,6 +221,8 @@ class Register extends StatelessWidget {
                                   firstName: firstNameController.text,
                                   lastName: lastNameController.text,
                                   email: emailController.text,
+                                  userName: usernameController.text,
+                                  gender: true,
                                   password: passwordController.text,
                                   confirmPassword:
                                       confirmPasswordController.text),

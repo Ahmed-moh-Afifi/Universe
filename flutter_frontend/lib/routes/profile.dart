@@ -1,107 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:universe/repositories/authentication_repository.dart';
-import 'package:universe/styles/text_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/blocs/profile_bloc.dart';
+import 'package:universe/models/user.dart';
+import 'package:universe/widgets/follow_button.dart';
+import 'package:universe/widgets/profile_card.dart';
+import 'package:universe/widgets/user_posts_viewer.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  final User user;
+  final ProfileBloc bloc;
+
+  Profile(this.user, {super.key}) : bloc = ProfileBloc(user);
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, bottom: 10, top: 2),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Profile',
-                style: TextStyles.titleStyle,
-              ),
-            ),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
           Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(60),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: Image.network(
-              AuthenticationRepository()
-                  .authenticationService
-                  .getUser()!
-                  .photoUrl!,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              AuthenticationRepository()
-                  .authenticationService
-                  .getUser()!
-                  .userName,
-              style: TextStyles.titleStyle,
-            ),
-          ),
-          IntrinsicHeight(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    width: 100,
-                    child: Column(
-                      children: [
-                        const Text('0'),
-                        Text(
-                          'posts',
-                          style: TextStyles.subtitleStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const VerticalDivider(
-                    width: 1,
-                    thickness: 1,
-                    color: Color.fromRGBO(80, 80, 80, 0.3),
-                  ),
-                  SizedBox(
-                    width: 100,
-                    child: Column(
-                      children: [
-                        const Text('0'),
-                        Text(
-                          'followers',
-                          style: TextStyles.subtitleStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const VerticalDivider(
-                    width: 1,
-                    thickness: 1,
-                    color: Color.fromRGBO(80, 80, 80, 0.3),
-                  ),
-                  SizedBox(
-                    width: 100,
-                    child: Column(
-                      children: [
-                        const Text('0'),
-                        Text(
-                          'following',
-                          style: TextStyles.subtitleStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            width: 145,
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: FollowButton(user),
           ),
         ],
+      ),
+      body: SafeArea(
+        child: BlocProvider<ProfileBloc>(
+          create: (context) => bloc,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ProfileCard(user),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: UserPostsViewer(user),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

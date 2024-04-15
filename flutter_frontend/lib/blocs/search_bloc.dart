@@ -16,31 +16,51 @@ class SearchEvent {
 }
 
 class SearchState {
+  final SearchStates previousState;
   final SearchStates state;
   final Iterable<User>? data;
   final String? error;
 
-  const SearchState({required this.state, this.data, this.error});
+  const SearchState(
+      {required this.previousState,
+      required this.state,
+      this.data,
+      this.error});
 }
 
 class SearchBloc extends Bloc<Object, SearchState> {
-  SearchBloc() : super(const SearchState(state: SearchStates.notStarted)) {
+  SearchBloc(super.initialState) {
     on<SearchEvent>(
       (event, emit) async {
         if (event.query != '') {
-          emit(const SearchState(state: SearchStates.loading));
+          emit(
+            SearchState(
+                state: SearchStates.loading, previousState: state.state),
+          );
           try {
             final results =
                 await DataRepository().searchUsers(event.query, null, 25);
-            emit(SearchState(state: SearchStates.loaded, data: results.users));
+            emit(
+              SearchState(
+                  state: SearchStates.loaded,
+                  previousState: state.state,
+                  data: results.users),
+            );
           } catch (e) {
-            emit(const SearchState(
-                state: SearchStates.failed,
-                error: 'something\'s gone wrong :('));
+            emit(
+              SearchState(
+                  state: SearchStates.failed,
+                  previousState: state.state,
+                  error: 'something\'s gone wrong :('),
+            );
           }
         } else {
-          emit(const SearchState(
-              state: SearchStates.failed, error: 'invalid or no input'));
+          emit(
+            SearchState(
+                previousState: state.state,
+                state: SearchStates.failed,
+                error: 'invalid or no input'),
+          );
         }
       },
     );

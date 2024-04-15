@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/blocs/search_bloc.dart';
 import 'package:universe/route_generator.dart';
+import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/user_presenter.dart';
 
 class Search extends StatelessWidget {
-  final SearchBloc bloc = SearchBloc();
+  final SearchBloc bloc = SearchBloc(RouteGenerator.searchState);
   Search({super.key});
 
   @override
@@ -18,10 +19,10 @@ class Search extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const Text(
-            //   'Search',
-            //   style: TextStyle(fontSize: 30),
-            // ),
+            Text(
+              'Search',
+              style: TextStyles.titleStyle,
+            ),
             TextField(
               onSubmitted: (value) =>
                   bloc.add(SearchEvent(searchController.text)),
@@ -40,6 +41,7 @@ class Search extends StatelessWidget {
             ),
             BlocListener<SearchBloc, SearchState>(
               listener: (context, state) {
+                RouteGenerator.searchState = state;
                 if (state.state == SearchStates.loading) {
                   showDialog(
                     barrierDismissible: false,
@@ -53,8 +55,9 @@ class Search extends StatelessWidget {
                   );
                 }
 
-                if (state.state == SearchStates.loaded ||
-                    state.state == SearchStates.failed) {
+                if ((state.state == SearchStates.loaded ||
+                        state.state == SearchStates.failed) &&
+                    state.previousState == SearchStates.loading) {
                   RouteGenerator.mainNavigatorkey.currentState?.pop();
                 }
 
@@ -75,8 +78,11 @@ class Search extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: state.data!.length,
                           shrinkWrap: true,
-                          itemBuilder: (context, index) =>
-                              UserPresenter(user: state.data!.elementAt(index)),
+                          itemBuilder: (context, index) => UserPresenter(
+                            user: state.data!.elementAt(index),
+                            margin: const EdgeInsets.only(top: 10, bottom: 10),
+                            contentPadding: const EdgeInsets.all(10),
+                          ),
                         )
                       : Container();
                 },

@@ -17,6 +17,8 @@ class RegisterEvent {
   final String firstName;
   final String lastName;
   final String email;
+  final String userName;
+  final bool gender;
   final String password;
   final String confirmPassword;
 
@@ -24,6 +26,8 @@ class RegisterEvent {
       {required this.firstName,
       required this.lastName,
       required this.email,
+      required this.userName,
+      required this.gender,
       required this.password,
       required this.confirmPassword});
 }
@@ -35,6 +39,7 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
         if (event.firstName.isNotEmpty &&
             event.lastName.isNotEmpty &&
             event.email.isNotEmpty &&
+            event.userName.isNotEmpty &&
             event.password.isNotEmpty &&
             event.confirmPassword.isNotEmpty &&
             event.password == event.confirmPassword) {
@@ -43,7 +48,7 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
             final user = await AuthenticationRepository()
                 .authenticationService
                 .register(event.firstName, event.lastName, event.email,
-                    event.password);
+                    event.userName, event.gender, event.password);
             // await user.user
             //     ?.updateDisplayName("${event.firstName} ${event.lastName}");
             emit(
@@ -82,7 +87,7 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
             emit(
               RegisterState(
                 state: RegisterStates.failed,
-                error: "something's gone wrong :(",
+                error: "something's gone wrong :(\n${e.runtimeType}",
               ),
             );
           }

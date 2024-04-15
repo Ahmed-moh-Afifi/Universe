@@ -64,7 +64,7 @@ class FirestoreDataProvider implements IDataProvider {
           fromFirestore: Follower.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
         )
-        .doc();
+        .doc(follower.uid);
     batch.set(followerReference,
         Follower(userReference: follower.uid, followDate: timeStampNow));
 
@@ -76,7 +76,7 @@ class FirestoreDataProvider implements IDataProvider {
           fromFirestore: Following.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
         )
-        .doc();
+        .doc(user.uid);
     batch.set(followingReference,
         Following(userReference: user.uid, followDate: timeStampNow));
 
@@ -84,25 +84,50 @@ class FirestoreDataProvider implements IDataProvider {
   }
 
   @override
-  Future addReaction(Post post, Reaction reaction) async {
+  Future addReaction(User user, Post post, Reaction reaction) async {
     await FirebaseFirestore.instance
         .collection('${post.id}/reactions')
         .withConverter(
           fromFirestore: Reaction.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
         )
-        .add(reaction);
+        .doc(user.uid)
+        .set(reaction);
   }
 
   @override
-  Future addReply(Post post, Post reply) async {
+  Future addReply(User user, Post post, Post reply) async {
     await FirebaseFirestore.instance
         .collection('${post.id}/replies')
         .withConverter(
           fromFirestore: Post.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
         )
-        .add(reply);
+        .doc(user.uid)
+        .set(reply);
+  }
+
+  @override
+  Future removeFollower(User user, User follower) async {
+    final batch = FirebaseFirestore.instance.batch();
+    final followerReference = FirebaseFirestore.instance
+        .collection(Collections.users.name)
+        .doc(user.uid)
+        .collection(Collections.followers.name)
+        .doc(follower.uid);
+    batch.delete(followerReference);
+    final followingReference = FirebaseFirestore.instance
+        .collection(Collections.users.name)
+        .doc(follower.uid)
+        .collection(Collections.following.name)
+        .doc(user.uid);
+    batch.delete(followingReference);
+    await batch.commit();
+  }
+
+  @override
+  Future removeReaction(Post post, Reaction reaction) async {
+    await FirebaseFirestore.instance.doc(reaction.reactionId!).delete();
   }
 
   @override
@@ -293,7 +318,7 @@ class FirestoreDataProvider implements IDataProvider {
     for (var reaction in reactionsIterableWithoutUser) {
       final userSnapshot = await FirebaseFirestore.instance
           .collection(Collections.users.name)
-          .doc(reaction.userReference)
+          .doc(reaction.userId)
           .withConverter(
             fromFirestore: User.fromFirestore,
             toFirestore: (value, options) => value.toFirestore(),
@@ -370,7 +395,7 @@ class FirestoreDataProvider implements IDataProvider {
                   toFirestore: (value, options) => value.toFirestore(),
                 )
                 .where('firstName', arrayContains: query)
-                .orderBy('uid')
+                .orderBy('joinDate')
                 .limit(limit as int)
                 .get())
             .docs
@@ -381,17 +406,104 @@ class FirestoreDataProvider implements IDataProvider {
                   toFirestore: (value, options) => value.toFirestore(),
                 )
                 .where('firstName', arrayContains: query)
-                .orderBy('uid')
+                .orderBy('joinDate')
                 .startAfterDocument(start as DocumentSnapshot<User>)
                 .limit(limit as int)
                 .get())
             .docs;
-
     final usersIterable = docsSnapshots.map((e) => e.data());
     return SearchUsersResponse(
       users: usersIterable,
       nextPage: () =>
           searchUsers(query, docsSnapshots[docsSnapshots.length - 1], limit),
     );
+  }
+
+  @override
+  Future<bool> isUserNameAvailable(String userName) async {
+    final snapshotsWithUserName = await FirebaseFirestore.instance
+        .collection(Collections.users.name)
+        .where('userName', isEqualTo: userName)
+        .get();
+
+    return snapshotsWithUserName.docs.isEmpty ? true : false;
+  }
+
+  @override
+  Future<int> getUserPostsCount(User user) async {
+    return (await FirebaseFirestore.instance
+                .collection(Collections.users.name)
+                .doc(user.uid)
+                .collection(Collections.posts.name)
+                .count()
+                .get())
+            .count ??
+        0;
+  }
+
+  @override
+  Future<int> getUserFollowersCount(User user) async {
+    return (await FirebaseFirestore.instance
+                .collection(Collections.users.name)
+                .doc(user.uid)
+                .collection(Collections.followers.name)
+                .count()
+                .get())
+            .count ??
+        0;
+  }
+
+  @override
+  Future<int> getUserFollowingCount(User user) async {
+    return (await FirebaseFirestore.instance
+                .collection(Collections.users.name)
+                .doc(user.uid)
+                .collection(Collections.following.name)
+                .count()
+                .get())
+            .count ??
+        0;
+  }
+
+  @override
+  Future<int> getPostReactionsCount(Post post) async {
+    return (await FirebaseFirestore.instance
+                .collection('${post.id!}/reactions')
+                .count()
+                .get())
+            .count ??
+        0;
+  }
+
+  @override
+  Stream<int> getPostReactionsCountStream(Post post) {
+    return FirebaseFirestore.instance
+        .collection('${post.id}/reactions')
+        .withConverter(
+          fromFirestore: Reaction.fromFirestore,
+          toFirestore: (value, options) => value.toFirestore(),
+        )
+        .snapshots()
+        .map((event) => event.size);
+  }
+
+  @override
+  Future<bool> isUserOneFollowingUserTwo(User userOne, User userTwo) async {
+    return (await FirebaseFirestore.instance
+            .collection(Collections.users.name)
+            .doc(userTwo.uid)
+            .collection(Collections.followers.name)
+            .doc(userOne.uid)
+            .get())
+        .exists;
+  }
+
+  @override
+  Future<bool> isPostLikedByUser(Post post, User user) async {
+    return (await FirebaseFirestore.instance
+            .collection('${post.id}/reactions')
+            .doc(user.uid)
+            .get())
+        .exists;
   }
 }

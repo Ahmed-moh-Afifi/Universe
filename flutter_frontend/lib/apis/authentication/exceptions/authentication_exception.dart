@@ -52,3 +52,9 @@ class OperationCanceledException extends AuthenticationException {
     super.message = 'Operation canceled';
   }
 }
+
+class UserNameUsedException extends AuthenticationException {
+  UserNameUsedException({required super.code}) {
+    super.message = 'User name used';
+  }
+}

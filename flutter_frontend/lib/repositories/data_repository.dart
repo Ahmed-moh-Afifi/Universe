@@ -4,20 +4,20 @@ import 'package:universe/models/search_users_response.dart';
 import 'package:universe/models/user.dart';
 
 class DataRepository {
-  final IDataProvider _dataProvider;
+  final IDataProvider dataProvider;
 
-  DataRepository._(this._dataProvider);
+  DataRepository._(this.dataProvider);
 
   static final DataRepository _instance = DataRepository._(
       FirestoreDataProvider()); //Change this dependency whenever you use a different data service.
 
   factory DataRepository() => _instance;
 
-  Future createUser(User user) async => await _dataProvider.createUser(user);
+  Future createUser(User user) async => await dataProvider.createUser(user);
 
-  Future<User> getUser(String userUid) => _dataProvider.getUser(userUid);
+  Future<User> getUser(String userUid) => dataProvider.getUser(userUid);
 
   Future<SearchUsersResponse> searchUsers<T, G>(
           String query, T start, G limit) =>
-      _dataProvider.searchUsers(query, start, limit);
+      dataProvider.searchUsers(query, start, limit);
 }

@@ -3,20 +3,22 @@ import 'package:universe/models/user.dart';
 
 class Post {
   User? user;
-  final String id;
+  String? id;
   final String title;
   final String body;
   final String authorId;
-  final List<String> images;
-  final List<String> videos;
+  final List<dynamic> images;
+  final List<dynamic> videos;
+  final DateTime publishDate;
 
   Post({
-    required this.id,
+    this.id,
     required this.title,
     required this.body,
     required this.authorId,
     required this.images,
     required this.videos,
+    required this.publishDate,
   });
 
   factory Post.fromFirestore(
@@ -31,6 +33,7 @@ class Post {
       authorId: data?['author'],
       images: data?['images'],
       videos: data?['videos'],
+      publishDate: data?['publishDate'].toDate(),
     );
   }
 
@@ -41,6 +44,7 @@ class Post {
       "author": authorId,
       "images": images,
       "videos": videos,
+      "publishDate": Timestamp.fromDate(publishDate),
     };
   }
 }

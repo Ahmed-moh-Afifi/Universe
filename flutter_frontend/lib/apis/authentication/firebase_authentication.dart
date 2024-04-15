@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:universe/apis/authentication/exceptions/authentication_exception.dart';
@@ -15,13 +16,21 @@ class FirebaseAuthentication implements IAuthentication {
   usr.User? user;
 
   @override
-  Future<usr.User?> register(
-      String firstName, String lastName, String email, String password) async {
+  Future<usr.User?> register(String firstName, String lastName, String email,
+      String userName, bool gender, String password) async {
+    bool userNameAvailable =
+        await DataRepository().dataProvider.isUserNameAvailable(userName);
+
+    if (!userNameAvailable) {
+      throw UserNameUsedException(code: '');
+    }
+
     firebase.UserCredential? auth;
     try {
       auth = await firebase.FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      await auth.user!.updatePhotoURL('https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9');
+      await auth.user!.updatePhotoURL(
+          'https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9');
     } on firebase.FirebaseAuthException catch (e) {
       switch (e.code) {
         case "email-already-in-use":
@@ -43,8 +52,12 @@ class FirebaseAuthentication implements IAuthentication {
           firstName: firstName,
           lastName: lastName,
           email: email,
-          userName: '$firstName $lastName',
-          photoUrl: 'https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9',
+          userName: userName,
+          photoUrl:
+              'https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9',
+          joinDate: Timestamp.fromDate(auth.user!.metadata.creationTime!),
+          gender: gender,
+          verified: false,
         ),
       );
     }
@@ -112,8 +125,15 @@ class FirebaseAuthentication implements IAuthentication {
               email: userCredential.user!.email!,
               firstName: userCredential.user!.displayName!,
               lastName: '',
-              userName: userCredential.user!.displayName!,
-              photoUrl: null,
+              userName: userCredential.user!.displayName!.toLowerCase() +
+                  userCredential.user!.uid,
+              photoUrl:
+                  'https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9',
+              joinDate: Timestamp.fromDate(
+                  userCredential.user!.metadata.creationTime!),
+              gender:
+                  true, //this should be getting the actual gender from google in the future.
+              verified: false,
             ),
           );
         }

@@ -3,14 +3,16 @@ import 'package:universe/models/user.dart';
 
 class Reaction {
   User? user;
-  final String userReference;
+  final String? reactionId;
+  final String? userId;
   final String reactionType;
-  final Timestamp reactionDate;
+  final DateTime reactionDate;
 
   Reaction({
-    required this.userReference,
+    required this.userId,
     required this.reactionType,
     required this.reactionDate,
+    this.reactionId,
   });
 
   factory Reaction.fromFirestore(
@@ -19,17 +21,17 @@ class Reaction {
   ) {
     final data = snapshot.data();
     return Reaction(
-      userReference: data?['userReference'],
+      reactionId: snapshot.reference.path,
+      userId: snapshot.reference.path,
       reactionType: data?['type'],
-      reactionDate: data?['reactionDate'],
+      reactionDate: data?['reactionDate'].toDate(),
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
-      'userReference': userReference,
       'type': reactionType,
-      'reactionDate': reactionDate,
+      'reactionDate': Timestamp.fromDate(reactionDate),
     };
   }
 }

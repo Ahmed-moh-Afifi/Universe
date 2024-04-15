@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:universe/blocs/new_post_bloc.dart';
+import 'package:universe/blocs/search_bloc.dart';
+import 'package:universe/models/user.dart';
 import 'package:universe/routes/complete_account.dart';
 import 'package:universe/routes/feed.dart';
 import 'package:universe/routes/followers.dart';
@@ -6,6 +9,7 @@ import 'package:universe/routes/home.dart';
 import 'package:universe/routes/login.dart';
 import 'package:universe/routes/messages.dart';
 import 'package:universe/routes/new_post.dart';
+import 'package:universe/routes/personal_profile.dart';
 import 'package:universe/routes/profile.dart';
 import 'package:universe/routes/register.dart';
 import 'package:universe/routes/search.dart';
@@ -27,7 +31,20 @@ class RouteGenerator {
   static const newPost = "newPost";
   static const messages = "messages";
   static const profile = "profile";
+  static const personalProfile = "personalProfile";
   static const followersPage = "followers";
+
+  static SearchState searchState = const SearchState(
+    previousState: SearchStates.notStarted,
+    state: SearchStates.notStarted,
+  );
+  static NewPostState newPostState = NewPostState(
+    previousState: NewPostStates.notStarted,
+    state: NewPostStates.notStarted,
+    content: '',
+    images: [],
+    videos: [],
+  );
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -41,6 +58,9 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const CompleteAccount());
       case startup:
         return MaterialPageRoute(builder: (_) => const Startup());
+      case profile:
+        return MaterialPageRoute(
+            builder: (_) => Profile(settings.arguments as User));
       case feed:
         return PageRouteBuilder(
             pageBuilder: (_, animation, secondaryAnimation) => const Feed(),
@@ -51,15 +71,16 @@ class RouteGenerator {
             transitionDuration: Duration.zero);
       case newPost:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => const NewPost(),
+            pageBuilder: (_, animation, secondaryAnimation) => NewPost(),
             transitionDuration: Duration.zero);
       case messages:
         return PageRouteBuilder(
             pageBuilder: (_, animation, secondaryAnimation) => const Messages(),
             transitionDuration: Duration.zero);
-      case profile:
+      case personalProfile:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => const Profile(),
+            pageBuilder: (_, animation, secondaryAnimation) =>
+                PersonalProfile(),
             transitionDuration: Duration.zero);
       case followersPage:
         return MaterialPageRoute(builder: (_) => FollowersPage());

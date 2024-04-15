@@ -17,8 +17,13 @@ class HomeState {
   String profileIcon = 'lib/assets/icons/user.svg';
   final user = AuthenticationRepository().authenticationService.getUser()!;
   String selectedRouteName = RouteGenerator.feed;
+  bool floatingActionButtonVisible;
 
-  HomeState(this.state, [this.selectedRouteName = RouteGenerator.feed]);
+  HomeState(
+    this.state, {
+    this.floatingActionButtonVisible = true,
+    this.selectedRouteName = RouteGenerator.feed,
+  });
 }
 
 class Navigate {
@@ -28,7 +33,9 @@ class Navigate {
 }
 
 class HomeBloc extends Bloc<Object, HomeState> {
-  HomeBloc() : super(HomeState(HomeStates.loading, RouteGenerator.feed)) {
+  HomeBloc()
+      : super(HomeState(HomeStates.loading,
+            selectedRouteName: RouteGenerator.feed)) {
     on<Navigate>(
       (event, emit) {
         if (state.selectedRouteName != event.routeName) {
@@ -39,8 +46,9 @@ class HomeBloc extends Bloc<Object, HomeState> {
   }
 
   HomeState changeRoute(String routeName, HomeState currentState) {
-    RouteGenerator.homeNavigatorKey.currentState!.pushNamed(routeName);
-    final state = HomeState(currentState.state, routeName);
+    RouteGenerator.homeNavigatorKey.currentState!
+        .pushReplacementNamed(routeName);
+    final state = HomeState(currentState.state, selectedRouteName: routeName);
     state.homeIcon = 'lib/assets/icons/home.svg';
     state.searchIcon = 'lib/assets/icons/search.svg';
     state.newPostIcon = 'lib/assets/icons/edit.svg';
@@ -56,11 +64,12 @@ class HomeBloc extends Bloc<Object, HomeState> {
         break;
       case RouteGenerator.newPost:
         state.newPostIcon = 'lib/assets/icons/editFilled.svg';
+        state.floatingActionButtonVisible = false;
         break;
       case RouteGenerator.messages:
         state.messagesIcon = 'lib/assets/icons/messageFilled.svg';
         break;
-      case RouteGenerator.profile:
+      case RouteGenerator.personalProfile:
         state.profileIcon = 'lib/assets/icons/userFilled.svg';
         break;
     }
