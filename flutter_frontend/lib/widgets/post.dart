@@ -20,7 +20,7 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 20, right: 20),
+      margin: const EdgeInsets.only(left: 0, right: 0),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: BlocProvider<PostBloc>(
         create: (context) => bloc,
@@ -41,7 +41,7 @@ class PostWidget extends StatelessWidget {
                     onPressed: () => bloc.add(LikeClicked(false)),
                     icon: const Icon(Icons.thumb_up_rounded),
                   ),
-                  Text(state.reactionsCount.toString()),
+                  Text((state.reactionsCount ?? '').toString()),
                 ],
               ),
             ],

@@ -26,7 +26,7 @@ class FollowButton extends StatelessWidget {
               }
             },
             child: SizedBox(
-              width: 100,
+              width: 110,
               height: 40,
               child: state.isFollowed != null
                   ? (user.uid ==

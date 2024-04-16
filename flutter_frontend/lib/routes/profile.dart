@@ -18,7 +18,6 @@ class Profile extends StatelessWidget {
       appBar: AppBar(
         actions: [
           Container(
-            width: 145,
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: FollowButton(user),
           ),
@@ -27,16 +26,21 @@ class Profile extends StatelessWidget {
       body: SafeArea(
         child: BlocProvider<ProfileBloc>(
           create: (context) => bloc,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ProfileCard(user),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: UserPostsViewer(user),
+          child: BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, state) => SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ProfileCard(user),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: UserPostsViewer(user, state.posts),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

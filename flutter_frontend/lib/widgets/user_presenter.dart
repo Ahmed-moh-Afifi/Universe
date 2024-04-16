@@ -12,13 +12,13 @@ class UserPresenter extends StatelessWidget {
   final EdgeInsets? contentPadding;
   final EdgeInsets? margin;
   final bool showFollowButton;
-  UserPresenter(
-      {required this.user,
-      this.contentPadding,
-      this.margin,
-      this.showFollowButton = true,
-      super.key})
-      : bloc = UserPresenterBloc(user);
+  UserPresenter({
+    required this.user,
+    this.contentPadding,
+    this.margin,
+    this.showFollowButton = true,
+    super.key,
+  }) : bloc = UserPresenterBloc(user);
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,11 @@ class UserPresenter extends StatelessWidget {
           contentPadding: contentPadding,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
               Text(
+                softWrap: false,
+                overflow: TextOverflow.fade,
                 '${user.firstName} ${user.lastName}',
               ),
               user.verified
@@ -66,8 +69,8 @@ class UserPresenter extends StatelessWidget {
           subtitle: Text('@${user.userName}'),
           subtitleTextStyle: TextStyles.subtitleStyle,
           leading: Container(
-            width: 55,
-            height: 55,
+            width: 50,
+            height: 50,
             clipBehavior: Clip.antiAlias,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(
