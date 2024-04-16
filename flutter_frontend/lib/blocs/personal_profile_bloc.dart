@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/models/user.dart';
-import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/data_repository.dart';
+import 'package:universe/route_generator.dart';
 
 class PersonalProfileState {
   final User user;
@@ -15,6 +15,10 @@ class PersonalProfileState {
     this.followersCount = 0,
     this.followingCount = 0,
   });
+
+  void saveState() {
+    RouteGenerator.personalProfileState = this;
+  }
 }
 
 class GetUserEvent {
@@ -24,10 +28,7 @@ class GetUserEvent {
 }
 
 class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
-  PersonalProfileBloc()
-      : super(PersonalProfileState(
-            user:
-                AuthenticationRepository().authenticationService.getUser()!)) {
+  PersonalProfileBloc(super.personalProfileState) {
     on<GetUserEvent>(
       (event, emit) async {
         final newState = PersonalProfileState(
@@ -45,7 +46,9 @@ class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
       },
     );
 
-    add(GetUserEvent(
-        user: AuthenticationRepository().authenticationService.getUser()!));
+    // if (RouteGenerator.personalProfileState == null) {
+    //   add(GetUserEvent(
+    //       user: AuthenticationRepository().authenticationService.getUser()!));
+    // }
   }
 }

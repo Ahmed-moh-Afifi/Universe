@@ -1,5 +1,5 @@
 flutter_launcher_icons:
-  image_path: "assets/icons/icon_circular.png"
+  image_path: "assets/icons/universe-bw.png"
   adaptive_icon_background: "assets/icons/universe-bw.png"
   adaptive_icon_foreground: "assets/icons/universe-bw.png"
   android: true

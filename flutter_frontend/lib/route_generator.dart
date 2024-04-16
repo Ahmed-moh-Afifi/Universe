@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:universe/blocs/new_post_bloc.dart';
+import 'package:universe/blocs/personal_profile_bloc.dart';
 import 'package:universe/blocs/search_bloc.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/routes/complete_account.dart';
@@ -45,6 +46,7 @@ class RouteGenerator {
     images: [],
     videos: [],
   );
+  static PersonalProfileState? personalProfileState;
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {

@@ -15,7 +15,7 @@ class Search extends StatelessWidget {
     return BlocProvider<SearchBloc>(
       create: (context) => bloc,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -23,20 +23,23 @@ class Search extends StatelessWidget {
               'Search',
               style: TextStyles.titleStyle,
             ),
-            TextField(
-              onSubmitted: (value) =>
-                  bloc.add(SearchEvent(searchController.text)),
-              controller: searchController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: TextField(
+                onSubmitted: (value) =>
+                    bloc.add(SearchEvent(searchController.text)),
+                controller: searchController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                    borderSide: BorderSide.none,
                   ),
-                  borderSide: BorderSide.none,
+                  filled: true,
+                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  hintText: 'Search',
                 ),
-                filled: true,
-                fillColor: Color.fromRGBO(80, 80, 80, 0.3),
-                hintText: 'Search',
               ),
             ),
             BlocListener<SearchBloc, SearchState>(

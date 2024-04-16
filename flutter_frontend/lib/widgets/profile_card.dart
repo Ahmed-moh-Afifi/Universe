@@ -16,7 +16,7 @@ class ProfileCard extends StatelessWidget {
       create: (context) => bloc,
       child: BlocBuilder<ProfileCardBloc, ProfileCardState>(
         builder: (context, state) => Container(
-          margin: const EdgeInsets.all(20),
+          margin: const EdgeInsets.all(0),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
