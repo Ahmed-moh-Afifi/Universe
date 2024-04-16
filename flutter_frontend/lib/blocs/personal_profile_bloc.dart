@@ -16,17 +16,17 @@ class PersonalProfileState {
   final PersonalProfileStates state;
   final User user;
   final Iterable<Post> posts;
-  int postCount = 0;
-  int followersCount = 0;
-  int followingCount = 0;
+  final int? postCount;
+  final int? followersCount;
+  final int? followingCount;
 
   PersonalProfileState({
     required this.state,
     required this.user,
     required this.posts,
-    this.postCount = 0,
-    this.followersCount = 0,
-    this.followingCount = 0,
+    this.postCount,
+    this.followersCount,
+    this.followingCount,
   }) {
     saveState();
   }
@@ -40,6 +40,12 @@ class GetUserEvent {
   final User user;
 
   const GetUserEvent({required this.user});
+}
+
+class GotUserEvent {
+  final PersonalProfileState state;
+
+  const GotUserEvent({required this.state});
 }
 
 class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
@@ -66,24 +72,12 @@ class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
             posts: [],
           ),
         );
-
-        final userPostsResponse = await DataRepository()
-            .dataProvider
-            .getUserPosts(event.user, null, 25);
-        final newState = PersonalProfileState(
-          state: PersonalProfileStates.success,
-          user: state.user,
-          posts: userPostsResponse.posts,
-          postCount: userPostsResponse.posts.length,
-          followersCount: await DataRepository()
-              .dataProvider
-              .getUserFollowersCount(state.user),
-          followingCount: await DataRepository()
-              .dataProvider
-              .getUserFollowingCount(state.user),
-        );
-        emit(newState);
+        await getUserData();
       },
+    );
+
+    on<GotUserEvent>(
+      (event, emit) => emit(event.state),
     );
 
     if (RouteGenerator.personalProfileState!.state ==
@@ -91,5 +85,22 @@ class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
       add(GetUserEvent(
           user: AuthenticationRepository().authenticationService.getUser()!));
     }
+  }
+
+  Future<void> getUserData() async {
+    final userPostsResponse =
+        await DataRepository().dataProvider.getUserPosts(state.user, null, 25);
+    final newState = PersonalProfileState(
+      state: PersonalProfileStates.success,
+      user: state.user,
+      posts: userPostsResponse.posts,
+      postCount: userPostsResponse.posts.length,
+      followersCount:
+          await DataRepository().dataProvider.getUserFollowersCount(state.user),
+      followingCount:
+          await DataRepository().dataProvider.getUserFollowingCount(state.user),
+    );
+
+    add(GotUserEvent(state: newState));
   }
 }

@@ -1,29 +1,29 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/data_repository.dart';
 
 enum ProfileStates {
+  notStarted,
   loading,
   success,
   failed,
 }
 
 class ProfileState {
-  final ProfileStates state;
   final User user;
   final Iterable<Post> posts;
-  int postCount = 0;
-  int followersCount = 0;
-  int followingCount = 0;
+  final int? postCount;
+  final int? followersCount;
+  final int? followingCount;
 
   ProfileState({
-    required this.state,
     required this.user,
     required this.posts,
-    this.postCount = 0,
-    this.followersCount = 0,
-    this.followingCount = 0,
+    this.postCount,
+    this.followersCount,
+    this.followingCount,
   });
 }
 
@@ -33,29 +33,47 @@ class GetUserEvent {
   const GetUserEvent({required this.user});
 }
 
+class GotUserEvent {
+  final ProfileState state;
+
+  const GotUserEvent({required this.state});
+}
+
 class ProfileBloc extends Bloc<Object, ProfileState> {
-  ProfileBloc(User user)
-      : super(
-            ProfileState(user: user, state: ProfileStates.loading, posts: [])) {
+  ProfileBloc(User user) : super(ProfileState(user: user, posts: [])) {
     on<GetUserEvent>(
       (event, emit) async {
-        final userPostsResponse =
-            await DataRepository().dataProvider.getUserPosts(user, null, 25);
-        final newState = ProfileState(
-          state: ProfileStates.success,
-          posts: userPostsResponse.posts,
-          user: user,
-          postCount:
-              await DataRepository().dataProvider.getUserPostsCount(user),
-          followersCount:
-              await DataRepository().dataProvider.getUserFollowersCount(user),
-          followingCount:
-              await DataRepository().dataProvider.getUserFollowingCount(user),
+        emit(
+          ProfileState(
+            user: user,
+            posts: [],
+          ),
         );
-        emit(newState);
+        await getUserData();
       },
     );
 
-    add(GetUserEvent(user: user));
+    on<GotUserEvent>(
+      (event, emit) => emit(event.state),
+    );
+
+    add(GetUserEvent(
+        user: AuthenticationRepository().authenticationService.getUser()!));
+  }
+
+  Future<void> getUserData() async {
+    final userPostsResponse =
+        await DataRepository().dataProvider.getUserPosts(state.user, null, 25);
+    final newState = ProfileState(
+      user: state.user,
+      posts: userPostsResponse.posts,
+      postCount: userPostsResponse.posts.length,
+      followersCount:
+          await DataRepository().dataProvider.getUserFollowersCount(state.user),
+      followingCount:
+          await DataRepository().dataProvider.getUserFollowingCount(state.user),
+    );
+
+    add(GotUserEvent(state: newState));
   }
 }

@@ -12,53 +12,48 @@ class PersonalProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: BlocProvider<PersonalProfileBloc>(
-        create: (context) => bloc,
-        child: BlocBuilder<PersonalProfileBloc, PersonalProfileState>(
-          builder: (context, state) => RefreshIndicator(
-            onRefresh: () {
-              return Future.delayed(Duration.zero).then(
-                (value) => bloc.add(
-                  GetUserEvent(
-                      user: AuthenticationRepository()
-                          .authenticationService
-                          .getUser()!),
-                ),
-              );
-            },
-            child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
+    return BlocProvider<PersonalProfileBloc>(
+      create: (context) => bloc,
+      child: BlocBuilder<PersonalProfileBloc, PersonalProfileState>(
+        builder: (context, state) => RefreshIndicator(
+          onRefresh: () {
+            return bloc.getUserData();
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 0, top: 2),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Profile',
-                              style: TextStyles.titleStyle,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: ProfileCard(AuthenticationRepository()
-                              .authenticationService
-                              .getUser()!),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: UserPostsViewer(state.user, state.posts),
-                        ),
-                      ],
+                    padding: const EdgeInsets.only(left: 0, top: 2),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Profile',
+                        style: TextStyles.titleStyle,
+                      ),
                     ),
                   ),
-                ]),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ProfileCard(
+                      AuthenticationRepository()
+                          .authenticationService
+                          .getUser()!,
+                      state.postCount,
+                      state.followersCount,
+                      state.followingCount,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: UserPostsViewer(state.user, state.posts),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

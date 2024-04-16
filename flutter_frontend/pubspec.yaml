@@ -45,6 +45,7 @@ dependencies:
   google_sign_in: ^6.2.1
   logger: ^2.2.0
   visibility_detector: ^0.4.0+2
+  flutter_animated_icons: ^1.0.1
 
 dev_dependencies:
   flutter_test:

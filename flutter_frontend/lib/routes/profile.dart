@@ -27,18 +27,26 @@ class Profile extends StatelessWidget {
         child: BlocProvider<ProfileBloc>(
           create: (context) => bloc,
           child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (context, state) => SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ProfileCard(user),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: UserPostsViewer(user, state.posts),
-                    ),
-                  ],
+            builder: (context, state) => RefreshIndicator(
+              onRefresh: () => bloc.getUserData(),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ProfileCard(
+                        user,
+                        state.postCount,
+                        state.followersCount,
+                        state.followingCount,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: UserPostsViewer(user, state.posts),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
