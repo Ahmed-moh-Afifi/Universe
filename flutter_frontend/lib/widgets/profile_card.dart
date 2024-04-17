@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/styles/text_styles.dart';
+import 'package:universe/widgets/verified_badge.dart';
 
 class ProfileCard extends StatelessWidget {
   final User user;
@@ -45,13 +45,9 @@ class ProfileCard extends StatelessWidget {
                   style: TextStyles.titleStyle,
                 ),
                 user.verified
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: SvgPicture.asset(
-                          'lib/assets/icons/shield.svg',
-                          colorFilter: const ColorFilter.mode(
-                              Colors.white, BlendMode.srcIn),
-                        ),
+                    ? const Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: VerifiedBadge(),
                       )
                     : const SizedBox(
                         width: 0,

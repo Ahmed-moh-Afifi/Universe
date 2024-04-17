@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_icons/icons8.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:universe/blocs/new_post_bloc.dart';
-import 'package:universe/route_generator.dart';
 
-class NewPost extends StatelessWidget {
-  final bloc = NewPostBloc(RouteGenerator.newPostState);
-  NewPost({super.key});
+class NewPost extends StatefulWidget {
+  const NewPost({super.key});
+
+  @override
+  State<NewPost> createState() => _NewPostState();
+}
+
+class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
+  late AnimationController _doneController;
+  final bloc = NewPostBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    _doneController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+  }
+
+  @override
+  void dispose() {
+    _doneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +37,21 @@ class NewPost extends StatelessWidget {
       child: BlocListener<NewPostBloc, NewPostState>(
         listener: (context, state) {
           if (state.state == NewPostStates.loading) {
-            showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) => const PopScope(
-                canPop: false,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            );
+            // showDialog(
+            //   barrierDismissible: false,
+            //   context: context,
+            //   builder: (context) => const PopScope(
+            //     canPop: false,
+            //     child: Center(
+            //       child: CircularProgressIndicator(),
+            //     ),
+            //   ),
+            // );
           }
 
-          if ((state.state == NewPostStates.success ||
-                  state.state == NewPostStates.failed) &&
-              state.previousState == NewPostStates.loading) {
-            RouteGenerator.mainNavigatorkey.currentState?.pop();
-          }
+          // if (state.previousState == NewPostStates.loading) {
+          //   RouteGenerator.mainNavigatorkey.currentState?.pop();
+          // }
 
           if (state.state == NewPostStates.failed) {
             showDialog(
@@ -60,11 +79,25 @@ class NewPost extends StatelessWidget {
                   videos: [],
                 ),
               ),
-              child: SvgPicture.asset(
-                'lib/assets/icons/share.svg',
-                colorFilter:
-                    const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-              ),
+              child: state.state == NewPostStates.informative
+                  ? Lottie.asset(
+                      Icons8.checkmark_ok,
+                      controller: _doneController..forward(),
+                      width: 35,
+                      height: 35,
+                      frameRate: FrameRate(30),
+                    )
+                  : state.state == NewPostStates.loading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.black,
+                          ),
+                        )
+                      : SvgPicture.asset(
+                          'lib/assets/icons/share.svg',
+                          colorFilter: const ColorFilter.mode(
+                              Colors.black, BlendMode.srcIn),
+                        ),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,

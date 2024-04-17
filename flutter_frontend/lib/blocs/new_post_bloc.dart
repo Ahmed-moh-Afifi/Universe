@@ -6,6 +6,7 @@ import 'package:universe/route_generator.dart';
 
 enum NewPostStates {
   notStarted,
+  informative,
   loading,
   success,
   failed,
@@ -48,52 +49,89 @@ class PostEvent {
 }
 
 class NewPostBloc extends Bloc<Object, NewPostState> {
-  NewPostBloc(super.initialState) {
+  NewPostBloc()
+      : super(RouteGenerator.newPostState.state == NewPostStates.informative ||
+                RouteGenerator.newPostState.state == NewPostStates.success
+            ? NewPostState(
+                previousState: NewPostStates.notStarted,
+                state: NewPostStates.notStarted,
+                content: '',
+                images: [],
+                videos: [])
+            : RouteGenerator.newPostState) {
     on<PostEvent>(
       (event, emit) async {
-        if (event.content.isNotEmpty ||
-            event.images.isNotEmpty ||
-            event.videos.isNotEmpty) {
-          emit(
-            NewPostState(
-              previousState: state.state,
-              state: NewPostStates.loading,
-              content: '',
-              images: [],
-              videos: [],
-            ),
-          );
-          await DataRepository().dataProvider.addPost(
-                AuthenticationRepository().authenticationService.getUser()!,
-                Post(
-                  title: '',
-                  body: event.content,
-                  authorId: AuthenticationRepository()
-                      .authenticationService
-                      .getUser()!
-                      .uid,
-                  images: event.images,
-                  videos: event.videos,
-                  publishDate: DateTime.now(),
+        if (state.state != NewPostStates.informative &&
+            state.state != NewPostStates.success) {
+          if (event.content.isNotEmpty ||
+              event.images.isNotEmpty ||
+              event.videos.isNotEmpty) {
+            if (!isClosed) {
+              emit(
+                NewPostState(
+                  previousState: state.state,
+                  state: NewPostStates.loading,
+                  content: '',
+                  images: [],
+                  videos: [],
                 ),
               );
-          emit(
-            NewPostState(
-                previousState: state.state,
-                state: NewPostStates.success,
-                content: event.content,
-                images: event.images,
-                videos: event.videos),
-          );
-        } else {
-          emit(NewPostState(
-            previousState: state.state,
-            state: NewPostStates.failed,
-            content: '',
-            images: [],
-            videos: [],
-            error: 'invalid or no input',
-          ));
+            }
+            await DataRepository().dataProvider.addPost(
+                  AuthenticationRepository().authenticationService.getUser()!,
+                  Post(
+                    title: '',
+                    body: event.content,
+                    authorId: AuthenticationRepository()
+                        .authenticationService
+                        .getUser()!
+                        .uid,
+                    images: event.images,
+                    videos: event.videos,
+                    publishDate: DateTime.now(),
+                  ),
+                );
+            if (!isClosed) {
+              emit(
+                NewPostState(
+                  previousState: state.state,
+                  state: NewPostStates.informative,
+                  content: event.content,
+                  images: event.images,
+                  videos: event.videos,
+                ),
+              );
+            }
+            await Future.delayed(
+              const Duration(milliseconds: 1500),
+              () {
+                if (!isClosed) {
+                  emit(
+                    NewPostState(
+                      previousState: state.state,
+                      state: NewPostStates.success,
+                      content: event.content,
+                      images: event.images,
+                      videos: event.videos,
+                    ),
+                  );
+                }
+              },
+            );
+          } else {
+            if (!isClosed) {
+              emit(
+                NewPostState(
+                  previousState: state.state,
+                  state: NewPostStates.failed,
+                  content: '',
+                  images: [],
+                  videos: [],
+                  error: 'invalid or no input',
+                ),
+              );
+            }
+          }
         }
       },
     );

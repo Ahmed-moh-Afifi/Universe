@@ -73,7 +73,7 @@ class RouteGenerator {
             transitionDuration: Duration.zero);
       case newPost:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => NewPost(),
+            pageBuilder: (_, animation, secondaryAnimation) => const NewPost(),
             transitionDuration: Duration.zero);
       case messages:
         return PageRouteBuilder(
