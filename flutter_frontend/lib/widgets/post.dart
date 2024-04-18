@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:universe/blocs/post_bloc.dart';
+import 'package:universe/extensions/date_time_extensions.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
+import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/user_presenter.dart';
 
 class PostWidget extends StatelessWidget {
@@ -36,12 +40,37 @@ class PostWidget extends StatelessWidget {
               ),
               Text(post.body),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: () => bloc.add(LikeClicked(false)),
-                    icon: const Icon(Icons.thumb_up_rounded),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => bloc.add(LikeClicked(false)),
+                        icon: state.isLiked == null
+                            ? Container()
+                            : state.isLiked!
+                                ? SvgPicture.asset(
+                                    'lib/assets/icons/heartFilled.svg',
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.red,
+                                      BlendMode.srcIn,
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    'lib/assets/icons/heart.svg',
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.white,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                      ),
+                      Text((state.reactionsCount ?? '').toString()),
+                    ],
                   ),
-                  Text((state.reactionsCount ?? '').toString()),
+                  Text(
+                    post.publishDate.toEnglishString(),
+                    style: TextStyles.subtitleStyle,
+                  ),
                 ],
               ),
             ],

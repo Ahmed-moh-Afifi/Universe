@@ -257,7 +257,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .collection(Collections.users.name)
                 .doc(user.uid)
                 .collection(Collections.posts.name)
-                .orderBy('publishDate')
+                .orderBy('publishDate', descending: true)
                 .limit(limit as int)
                 .withConverter(
                   fromFirestore: Post.fromFirestore,
@@ -269,7 +269,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .collection(Collections.users.name)
                 .doc(user.uid)
                 .collection(Collections.posts.name)
-                .orderBy('publishDate')
+                .orderBy('publishDate', descending: true)
                 .startAfterDocument(start as DocumentSnapshot<Post>)
                 .limit(limit as int)
                 .withConverter(

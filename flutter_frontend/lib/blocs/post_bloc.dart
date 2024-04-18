@@ -6,8 +6,9 @@ import 'package:universe/repositories/data_repository.dart';
 
 class PostState {
   final int? reactionsCount;
+  final bool? isLiked;
 
-  const PostState({this.reactionsCount});
+  const PostState({this.reactionsCount, this.isLiked});
 }
 
 class LikeClicked {
@@ -44,8 +45,17 @@ class PostBloc extends Bloc<Object, PostState> {
             .dataProvider
             .getPostReactionsCountStream(post)
             .listen(
-          (event) {
-            emit(PostState(reactionsCount: event));
+          (event) async {
+            emit(
+              PostState(
+                reactionsCount: event,
+                isLiked: await DataRepository().dataProvider.isPostLikedByUser(
+                    post,
+                    AuthenticationRepository()
+                        .authenticationService
+                        .getUser()!),
+              ),
+            );
           },
         ).asFuture();
       },

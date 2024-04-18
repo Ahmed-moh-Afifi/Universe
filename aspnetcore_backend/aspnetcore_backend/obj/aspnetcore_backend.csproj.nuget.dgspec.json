@@ -20,7 +20,6 @@
           "net8.0"
         ],
         "sources": {
-          "/home/ahmedafifi/.dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
