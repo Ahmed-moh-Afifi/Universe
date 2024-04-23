@@ -46,16 +46,22 @@ class PostBloc extends Bloc<Object, PostState> {
             .getPostReactionsCountStream(post)
             .listen(
           (event) async {
-            emit(
-              PostState(
-                reactionsCount: event,
-                isLiked: await DataRepository().dataProvider.isPostLikedByUser(
-                    post,
-                    AuthenticationRepository()
-                        .authenticationService
-                        .getUser()!),
-              ),
-            );
+            print(
+                'listening to post with id: ${post.id}. CURRENT LIKES COUNT: $event');
+            if (!isClosed) {
+              emit(
+                PostState(
+                  reactionsCount: event,
+                  isLiked:
+                      await DataRepository().dataProvider.isPostLikedByUser(
+                            post,
+                            AuthenticationRepository()
+                                .authenticationService
+                                .getUser()!,
+                          ),
+                ),
+              );
+            }
           },
         ).asFuture();
       },

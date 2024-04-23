@@ -116,6 +116,7 @@ class NewPostBloc extends Bloc<Object, NewPostState> {
                     ),
                   );
                 }
+                RouteGenerator.mainNavigatorkey.currentState!.pop();
               },
             );
           } else {

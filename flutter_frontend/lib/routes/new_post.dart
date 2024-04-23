@@ -64,75 +64,75 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
           }
         },
         child: BlocBuilder<NewPostBloc, NewPostState>(
-          builder: (context, state) => Scaffold(
-            bottomNavigationBar: const BottomAppBar(
-              height: 0,
-              shape: CircularNotchedRectangle(),
-              notchMargin: 6,
-            ),
-            floatingActionButton: FloatingActionButton(
-              shape: const CircleBorder(),
-              onPressed: () => bloc.add(
-                PostEvent(
-                  content: postController.text,
-                  images: [],
-                  videos: [],
-                ),
-              ),
-              child: state.state == NewPostStates.informative
-                  ? Lottie.asset(
-                      Icons8.checkmark_ok,
-                      controller: _doneController..forward(),
-                      width: 35,
-                      height: 35,
-                      frameRate: FrameRate(30),
-                    )
-                  : state.state == NewPostStates.loading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.black,
-                          ),
-                        )
-                      : SvgPicture.asset(
-                          'lib/assets/icons/share.svg',
-                          colorFilter: const ColorFilter.mode(
-                              Colors.black, BlendMode.srcIn),
-                        ),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: SizedBox(
-                        height: 300,
-                        child: TextField(
-                          expands: true,
-                          maxLines: null,
-                          minLines: null,
-                          controller: postController,
-                          textAlignVertical: TextAlignVertical.top,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              borderSide: BorderSide.none,
+          builder: (context, state) => SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: SizedBox(
+                      height: 300,
+                      child: TextField(
+                        expands: true,
+                        maxLines: null,
+                        minLines: null,
+                        controller: postController,
+                        textAlignVertical: TextAlignVertical.top,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
                             ),
-                            filled: true,
-                            fillColor: Color.fromRGBO(80, 80, 80, 0.3),
-                            hintText: "What's on your mind?",
+                            borderSide: BorderSide.none,
                           ),
+                          filled: true,
+                          fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                          hintText: "What's on your mind?",
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  ElevatedButton(
+                    onLongPress: null,
+                    onPressed: () => bloc.add(
+                      PostEvent(
+                        content: postController.text,
+                        images: [],
+                        videos: [],
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        state.state == NewPostStates.informative
+                            ? Lottie.asset(
+                                Icons8.checkmark_ok,
+                                controller: _doneController..forward(),
+                                width: 35,
+                                height: 35,
+                                frameRate: FrameRate(30),
+                              )
+                            : state.state == NewPostStates.loading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    'lib/assets/icons/share.svg',
+                                    colorFilter: const ColorFilter.mode(
+                                        Colors.black, BlendMode.srcIn),
+                                  ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Share'),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
           ),

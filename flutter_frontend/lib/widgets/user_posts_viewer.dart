@@ -5,8 +5,9 @@ import 'package:universe/widgets/post.dart';
 
 class UserPostsViewer extends StatelessWidget {
   final User user;
-  final Iterable<Post> posts;
-  const UserPostsViewer(this.user, this.posts, {super.key});
+  final List<Post> postsList;
+  UserPostsViewer(this.user, Iterable<Post> posts, {super.key})
+      : postsList = posts.toList();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class UserPostsViewer extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) => PostWidget(
-        post: posts.elementAt(index),
+        post: postsList[index],
         user: user,
         showFollowButton: false,
       ),
@@ -23,7 +24,7 @@ class UserPostsViewer extends StatelessWidget {
         endIndent: 0,
         color: Color.fromRGBO(80, 80, 80, 0.3),
       ),
-      itemCount: posts.length,
+      itemCount: postsList.length,
     );
   }
 }

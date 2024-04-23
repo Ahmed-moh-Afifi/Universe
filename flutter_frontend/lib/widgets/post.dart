@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:universe/blocs/post_bloc.dart';
@@ -28,18 +27,18 @@ class PostWidget extends StatelessWidget {
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: BlocProvider<PostBloc>(
         create: (context) => bloc,
-        child: BlocBuilder<PostBloc, PostState>(
-          builder: (context, state) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UserPresenter(
-                user: user,
-                margin: const EdgeInsets.only(top: 10, bottom: 10),
-                contentPadding: const EdgeInsets.all(0),
-                showFollowButton: showFollowButton,
-              ),
-              Text(post.body),
-              Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            UserPresenter(
+              user: user,
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
+              contentPadding: const EdgeInsets.all(0),
+              showFollowButton: showFollowButton,
+            ),
+            Text(post.body),
+            BlocBuilder<PostBloc, PostState>(
+              builder: (context, state) => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
@@ -48,7 +47,7 @@ class PostWidget extends StatelessWidget {
                         onPressed: () => bloc.add(LikeClicked(false)),
                         icon: state.isLiked == null
                             ? Container()
-                            : state.isLiked!
+                            : (state.isLiked!
                                 ? SvgPicture.asset(
                                     'lib/assets/icons/heartFilled.svg',
                                     colorFilter: const ColorFilter.mode(
@@ -62,7 +61,7 @@ class PostWidget extends StatelessWidget {
                                       Colors.white,
                                       BlendMode.srcIn,
                                     ),
-                                  ),
+                                  )),
                       ),
                       Text((state.reactionsCount ?? '').toString()),
                     ],
@@ -73,8 +72,8 @@ class PostWidget extends StatelessWidget {
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
