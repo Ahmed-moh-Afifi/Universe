@@ -8,7 +8,7 @@ class PostState {
   final int? reactionsCount;
   final bool? isLiked;
 
-  const PostState({this.reactionsCount, this.isLiked});
+  const PostState({this.reactionsCount = 0, this.isLiked = false});
 }
 
 class LikeClicked {
@@ -18,6 +18,13 @@ class LikeClicked {
 }
 
 class ListenToReactionCountChanges {}
+
+class ReactionCountChanged {
+  final int reactionCount;
+  final bool isLiked;
+
+  ReactionCountChanged({required this.reactionCount, required this.isLiked});
+}
 
 class PostBloc extends Bloc<Object, PostState> {
   final Post post;
@@ -41,29 +48,35 @@ class PostBloc extends Bloc<Object, PostState> {
 
     on<ListenToReactionCountChanges>(
       (event, emit) async {
-        await DataRepository()
-            .dataProvider
-            .getPostReactionsCountStream(post)
-            .listen(
+        DataRepository().dataProvider.getPostReactionsCountStream(post).listen(
           (event) async {
             print(
                 'listening to post with id: ${post.id}. CURRENT LIKES COUNT: $event');
-            if (!isClosed) {
-              emit(
-                PostState(
-                  reactionsCount: event,
-                  isLiked:
-                      await DataRepository().dataProvider.isPostLikedByUser(
-                            post,
-                            AuthenticationRepository()
-                                .authenticationService
-                                .getUser()!,
-                          ),
-                ),
-              );
-            }
+            // if (!isClosed) {
+            add(
+              ReactionCountChanged(
+                reactionCount: event,
+                isLiked: await DataRepository().dataProvider.isPostLikedByUser(
+                    post,
+                    AuthenticationRepository()
+                        .authenticationService
+                        .getUser()!),
+              ),
+            );
+            // }
           },
-        ).asFuture();
+        );
+      },
+    );
+
+    on<ReactionCountChanged>(
+      (event, emit) {
+        print(
+            'reactions count changed: count = ${event.reactionCount}, isLiked = ${event.isLiked}');
+        emit(
+          PostState(
+              reactionsCount: event.reactionCount, isLiked: event.isLiked),
+        );
       },
     );
 

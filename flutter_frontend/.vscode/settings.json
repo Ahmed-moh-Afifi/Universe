@@ -1,0 +1,5 @@
+{
+  "avdmanager.executable": "/home/ahmedafifi/Android/Sdk/cmdline-tools/latest/bin/avdmanager",
+  "avdmanager.sdkManager": "/home/ahmedafifi/Android/Sdk/cmdline-tools/latest/bin/sdkmanager",
+  "avdmanager.emulator": "/home/ahmedafifi/Android/Sdk/emulator/emulator"
+}

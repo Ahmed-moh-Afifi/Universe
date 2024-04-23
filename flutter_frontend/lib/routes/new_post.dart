@@ -110,14 +110,18 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                             ? Lottie.asset(
                                 Icons8.checkmark_ok,
                                 controller: _doneController..forward(),
-                                width: 35,
-                                height: 35,
+                                width: 30,
+                                height: 30,
                                 frameRate: FrameRate(30),
                               )
                             : state.state == NewPostStates.loading
                                 ? const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Colors.black,
+                                    child: SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   )
                                 : SvgPicture.asset(

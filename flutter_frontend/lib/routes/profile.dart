@@ -30,6 +30,7 @@ class Profile extends StatelessWidget {
             builder: (context, state) => RefreshIndicator(
               onRefresh: () => bloc.getUserData(),
               child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Column(
