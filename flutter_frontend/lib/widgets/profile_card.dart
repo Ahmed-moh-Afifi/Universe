@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:universe/models/user.dart';
+import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/verified_badge.dart';
 
@@ -71,14 +72,24 @@ class ProfileCard extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: 100,
-                    child: Column(
-                      children: [
-                        Text((postsCount ?? '').toString()),
-                        Text(
-                          'posts',
-                          style: TextStyles.subtitleStyle,
-                        ),
-                      ],
+                    child: TextButton(
+                      style: const ButtonStyle(
+                        surfaceTintColor:
+                            MaterialStatePropertyAll(Colors.transparent),
+                        overlayColor:
+                            MaterialStatePropertyAll(Colors.transparent),
+                        splashFactory: NoSplash.splashFactory,
+                      ),
+                      onPressed: () {},
+                      child: Column(
+                        children: [
+                          Text((postsCount ?? '').toString()),
+                          Text(
+                            'posts',
+                            style: TextStyles.subtitleStyle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const VerticalDivider(
@@ -88,14 +99,19 @@ class ProfileCard extends StatelessWidget {
                   ),
                   SizedBox(
                     width: 100,
-                    child: Column(
-                      children: [
-                        Text((followersCount ?? '').toString()),
-                        Text(
-                          'followers',
-                          style: TextStyles.subtitleStyle,
-                        ),
-                      ],
+                    child: TextButton(
+                      onPressed: () => RouteGenerator
+                          .mainNavigatorkey.currentState!
+                          .pushNamed(RouteGenerator.followersPage),
+                      child: Column(
+                        children: [
+                          Text((followersCount ?? '').toString()),
+                          Text(
+                            'followers',
+                            style: TextStyles.subtitleStyle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const VerticalDivider(
@@ -105,14 +121,21 @@ class ProfileCard extends StatelessWidget {
                   ),
                   SizedBox(
                     width: 100,
-                    child: Column(
-                      children: [
-                        Text((followingCount ?? '').toString()),
-                        Text(
-                          'following',
-                          style: TextStyles.subtitleStyle,
-                        ),
-                      ],
+                    child: TextButton(
+                      onPressed: () => RouteGenerator
+                          .mainNavigatorkey.currentState!
+                          .pushNamed(
+                        RouteGenerator.followingPage,
+                      ),
+                      child: Column(
+                        children: [
+                          Text((followingCount ?? '').toString()),
+                          Text(
+                            'following',
+                            style: TextStyles.subtitleStyle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

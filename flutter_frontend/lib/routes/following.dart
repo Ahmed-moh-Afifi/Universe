@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/blocs/followers_bloc.dart';
+import 'package:universe/blocs/following_bloc.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/widgets/user_presenter.dart';
 
-class FollowersPage extends StatelessWidget {
-  final FollowersBloc bloc = FollowersBloc();
-  FollowersPage({super.key});
+class FollowingPage extends StatelessWidget {
+  final FollowingBloc bloc = FollowingBloc();
+  FollowingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Followers'),
+        title: const Text('Following'),
       ),
-      body: BlocProvider<FollowersBloc>(
+      body: BlocProvider<FollowingBloc>(
         create: (context) => bloc,
-        child: BlocListener<FollowersBloc, FollowersState>(
+        child: BlocListener<FollowingBloc, FollowingState>(
           listener: (context, state) {
-            if (state.state == FollowersStates.loading) {
+            if (state.state == FollowingStates.loading) {
               showDialog(
                 barrierDismissible: false,
                 context: context,
@@ -31,13 +31,13 @@ class FollowersPage extends StatelessWidget {
               );
             }
 
-            if ((state.state == FollowersStates.success ||
-                    state.state == FollowersStates.failed) &&
-                state.previousState == FollowersStates.loading) {
+            if ((state.state == FollowingStates.success ||
+                    state.state == FollowingStates.failed) &&
+                state.previousState == FollowingStates.loading) {
               RouteGenerator.mainNavigatorkey.currentState?.pop();
             }
 
-            if (state.state == FollowersStates.failed) {
+            if (state.state == FollowingStates.failed) {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -47,18 +47,18 @@ class FollowersPage extends StatelessWidget {
               );
             }
           },
-          child: BlocBuilder<FollowersBloc, FollowersState>(
+          child: BlocBuilder<FollowingBloc, FollowingState>(
             bloc: bloc,
             builder: (context, state) => Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  return UserPresenter(user: state.followers[index].user);
+                  return UserPresenter(user: state.following[index].user);
                 },
                 separatorBuilder: (context, index) => const Divider(
                   color: Color.fromRGBO(80, 80, 80, 0.3),
                 ),
-                itemCount: state.followers.length,
+                itemCount: state.following.length,
               ),
             ),
           ),

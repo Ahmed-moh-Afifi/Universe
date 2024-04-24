@@ -4,10 +4,24 @@ import 'package:universe/apis/firestore.dart';
 import 'package:universe/models/follower.dart';
 import 'package:universe/models/user.dart';
 
-class FollowersState {
-  final List<Follower> followers;
+enum FollowersStates {
+  notStarted,
+  loading,
+  success,
+  failed,
+}
 
-  const FollowersState(this.followers);
+class FollowersState {
+  final FollowersStates previousState;
+  final FollowersStates state;
+  final List<Follower> followers;
+  String? error;
+
+  FollowersState(
+      {required this.previousState,
+      required this.state,
+      required this.followers,
+      this.error});
 }
 
 class GetFollowers {
@@ -17,24 +31,33 @@ class GetFollowers {
 }
 
 class FollowersBloc extends Bloc<Object, FollowersState> {
-  FollowersBloc() : super(const FollowersState([])) {
+  FollowersBloc()
+      : super(
+          FollowersState(
+            previousState: FollowersStates.notStarted,
+            state: FollowersStates.notStarted,
+            followers: [],
+          ),
+        ) {
     on<GetFollowers>(
       (event, emit) async {
-        var response = await FirestoreDataProvider()
+        final currenPage = state.followers;
+        emit(
+          FollowersState(
+            previousState: state.state,
+            state: FollowersStates.loading,
+            followers: [],
+          ),
+        );
+        final followers = await FirestoreDataProvider()
             .getUserFollowers(event.user, null, 50);
-        emit(FollowersState([...response.followers, ...state.followers]));
-        // await Future.delayed(const Duration(seconds: 0));
-        // response = await response.nextPage();
-        // emit(FollowersState(
-        //     [...response.followers.toList(), ...state.followers]));
-        // await Future.delayed(const Duration(seconds: 0));
-        // response = await response.nextPage();
-        // emit(FollowersState(
-        //     [...response.followers.toList(), ...state.followers]));
-        // await Future.delayed(const Duration(seconds: 0));
-        // response = await response.nextPage();
-        // emit(FollowersState(
-        //     [...response.followers.toList(), ...state.followers]));
+        emit(
+          FollowersState(
+            previousState: state.state,
+            state: FollowersStates.success,
+            followers: [...currenPage, ...followers.followers],
+          ),
+        );
       },
     );
     add(GetFollowers(FirebaseAuthentication().user!));

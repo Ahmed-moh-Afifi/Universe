@@ -6,6 +6,7 @@ import 'package:universe/models/user.dart';
 import 'package:universe/routes/complete_account.dart';
 import 'package:universe/routes/feed.dart';
 import 'package:universe/routes/followers.dart';
+import 'package:universe/routes/following.dart';
 import 'package:universe/routes/home.dart';
 import 'package:universe/routes/login.dart';
 import 'package:universe/routes/messages.dart';
@@ -34,6 +35,7 @@ class RouteGenerator {
   static const profile = "profile";
   static const personalProfile = "personalProfile";
   static const followersPage = "followers";
+  static const followingPage = "following";
 
   static SearchState searchState = const SearchState(
     previousState: SearchStates.notStarted,
@@ -86,6 +88,8 @@ class RouteGenerator {
             transitionDuration: Duration.zero);
       case followersPage:
         return MaterialPageRoute(builder: (_) => FollowersPage());
+      case followingPage:
+        return MaterialPageRoute(builder: (_) => FollowingPage());
 
       default:
         throw const FormatException("Route not found");
