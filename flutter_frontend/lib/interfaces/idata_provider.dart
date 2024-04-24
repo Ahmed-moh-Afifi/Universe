@@ -30,5 +30,5 @@ abstract class IDataProvider {
   Future<SearchUsersResponse> searchUsers<T, G>(String query, T start, G limit);
   Future<bool> isUserNameAvailable(String userName);
   Future<bool> isUserOneFollowingUserTwo(User userOne, User userTwo);
-  Future<bool> isPostLikedByUser(Post post, User user);
+  Future<Reaction?> isPostReactedToByUser(Post post, User user);
 }

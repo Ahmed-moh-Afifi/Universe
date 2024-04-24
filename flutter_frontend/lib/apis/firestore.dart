@@ -499,11 +499,15 @@ class FirestoreDataProvider implements IDataProvider {
   }
 
   @override
-  Future<bool> isPostLikedByUser(Post post, User user) async {
-    return (await FirebaseFirestore.instance
-            .collection('${post.id}/reactions')
-            .doc(user.uid)
-            .get())
-        .exists;
+  Future<Reaction?> isPostReactedToByUser(Post post, User user) async {
+    final docSnapshot = await FirebaseFirestore.instance
+        .collection('${post.id}/reactions')
+        .withConverter(
+          fromFirestore: Reaction.fromFirestore,
+          toFirestore: (value, options) => value.toFirestore(),
+        )
+        .doc(user.uid)
+        .get();
+    return docSnapshot.exists ? docSnapshot.data() : null;
   }
 }

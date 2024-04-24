@@ -6,9 +6,9 @@ import 'package:universe/repositories/data_repository.dart';
 
 class PostState {
   final int? reactionsCount;
-  final bool? isLiked;
+  final Reaction? reaction;
 
-  const PostState({this.reactionsCount = 0, this.isLiked = false});
+  const PostState({this.reactionsCount = 0, this.reaction});
 }
 
 class LikeClicked {
@@ -21,9 +21,9 @@ class ListenToReactionCountChanges {}
 
 class ReactionCountChanged {
   final int reactionCount;
-  final bool isLiked;
+  final Reaction? reaction;
 
-  ReactionCountChanged({required this.reactionCount, required this.isLiked});
+  ReactionCountChanged({required this.reactionCount, required this.reaction});
 }
 
 class PostBloc extends Bloc<Object, PostState> {
@@ -31,18 +31,22 @@ class PostBloc extends Bloc<Object, PostState> {
   PostBloc(this.post) : super(const PostState()) {
     on<LikeClicked>(
       (event, emit) {
-        DataRepository().dataProvider.addReaction(
-              AuthenticationRepository().authenticationService.getUser()!,
-              post,
-              Reaction(
-                userId: AuthenticationRepository()
-                    .authenticationService
-                    .getUser()!
-                    .uid,
-                reactionType: 'like',
-                reactionDate: DateTime.now(),
-              ),
-            );
+        if (state.reaction != null) {
+          DataRepository().dataProvider.removeReaction(post, state.reaction!);
+        } else {
+          DataRepository().dataProvider.addReaction(
+                AuthenticationRepository().authenticationService.getUser()!,
+                post,
+                Reaction(
+                  userId: AuthenticationRepository()
+                      .authenticationService
+                      .getUser()!
+                      .uid,
+                  reactionType: 'like',
+                  reactionDate: DateTime.now(),
+                ),
+              );
+        }
       },
     );
 
@@ -56,11 +60,13 @@ class PostBloc extends Bloc<Object, PostState> {
             add(
               ReactionCountChanged(
                 reactionCount: event,
-                isLiked: await DataRepository().dataProvider.isPostLikedByUser(
-                    post,
-                    AuthenticationRepository()
-                        .authenticationService
-                        .getUser()!),
+                reaction: await DataRepository()
+                    .dataProvider
+                    .isPostReactedToByUser(
+                        post,
+                        AuthenticationRepository()
+                            .authenticationService
+                            .getUser()!),
               ),
             );
             // }
@@ -72,10 +78,10 @@ class PostBloc extends Bloc<Object, PostState> {
     on<ReactionCountChanged>(
       (event, emit) {
         print(
-            'reactions count changed: count = ${event.reactionCount}, isLiked = ${event.isLiked}');
+            'reactions count changed: count = ${event.reactionCount}, reaction = ${event.reaction}');
         emit(
           PostState(
-              reactionsCount: event.reactionCount, isLiked: event.isLiked),
+              reactionsCount: event.reactionCount, reaction: event.reaction),
         );
       },
     );

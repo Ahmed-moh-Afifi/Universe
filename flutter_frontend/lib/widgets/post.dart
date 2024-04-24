@@ -45,23 +45,21 @@ class PostWidget extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () => bloc.add(LikeClicked(false)),
-                        icon: state.isLiked == null
-                            ? Container()
-                            : (state.isLiked!
-                                ? SvgPicture.asset(
-                                    'lib/assets/icons/heartFilled.svg',
-                                    colorFilter: const ColorFilter.mode(
-                                      Colors.red,
-                                      BlendMode.srcIn,
-                                    ),
-                                  )
-                                : SvgPicture.asset(
-                                    'lib/assets/icons/heart.svg',
-                                    colorFilter: const ColorFilter.mode(
-                                      Colors.white,
-                                      BlendMode.srcIn,
-                                    ),
-                                  )),
+                        icon: state.reaction != null
+                            ? SvgPicture.asset(
+                                'lib/assets/icons/heartFilled.svg',
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.red,
+                                  BlendMode.srcIn,
+                                ),
+                              )
+                            : SvgPicture.asset(
+                                'lib/assets/icons/heart.svg',
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
                       ),
                       Text((state.reactionsCount ?? '').toString()),
                     ],
