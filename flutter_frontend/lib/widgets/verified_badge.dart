@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class VerifiedBadge extends StatefulWidget {
@@ -38,12 +37,16 @@ class VerifiedBadgeState extends State<VerifiedBadge>
               width: widget.width,
               height: widget.height,
               'lib/assets/icons/Universe Verification Badge Background.svg',
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.primary, BlendMode.srcIn),
             ),
           ),
           SvgPicture.asset(
             width: widget.width,
             height: widget.height,
             'lib/assets/icons/Universe Verification Badge Foreground.svg',
+            colorFilter: ColorFilter.mode(
+                Theme.of(context).primaryColor, BlendMode.srcIn),
           )
         ],
       ),

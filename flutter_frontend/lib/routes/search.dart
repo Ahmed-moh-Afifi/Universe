@@ -29,15 +29,15 @@ class Search extends StatelessWidget {
                 onSubmitted: (value) =>
                     bloc.add(SearchEvent(searchController.text)),
                 controller: searchController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(20),
                     ),
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.secondary,
                   hintText: 'Search',
                 ),
               ),

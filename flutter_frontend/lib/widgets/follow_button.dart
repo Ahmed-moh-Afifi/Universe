@@ -36,12 +36,10 @@ class FollowButton extends StatelessWidget {
                               .uid
                       ? Container()
                       : (state.isFollowed!
-                          ? ElevatedButton(
+                          ? TextButton(
                               style: const ButtonStyle(
                                 backgroundColor: MaterialStatePropertyAll(
                                     Colors.transparent),
-                                foregroundColor:
-                                    MaterialStatePropertyAll(Colors.white),
                                 shape: MaterialStatePropertyAll(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(

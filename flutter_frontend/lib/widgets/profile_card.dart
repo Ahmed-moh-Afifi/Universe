@@ -21,7 +21,7 @@ class ProfileCard extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          color: const Color.fromRGBO(80, 80, 80, 0.3)),
+          color: Theme.of(context).colorScheme.secondary),
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

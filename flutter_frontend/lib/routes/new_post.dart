@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_icons/icons8.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:universe/blocs/new_post_bloc.dart';
 
 class NewPost extends StatefulWidget {
@@ -80,15 +78,15 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                         minLines: null,
                         controller: postController,
                         textAlignVertical: TextAlignVertical.top,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(20),
                             ),
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
-                          fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                          fillColor: Theme.of(context).colorScheme.secondary,
                           hintText: "What's on your mind?",
                         ),
                       ),
@@ -106,29 +104,32 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        state.state == NewPostStates.informative
-                            ? Lottie.asset(
-                                Icons8.checkmark_ok,
-                                controller: _doneController..forward(),
-                                width: 30,
-                                height: 30,
-                                frameRate: FrameRate(30),
-                              )
-                            : state.state == NewPostStates.loading
-                                ? const Center(
-                                    child: SizedBox(
-                                      width: 30,
-                                      height: 30,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  )
-                                : SvgPicture.asset(
-                                    'lib/assets/icons/share.svg',
-                                    colorFilter: const ColorFilter.mode(
-                                        Colors.black, BlendMode.srcIn),
+                        state.state == NewPostStates.informative ||
+                                // Lottie.asset(
+                                //     Icons8.checkmark_ok,
+                                //     controller: _doneController..forward(),
+                                //     width: 30,
+                                //     height: 30,
+                                //     frameRate: FrameRate(30),
+                                //   )
+                                // :
+                                state.state == NewPostStates.loading
+                            ? Center(
+                                child: SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: CircularProgressIndicator(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
                                   ),
+                                ),
+                              )
+                            : SvgPicture.asset(
+                                'lib/assets/icons/share.svg',
+                                colorFilter: ColorFilter.mode(
+                                    Theme.of(context).colorScheme.secondary,
+                                    BlendMode.srcIn),
+                              ),
                         const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text('Share'),

@@ -54,8 +54,8 @@ class PostBloc extends Bloc<Object, PostState> {
       (event, emit) async {
         DataRepository().dataProvider.getPostReactionsCountStream(post).listen(
           (event) async {
-            print(
-                'listening to post with id: ${post.id}. CURRENT LIKES COUNT: $event');
+            // print(
+            //     'listening to post with id: ${post.id}. CURRENT LIKES COUNT: $event');
             // if (!isClosed) {
             add(
               ReactionCountChanged(
@@ -77,8 +77,8 @@ class PostBloc extends Bloc<Object, PostState> {
 
     on<ReactionCountChanged>(
       (event, emit) {
-        print(
-            'reactions count changed: count = ${event.reactionCount}, reaction = ${event.reaction}');
+        // print(
+        //     'reactions count changed: count = ${event.reactionCount}, reaction = ${event.reaction}');
         emit(
           PostState(
               reactionsCount: event.reactionCount, reaction: event.reaction),

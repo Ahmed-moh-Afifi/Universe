@@ -17,15 +17,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
         primaryColorLight: Colors.white,
-        primaryColorDark: Colors.white,
+        primaryColorDark: const Color.fromRGBO(230, 230, 230, 1),
         indicatorColor: Colors.white,
         colorScheme: const ColorScheme.light(
           primary: Colors.black,
-          secondary: Colors.grey,
+          secondary: Color.fromRGBO(230, 230, 230, 1),
           tertiary: Colors.grey,
           brightness: Brightness.light,
         ),
         useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+        ),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
             foregroundColor: MaterialStatePropertyAll(Colors.white),
@@ -34,13 +38,13 @@ class MyApp extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
-        primaryColor: Colors.black,
+        primaryColor: const Color.fromRGBO(16, 16, 16, 1),
         primaryColorDark: Colors.black,
-        primaryColorLight: Colors.black,
+        primaryColorLight: const Color.fromRGBO(80, 80, 80, 0.3),
         indicatorColor: Colors.black,
         colorScheme: const ColorScheme.dark(
           primary: Colors.white,
-          secondary: Colors.grey,
+          secondary: Color.fromRGBO(80, 80, 80, 0.3),
           tertiary: Colors.grey,
           brightness: Brightness.dark,
         ),

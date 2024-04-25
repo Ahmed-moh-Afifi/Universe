@@ -78,8 +78,9 @@ class HomePage extends StatelessWidget {
                     IconButton(
                       icon: SvgPicture.asset(
                         state.homeIcon,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).primaryIconTheme.color!,
+                            BlendMode.srcIn),
                       ),
                       onPressed: () =>
                           bloc.add(const Navigate(RouteGenerator.feed)),
@@ -87,8 +88,9 @@ class HomePage extends StatelessWidget {
                     IconButton(
                       icon: SvgPicture.asset(
                         state.searchIcon,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).primaryIconTheme.color!,
+                            BlendMode.srcIn),
                       ),
                       onPressed: () =>
                           bloc.add(const Navigate(RouteGenerator.search)),
@@ -111,15 +113,17 @@ class HomePage extends StatelessWidget {
                       //     bloc.add(const Navigate(RouteGenerator.newPost)),
                       icon: SvgPicture.asset(
                         state.newPostIcon,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).primaryIconTheme.color!,
+                            BlendMode.srcIn),
                       ),
                     ),
                     IconButton(
                       icon: SvgPicture.asset(
                         state.messagesIcon,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).primaryIconTheme.color!,
+                            BlendMode.srcIn),
                       ),
                       onPressed: () =>
                           bloc.add(const Navigate(RouteGenerator.messages)),
@@ -127,8 +131,9 @@ class HomePage extends StatelessWidget {
                     IconButton(
                       icon: SvgPicture.asset(
                         state.profileIcon,
-                        colorFilter: const ColorFilter.mode(
-                            Colors.white, BlendMode.srcIn),
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).primaryIconTheme.color!,
+                            BlendMode.srcIn),
                       ),
                       onPressed: () => bloc
                           .add(const Navigate(RouteGenerator.personalProfile)),

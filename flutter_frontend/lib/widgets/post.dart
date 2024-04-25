@@ -55,13 +55,16 @@ class PostWidget extends StatelessWidget {
                               )
                             : SvgPicture.asset(
                                 'lib/assets/icons/heart.svg',
-                                colorFilter: const ColorFilter.mode(
-                                  Colors.white,
+                                colorFilter: ColorFilter.mode(
+                                  Theme.of(context).colorScheme.secondary,
                                   BlendMode.srcIn,
                                 ),
                               ),
                       ),
-                      Text((state.reactionsCount ?? '').toString()),
+                      Text(
+                        (state.reactionsCount ?? '').toString(),
+                        style: TextStyles.subtitleStyle,
+                      ),
                     ],
                   ),
                   Text(
