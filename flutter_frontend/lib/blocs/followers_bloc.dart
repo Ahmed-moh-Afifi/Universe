@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/apis/authentication/firebase_authentication.dart';
-import 'package:universe/apis/firestore.dart';
 import 'package:universe/models/follower.dart';
 import 'package:universe/models/user.dart';
+import 'package:universe/repositories/data_repository.dart';
 
 enum FollowersStates {
   notStarted,
@@ -31,7 +30,8 @@ class GetFollowers {
 }
 
 class FollowersBloc extends Bloc<Object, FollowersState> {
-  FollowersBloc()
+  final User user;
+  FollowersBloc(this.user)
       : super(
           FollowersState(
             previousState: FollowersStates.notStarted,
@@ -49,7 +49,8 @@ class FollowersBloc extends Bloc<Object, FollowersState> {
             followers: [],
           ),
         );
-        final followers = await FirestoreDataProvider()
+        final followers = await DataRepository()
+            .dataProvider
             .getUserFollowers(event.user, null, 50);
         emit(
           FollowersState(
@@ -60,6 +61,6 @@ class FollowersBloc extends Bloc<Object, FollowersState> {
         );
       },
     );
-    add(GetFollowers(FirebaseAuthentication().user!));
+    add(GetFollowers(user));
   }
 }

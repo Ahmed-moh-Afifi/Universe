@@ -27,6 +27,7 @@ class UserPresenter extends StatelessWidget {
       child: TextButton(
         style: const ButtonStyle(
           overlayColor: MaterialStatePropertyAll(Colors.transparent),
+          splashFactory: NoSplash.splashFactory,
           padding: MaterialStatePropertyAll(EdgeInsets.zero),
           shape: MaterialStatePropertyAll(
             RoundedRectangleBorder(
@@ -45,8 +46,7 @@ class UserPresenter extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
-                softWrap: false,
-                overflow: TextOverflow.fade,
+                maxLines: 1,
                 '${user.firstName} ${user.lastName}',
               ),
               user.verified

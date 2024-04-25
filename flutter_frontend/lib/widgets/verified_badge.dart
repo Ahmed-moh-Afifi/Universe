@@ -27,22 +27,26 @@ class VerifiedBadgeState extends State<VerifiedBadge>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        RotationTransition(
-          turns: _animation,
-          child: SvgPicture.asset(
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: Stack(
+        children: [
+          RotationTransition(
+            turns: _animation,
+            child: SvgPicture.asset(
+              width: widget.width,
+              height: widget.height,
+              'lib/assets/icons/Universe Verification Badge Background.svg',
+            ),
+          ),
+          SvgPicture.asset(
             width: widget.width,
             height: widget.height,
-            'lib/assets/icons/Universe Verification Badge Background.svg',
-          ),
-        ),
-        SvgPicture.asset(
-          width: widget.width,
-          height: widget.height,
-          'lib/assets/icons/Universe Verification Badge Foreground.svg',
-        )
-      ],
+            'lib/assets/icons/Universe Verification Badge Foreground.svg',
+          )
+        ],
+      ),
     );
   }
 }

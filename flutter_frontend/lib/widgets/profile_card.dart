@@ -100,9 +100,19 @@ class ProfileCard extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: TextButton(
+                      style: const ButtonStyle(
+                        surfaceTintColor:
+                            MaterialStatePropertyAll(Colors.transparent),
+                        overlayColor:
+                            MaterialStatePropertyAll(Colors.transparent),
+                        splashFactory: NoSplash.splashFactory,
+                      ),
                       onPressed: () => RouteGenerator
                           .mainNavigatorkey.currentState!
-                          .pushNamed(RouteGenerator.followersPage),
+                          .pushNamed(
+                        RouteGenerator.followersPage,
+                        arguments: user,
+                      ),
                       child: Column(
                         children: [
                           Text((followersCount ?? '').toString()),
@@ -122,10 +132,18 @@ class ProfileCard extends StatelessWidget {
                   SizedBox(
                     width: 100,
                     child: TextButton(
+                      style: const ButtonStyle(
+                        surfaceTintColor:
+                            MaterialStatePropertyAll(Colors.transparent),
+                        overlayColor:
+                            MaterialStatePropertyAll(Colors.transparent),
+                        splashFactory: NoSplash.splashFactory,
+                      ),
                       onPressed: () => RouteGenerator
                           .mainNavigatorkey.currentState!
                           .pushNamed(
                         RouteGenerator.followingPage,
+                        arguments: user,
                       ),
                       child: Column(
                         children: [

@@ -87,9 +87,11 @@ class RouteGenerator {
                 PersonalProfile(),
             transitionDuration: Duration.zero);
       case followersPage:
-        return MaterialPageRoute(builder: (_) => FollowersPage());
+        return MaterialPageRoute(
+            builder: (_) => FollowersPage(settings.arguments as User));
       case followingPage:
-        return MaterialPageRoute(builder: (_) => FollowingPage());
+        return MaterialPageRoute(
+            builder: (_) => FollowingPage(settings.arguments as User));
 
       default:
         throw const FormatException("Route not found");

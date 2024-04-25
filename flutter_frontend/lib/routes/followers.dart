@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/blocs/followers_bloc.dart';
+import 'package:universe/models/user.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/widgets/user_presenter.dart';
 
 class FollowersPage extends StatelessWidget {
-  final FollowersBloc bloc = FollowersBloc();
-  FollowersPage({super.key});
+  final User user;
+  final FollowersBloc bloc;
+  FollowersPage(this.user, {super.key}) : bloc = FollowersBloc(user);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class FollowersPage extends StatelessWidget {
           child: BlocBuilder<FollowersBloc, FollowersState>(
             bloc: bloc,
             builder: (context, state) => Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              padding: const EdgeInsets.only(left: 0, right: 0, top: 20),
               child: ListView.separated(
                 itemBuilder: (context, index) {
                   return UserPresenter(user: state.followers[index].user);
