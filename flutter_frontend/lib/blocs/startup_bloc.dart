@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/apis/firebase_cloud_messaging.dart';
 import 'package:universe/firebase_options.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
@@ -31,7 +32,7 @@ class StartupBloc extends Bloc<Object, Object> {
     initialization =
         Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     await initialization;
-    // await FirebasePushManager().init();
+    await FCM().init();
     await AuthenticationRepository().authenticationService.loadUser();
     add(StartupCompleted());
   }
