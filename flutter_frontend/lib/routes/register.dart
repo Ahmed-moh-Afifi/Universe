@@ -1,15 +1,14 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/blocs/register_bloc.dart';
 import 'package:universe/route_generator.dart';
 
 class Register extends StatelessWidget {
-  final registerBloc = RegisterBloc();
-  Register({super.key});
+  const Register({super.key});
 
   @override
   Widget build(BuildContext context) {
-    RegisterState globalState = registerBloc.state;
     final TextEditingController firstNameController = TextEditingController();
     final TextEditingController lastNameController = TextEditingController();
     final TextEditingController usernameController = TextEditingController();
@@ -19,19 +18,23 @@ class Register extends StatelessWidget {
         TextEditingController();
 
     return BlocProvider(
-      create: (context) => registerBloc,
+      create: (context) => RegisterBloc(),
       child: Scaffold(
         appBar: AppBar(),
         body: BlocListener<RegisterBloc, RegisterState>(
           listener: (context, state) {
             if (state.state == RegisterStates.loading) {
               showDialog(
+                barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => const PopScope(
+                builder: (context) => PopScope(
                   canPop: false,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ),
               );
@@ -39,16 +42,20 @@ class Register extends StatelessWidget {
 
             if ((state.state == RegisterStates.success ||
                     state.state == RegisterStates.failed) &&
-                globalState.state == RegisterStates.loading) {
+                state.previouseState == RegisterStates.loading) {
               RouteGenerator.mainNavigatorkey.currentState?.pop();
             }
 
             if (state.state == RegisterStates.failed) {
               showDialog(
+                barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Error"),
-                  content: Text(state.error!),
+                builder: (context) => BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: AlertDialog(
+                    title: const Text("Error"),
+                    content: Text(state.error!),
+                  ),
                 ),
               );
             }
@@ -68,8 +75,6 @@ class Register extends StatelessWidget {
                 ),
               );
             }
-
-            globalState = state;
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
@@ -216,7 +221,8 @@ class Register extends StatelessWidget {
                               top: 10, left: 10, right: 10),
                           height: 66,
                           child: ElevatedButton(
-                            onPressed: () => registerBloc.add(
+                            onPressed: () =>
+                                BlocProvider.of<RegisterBloc>(context).add(
                               RegisterEvent(
                                   firstName: firstNameController.text,
                                   lastName: lastNameController.text,

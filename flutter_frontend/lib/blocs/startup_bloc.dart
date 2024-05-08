@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/firebase_cloud_messaging.dart';
 import 'package:universe/firebase_options.dart';
@@ -32,8 +33,11 @@ class StartupBloc extends Bloc<Object, Object> {
     initialization =
         Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     await initialization;
-    await FCM().init();
     await AuthenticationRepository().authenticationService.loadUser();
+    if (!kIsWeb) {
+      // until adding the vapid key for web support.
+      await FCM().init();
+    }
     add(StartupCompleted());
   }
 }

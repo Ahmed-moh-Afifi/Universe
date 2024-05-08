@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/blocs/followers_bloc.dart';
@@ -7,8 +8,7 @@ import 'package:universe/widgets/user_presenter.dart';
 
 class FollowersPage extends StatelessWidget {
   final User user;
-  final FollowersBloc bloc;
-  FollowersPage(this.user, {super.key}) : bloc = FollowersBloc(user);
+  const FollowersPage(this.user, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +17,21 @@ class FollowersPage extends StatelessWidget {
         title: const Text('Followers'),
       ),
       body: BlocProvider<FollowersBloc>(
-        create: (context) => bloc,
+        create: (context) => FollowersBloc(user),
         child: BlocListener<FollowersBloc, FollowersState>(
           listener: (context, state) {
             if (state.state == FollowersStates.loading) {
               showDialog(
+                barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => const PopScope(
+                builder: (context) => PopScope(
                   canPop: false,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ),
               );
@@ -41,16 +45,20 @@ class FollowersPage extends StatelessWidget {
 
             if (state.state == FollowersStates.failed) {
               showDialog(
+                barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Error"),
-                  content: Text(state.error!),
+                builder: (context) => BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: AlertDialog(
+                    title: const Text("Error"),
+                    content: Text(state.error!),
+                  ),
                 ),
               );
             }
           },
           child: BlocBuilder<FollowersBloc, FollowersState>(
-            bloc: bloc,
+            bloc: BlocProvider.of<FollowersBloc>(context),
             builder: (context, state) => Padding(
               padding: const EdgeInsets.only(left: 0, right: 0, top: 20),
               child: ListView.separated(

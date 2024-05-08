@@ -11,14 +11,13 @@ import 'package:universe/widgets/user_presenter.dart';
 class PostWidget extends StatelessWidget {
   final Post post;
   final User user;
-  final PostBloc bloc;
   final bool showFollowButton;
-  PostWidget({
+  const PostWidget({
     required this.post,
     required this.user,
     this.showFollowButton = true,
     super.key,
-  }) : bloc = PostBloc(post);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class PostWidget extends StatelessWidget {
       margin: const EdgeInsets.only(left: 0, right: 0),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: BlocProvider<PostBloc>(
-        create: (context) => bloc,
+        create: (context) => PostBloc(post),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,7 +43,12 @@ class PostWidget extends StatelessWidget {
                   Row(
                     children: [
                       IconButton(
-                        onPressed: () => bloc.add(LikeClicked(false)),
+                        onPressed: () {
+                          if (!BlocProvider.of<PostBloc>(context).isClosed) {
+                            BlocProvider.of<PostBloc>(context)
+                                .add(LikeClicked(false));
+                          }
+                        },
                         icon: state.reaction != null
                             ? SvgPicture.asset(
                                 'lib/assets/icons/heartFilled.svg',

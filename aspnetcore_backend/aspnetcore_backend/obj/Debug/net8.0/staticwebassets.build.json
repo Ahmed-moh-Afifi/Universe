@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "yWfe+ak+ecKH/hWRsvLaN/wj0obCA/TLG+0j1DG+NcU=",
+  "Source": "aspnetcore_backend",
+  "BasePath": "_content/aspnetcore_backend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

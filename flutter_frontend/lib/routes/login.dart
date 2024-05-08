@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,7 +6,6 @@ import 'package:universe/blocs/login_bloc.dart';
 import 'package:universe/route_generator.dart';
 
 class Login extends StatelessWidget {
-  final loginBloc = LoginBloc();
   Login({super.key});
 
   @override
@@ -14,7 +14,7 @@ class Login extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
 
     return BlocProvider(
-      create: (context) => loginBloc,
+      create: (context) => LoginBloc(),
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -30,12 +30,16 @@ class Login extends StatelessWidget {
           listener: (context, state) {
             if (state.state == SignInStates.loading) {
               showDialog(
+                barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
                 barrierDismissible: false,
                 context: context,
-                builder: (context) => const PopScope(
+                builder: (context) => PopScope(
                   canPop: false,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                 ),
               );
@@ -48,10 +52,14 @@ class Login extends StatelessWidget {
 
             if (state.state == SignInStates.failed) {
               showDialog(
+                barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Error"),
-                  content: Text(state.error!),
+                builder: (context) => BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: AlertDialog(
+                    title: const Text("Error"),
+                    content: Text(state.error!),
+                  ),
                 ),
               );
             }
@@ -164,7 +172,8 @@ class Login extends StatelessWidget {
                               top: 10, left: 10, right: 10),
                           height: 66,
                           child: ElevatedButton(
-                            onPressed: () => loginBloc.add(
+                            onPressed: () =>
+                                BlocProvider.of<LoginBloc>(context).add(
                               EmailLoginEvent(
                                 email: emailController.text,
                                 password: passwordController.text,
@@ -227,7 +236,8 @@ class Login extends StatelessWidget {
                               ),
                             ),
                           ),
-                          onPressed: () => loginBloc.add(GoogleLoginEvent()),
+                          onPressed: () => BlocProvider.of<LoginBloc>(context)
+                              .add(GoogleLoginEvent()),
                           child: SvgPicture.asset(
                             "lib/assets/icons/google.svg",
                             width: 40,

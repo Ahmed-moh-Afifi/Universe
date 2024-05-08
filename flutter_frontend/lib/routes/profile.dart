@@ -8,9 +8,8 @@ import 'package:universe/widgets/user_posts_viewer.dart';
 
 class Profile extends StatelessWidget {
   final User user;
-  final ProfileBloc bloc;
 
-  Profile(this.user, {super.key}) : bloc = ProfileBloc(user);
+  Profile(this.user, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +24,11 @@ class Profile extends StatelessWidget {
       ),
       body: SafeArea(
         child: BlocProvider<ProfileBloc>(
-          create: (context) => bloc,
+          create: (context) => ProfileBloc(user),
           child: BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, state) => RefreshIndicator(
-              onRefresh: () => bloc.getUserData(),
+              onRefresh: () =>
+                  BlocProvider.of<ProfileBloc>(context).getUserData(),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(

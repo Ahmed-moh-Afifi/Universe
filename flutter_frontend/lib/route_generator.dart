@@ -53,11 +53,11 @@ class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homePage:
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => const HomePage());
       case loginPage:
         return MaterialPageRoute(builder: (_) => Login());
       case registerPage:
-        return MaterialPageRoute(builder: (_) => Register());
+        return MaterialPageRoute(builder: (_) => const Register());
       case completeAccount:
         return MaterialPageRoute(builder: (_) => const CompleteAccount());
       case startup:
@@ -71,7 +71,7 @@ class RouteGenerator {
             transitionDuration: Duration.zero);
       case search:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => Search(),
+            pageBuilder: (_, animation, secondaryAnimation) => const Search(),
             transitionDuration: Duration.zero);
       case newPost:
         return PageRouteBuilder(
@@ -84,7 +84,7 @@ class RouteGenerator {
       case personalProfile:
         return PageRouteBuilder(
             pageBuilder: (_, animation, secondaryAnimation) =>
-                PersonalProfile(),
+                const PersonalProfile(),
             transitionDuration: Duration.zero);
       case followersPage:
         return MaterialPageRoute(

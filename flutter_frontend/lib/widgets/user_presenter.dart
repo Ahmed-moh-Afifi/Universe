@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:universe/blocs/user_presenter_bloc.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
@@ -8,17 +7,16 @@ import 'package:universe/widgets/verified_badge.dart';
 
 class UserPresenter extends StatelessWidget {
   final User user;
-  final UserPresenterBloc bloc;
   final EdgeInsets? contentPadding;
   final EdgeInsets? margin;
   final bool showFollowButton;
-  UserPresenter({
+  const UserPresenter({
     required this.user,
     this.contentPadding,
     this.margin,
     this.showFollowButton = true,
     super.key,
-  }) : bloc = UserPresenterBloc(user);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -6,11 +6,16 @@ import 'package:universe/repositories/authentication_repository.dart';
 enum RegisterStates { startup, loading, failed, success }
 
 class RegisterState {
+  RegisterStates previouseState;
   RegisterStates state;
   String? error;
   User? userCredential;
 
-  RegisterState({required this.state, this.error, this.userCredential});
+  RegisterState(
+      {required this.previouseState,
+      required this.state,
+      this.error,
+      this.userCredential});
 }
 
 class RegisterEvent {
@@ -33,7 +38,10 @@ class RegisterEvent {
 }
 
 class RegisterBloc extends Bloc<Object, RegisterState> {
-  RegisterBloc() : super(RegisterState(state: RegisterStates.startup)) {
+  RegisterBloc()
+      : super(RegisterState(
+            previouseState: RegisterStates.startup,
+            state: RegisterStates.startup)) {
     on<RegisterEvent>(
       (event, emit) async {
         if (event.firstName.isNotEmpty &&
@@ -44,7 +52,12 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
             event.confirmPassword.isNotEmpty &&
             event.password == event.confirmPassword) {
           try {
-            emit(RegisterState(state: RegisterStates.loading));
+            emit(
+              RegisterState(
+                previouseState: state.state,
+                state: RegisterStates.loading,
+              ),
+            );
             final user = await AuthenticationRepository()
                 .authenticationService
                 .register(event.firstName, event.lastName, event.email,
@@ -53,11 +66,15 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
             //     ?.updateDisplayName("${event.firstName} ${event.lastName}");
             emit(
               RegisterState(
-                  state: RegisterStates.success, userCredential: user),
+                previouseState: state.state,
+                state: RegisterStates.success,
+                userCredential: user,
+              ),
             );
           } on EmailInUseException catch (_) {
             emit(
               RegisterState(
+                previouseState: state.state,
                 state: RegisterStates.failed,
                 error: "Email already in use",
               ),
@@ -65,6 +82,7 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
           } on InvalidEmailException catch (_) {
             emit(
               RegisterState(
+                previouseState: state.state,
                 state: RegisterStates.failed,
                 error: "Invalid email",
               ),
@@ -72,6 +90,7 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
           } on WeakPasswordException catch (_) {
             emit(
               RegisterState(
+                previouseState: state.state,
                 state: RegisterStates.failed,
                 error: "Weak password",
               ),
@@ -79,6 +98,7 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
           } on AuthenticationException catch (e) {
             emit(
               RegisterState(
+                previouseState: state.state,
                 state: RegisterStates.failed,
                 error: "something's gone wrong :(\n${e.code}",
               ),
@@ -86,6 +106,7 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
           } catch (e) {
             emit(
               RegisterState(
+                previouseState: state.state,
                 state: RegisterStates.failed,
                 error: "something's gone wrong :(\n${e.runtimeType}",
               ),
@@ -94,6 +115,7 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
         } else {
           emit(
             RegisterState(
+              previouseState: state.state,
               state: RegisterStates.failed,
               error: "invalid or no input",
             ),

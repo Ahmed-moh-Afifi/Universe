@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,7 +13,6 @@ class NewPost extends StatefulWidget {
 
 class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
   late AnimationController _doneController;
-  final bloc = NewPostBloc();
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final postController = TextEditingController();
     return BlocProvider<NewPostBloc>(
-      create: (context) => bloc,
+      create: (context) => NewPostBloc(),
       child: BlocListener<NewPostBloc, NewPostState>(
         listener: (context, state) {
           if (state.state == NewPostStates.loading) {
@@ -53,10 +53,14 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
 
           if (state.state == NewPostStates.failed) {
             showDialog(
+              barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text("Error"),
-                content: Text(state.error!),
+              builder: (context) => BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: AlertDialog(
+                  title: const Text("Error"),
+                  content: Text(state.error!),
+                ),
               ),
             );
           }
@@ -94,7 +98,7 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                   ),
                   ElevatedButton(
                     onLongPress: null,
-                    onPressed: () => bloc.add(
+                    onPressed: () => BlocProvider.of<NewPostBloc>(context).add(
                       PostEvent(
                         content: postController.text,
                         images: [],
