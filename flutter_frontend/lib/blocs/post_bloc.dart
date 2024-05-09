@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/reaction.dart';
@@ -27,6 +29,7 @@ class ReactionCountChanged {
 }
 
 class PostBloc extends Bloc<Object, PostState> {
+  StreamSubscription<int>? streamSubscription;
   final Post post;
   PostBloc(this.post) : super(const PostState()) {
     on<LikeClicked>(
@@ -52,7 +55,10 @@ class PostBloc extends Bloc<Object, PostState> {
 
     on<ListenToReactionCountChanges>(
       (event, emit) async {
-        DataRepository().dataProvider.getPostReactionsCountStream(post).listen(
+        streamSubscription = DataRepository()
+            .dataProvider
+            .getPostReactionsCountStream(post)
+            .listen(
           (event) async {
             // print(
             //     'listening to post with id: ${post.id}. CURRENT LIKES COUNT: $event');
@@ -60,13 +66,13 @@ class PostBloc extends Bloc<Object, PostState> {
             add(
               ReactionCountChanged(
                 reactionCount: event,
-                reaction: await DataRepository()
-                    .dataProvider
-                    .isPostReactedToByUser(
-                        post,
-                        AuthenticationRepository()
-                            .authenticationService
-                            .getUser()!),
+                reaction:
+                    await DataRepository().dataProvider.isPostReactedToByUser(
+                          post,
+                          AuthenticationRepository()
+                              .authenticationService
+                              .getUser()!,
+                        ),
               ),
             );
             // }
@@ -81,11 +87,21 @@ class PostBloc extends Bloc<Object, PostState> {
         //     'reactions count changed: count = ${event.reactionCount}, reaction = ${event.reaction}');
         emit(
           PostState(
-              reactionsCount: event.reactionCount, reaction: event.reaction),
+            reactionsCount: event.reactionCount,
+            reaction: event.reaction,
+          ),
         );
       },
     );
 
     add(ListenToReactionCountChanges());
+  }
+
+  @override
+  Future<void> close() async {
+    if (streamSubscription != null) {
+      await streamSubscription!.cancel();
+    }
+    return super.close();
   }
 }

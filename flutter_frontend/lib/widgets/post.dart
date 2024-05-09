@@ -45,9 +45,7 @@ class PostWidget extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          if (!bloc.isClosed) {
-                            bloc.add(LikeClicked(false));
-                          }
+                          bloc.add(LikeClicked(false));
                         },
                         icon: state.reaction != null
                             ? SvgPicture.asset(
