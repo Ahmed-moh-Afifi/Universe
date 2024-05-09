@@ -7,23 +7,22 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class FollowButton extends StatelessWidget {
   final User user;
+  final FollowButtonBloc bloc;
   final widgetKey = GlobalKey();
 
-  FollowButton(this.user, {super.key});
+  FollowButton(this.user, {super.key}) : bloc = FollowButtonBloc(user);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<FollowButtonBloc>(
-      create: (context) => FollowButtonBloc(user),
+      create: (context) => bloc,
       child: BlocBuilder<FollowButtonBloc, FollowButtonState>(
         builder: (context, state) {
           return VisibilityDetector(
             key: widgetKey,
             onVisibilityChanged: (info) {
-              if (info.visibleFraction != 0 &&
-                  BlocProvider.of<FollowButtonBloc>(context).builtOnce) {
-                BlocProvider.of<FollowButtonBloc>(context)
-                    .add(GetFollowState());
+              if (info.visibleFraction != 0 && bloc.builtOnce) {
+                bloc.add(GetFollowState());
               }
             },
             child: SizedBox(
@@ -50,9 +49,7 @@ class FollowButton extends StatelessWidget {
                                 ),
                               ),
                               child: const Text('Unfollow'),
-                              onPressed: () =>
-                                  BlocProvider.of<FollowButtonBloc>(context)
-                                      .add(UnfollowEvent()),
+                              onPressed: () => bloc.add(UnfollowEvent()),
                             )
                           : ElevatedButton(
                               style: const ButtonStyle(
@@ -65,9 +62,7 @@ class FollowButton extends StatelessWidget {
                                 ),
                               ),
                               child: const Text('Follow'),
-                              onPressed: () =>
-                                  BlocProvider.of<FollowButtonBloc>(context)
-                                      .add(FollowEvent()),
+                              onPressed: () => bloc.add(FollowEvent()),
                             )))
                   : const SizedBox(
                       width: 25,

@@ -7,16 +7,17 @@ import 'package:universe/widgets/profile_card.dart';
 import 'package:universe/widgets/user_posts_viewer.dart';
 
 class PersonalProfile extends StatelessWidget {
-  const PersonalProfile({super.key});
+  final PersonalProfileBloc bloc;
+  PersonalProfile({super.key}) : bloc = PersonalProfileBloc();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PersonalProfileBloc>(
-      create: (context) => PersonalProfileBloc(),
+      create: (context) => bloc,
       child: BlocBuilder<PersonalProfileBloc, PersonalProfileState>(
         builder: (context, state) => RefreshIndicator(
           onRefresh: () {
-            return BlocProvider.of<PersonalProfileBloc>(context).getUserData();
+            return bloc.getUserData();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),

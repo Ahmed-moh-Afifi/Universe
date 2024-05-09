@@ -5,7 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:universe/blocs/new_post_bloc.dart';
 
 class NewPost extends StatefulWidget {
-  const NewPost({super.key});
+  final NewPostBloc bloc;
+  NewPost({super.key}) : bloc = NewPostBloc();
 
   @override
   State<NewPost> createState() => _NewPostState();
@@ -31,7 +32,7 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final postController = TextEditingController();
     return BlocProvider<NewPostBloc>(
-      create: (context) => NewPostBloc(),
+      create: (context) => widget.bloc,
       child: BlocListener<NewPostBloc, NewPostState>(
         listener: (context, state) {
           if (state.state == NewPostStates.loading) {
@@ -98,7 +99,7 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                   ),
                   ElevatedButton(
                     onLongPress: null,
-                    onPressed: () => BlocProvider.of<NewPostBloc>(context).add(
+                    onPressed: () => widget.bloc.add(
                       PostEvent(
                         content: postController.text,
                         images: [],
@@ -131,7 +132,7 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                             : SvgPicture.asset(
                                 'lib/assets/icons/share.svg',
                                 colorFilter: ColorFilter.mode(
-                                    Theme.of(context).colorScheme.secondary,
+                                    Theme.of(context).primaryColor,
                                     BlendMode.srcIn),
                               ),
                         const Padding(

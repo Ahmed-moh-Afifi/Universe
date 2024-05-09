@@ -6,7 +6,8 @@ import 'package:universe/blocs/login_bloc.dart';
 import 'package:universe/route_generator.dart';
 
 class Login extends StatelessWidget {
-  Login({super.key});
+  final LoginBloc bloc;
+  Login({super.key}) : bloc = LoginBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class Login extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
 
     return BlocProvider(
-      create: (context) => LoginBloc(),
+      create: (context) => bloc,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -172,8 +173,7 @@ class Login extends StatelessWidget {
                               top: 10, left: 10, right: 10),
                           height: 66,
                           child: ElevatedButton(
-                            onPressed: () =>
-                                BlocProvider.of<LoginBloc>(context).add(
+                            onPressed: () => bloc.add(
                               EmailLoginEvent(
                                 email: emailController.text,
                                 password: passwordController.text,
@@ -236,8 +236,7 @@ class Login extends StatelessWidget {
                               ),
                             ),
                           ),
-                          onPressed: () => BlocProvider.of<LoginBloc>(context)
-                              .add(GoogleLoginEvent()),
+                          onPressed: () => bloc.add(GoogleLoginEvent()),
                           child: SvgPicture.asset(
                             "lib/assets/icons/google.svg",
                             width: 40,

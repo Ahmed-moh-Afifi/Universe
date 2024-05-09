@@ -7,7 +7,8 @@ import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/user_presenter.dart';
 
 class Search extends StatelessWidget {
-  const Search({super.key});
+  final SearchBloc bloc;
+  Search({super.key}) : bloc = SearchBloc(RouteGenerator.searchState);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class Search extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: BlocProvider<SearchBloc>(
-        create: (context) => SearchBloc(RouteGenerator.searchState),
+        create: (context) => bloc,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -26,8 +27,8 @@ class Search extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: TextField(
-                onSubmitted: (value) => BlocProvider.of<SearchBloc>(context)
-                    .add(SearchEvent(searchController.text)),
+                onSubmitted: (value) =>
+                    bloc.add(SearchEvent(searchController.text)),
                 controller: searchController,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(

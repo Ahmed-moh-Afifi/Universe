@@ -5,7 +5,8 @@ import 'package:universe/blocs/register_bloc.dart';
 import 'package:universe/route_generator.dart';
 
 class Register extends StatelessWidget {
-  const Register({super.key});
+  final RegisterBloc bloc;
+  Register({super.key}) : bloc = RegisterBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class Register extends StatelessWidget {
         TextEditingController();
 
     return BlocProvider(
-      create: (context) => RegisterBloc(),
+      create: (context) => bloc,
       child: Scaffold(
         appBar: AppBar(),
         body: BlocListener<RegisterBloc, RegisterState>(
@@ -221,8 +222,7 @@ class Register extends StatelessWidget {
                               top: 10, left: 10, right: 10),
                           height: 66,
                           child: ElevatedButton(
-                            onPressed: () =>
-                                BlocProvider.of<RegisterBloc>(context).add(
+                            onPressed: () => bloc.add(
                               RegisterEvent(
                                   firstName: firstNameController.text,
                                   lastName: lastNameController.text,

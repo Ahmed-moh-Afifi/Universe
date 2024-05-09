@@ -8,12 +8,13 @@ import 'package:universe/routes/new_post.dart';
 import 'package:universe/widgets/universe_appbar.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final HomeBloc bloc;
+  HomePage({super.key}) : bloc = HomeBloc();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<HomeBloc>(
-      create: (context) => HomeBloc(),
+      create: (context) => bloc,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         extendBody: true,
@@ -80,8 +81,8 @@ class HomePage extends StatelessWidget {
                             Theme.of(context).primaryIconTheme.color!,
                             BlendMode.srcIn),
                       ),
-                      onPressed: () => BlocProvider.of<HomeBloc>(context)
-                          .add(const Navigate(RouteGenerator.feed)),
+                      onPressed: () =>
+                          bloc.add(const Navigate(RouteGenerator.feed)),
                     ),
                     IconButton(
                       icon: SvgPicture.asset(
@@ -90,8 +91,8 @@ class HomePage extends StatelessWidget {
                             Theme.of(context).primaryIconTheme.color!,
                             BlendMode.srcIn),
                       ),
-                      onPressed: () => BlocProvider.of<HomeBloc>(context)
-                          .add(const Navigate(RouteGenerator.search)),
+                      onPressed: () =>
+                          bloc.add(const Navigate(RouteGenerator.search)),
                     ),
                     IconButton(
                       onPressed: () => showModalBottomSheet(
@@ -100,7 +101,7 @@ class HomePage extends StatelessWidget {
                             LayoutBuilder(builder: (context, constraints) {
                           return SizedBox(
                             height: constraints.maxHeight,
-                            child: const NewPost(),
+                            child: NewPost(),
                           );
                         }),
                         enableDrag: true,
@@ -124,8 +125,8 @@ class HomePage extends StatelessWidget {
                             Theme.of(context).primaryIconTheme.color!,
                             BlendMode.srcIn),
                       ),
-                      onPressed: () => BlocProvider.of<HomeBloc>(context)
-                          .add(const Navigate(RouteGenerator.messages)),
+                      onPressed: () =>
+                          bloc.add(const Navigate(RouteGenerator.messages)),
                     ),
                     IconButton(
                       icon: SvgPicture.asset(
@@ -134,7 +135,7 @@ class HomePage extends StatelessWidget {
                             Theme.of(context).primaryIconTheme.color!,
                             BlendMode.srcIn),
                       ),
-                      onPressed: () => BlocProvider.of<HomeBloc>(context)
+                      onPressed: () => bloc
                           .add(const Navigate(RouteGenerator.personalProfile)),
                     ),
                   ],

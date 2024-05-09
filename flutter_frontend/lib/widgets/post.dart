@@ -12,12 +12,13 @@ class PostWidget extends StatelessWidget {
   final Post post;
   final User user;
   final bool showFollowButton;
-  const PostWidget({
+  final PostBloc bloc;
+  PostWidget({
     required this.post,
     required this.user,
     this.showFollowButton = true,
     super.key,
-  });
+  }) : bloc = PostBloc(post);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class PostWidget extends StatelessWidget {
       margin: const EdgeInsets.only(left: 0, right: 0),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: BlocProvider<PostBloc>(
-        create: (context) => PostBloc(post),
+        create: (context) => bloc,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,9 +45,8 @@ class PostWidget extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          if (!BlocProvider.of<PostBloc>(context).isClosed) {
-                            BlocProvider.of<PostBloc>(context)
-                                .add(LikeClicked(false));
+                          if (!bloc.isClosed) {
+                            bloc.add(LikeClicked(false));
                           }
                         },
                         icon: state.reaction != null

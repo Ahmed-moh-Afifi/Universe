@@ -8,7 +8,8 @@ import 'package:universe/widgets/user_presenter.dart';
 
 class FollowingPage extends StatelessWidget {
   final User user;
-  const FollowingPage(this.user, {super.key});
+  final FollowingBloc bloc;
+  FollowingPage(this.user, {super.key}) : bloc = FollowingBloc(user);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class FollowingPage extends StatelessWidget {
         title: const Text('Following'),
       ),
       body: BlocProvider<FollowingBloc>(
-        create: (context) => FollowingBloc(user),
+        create: (context) => bloc,
         child: BlocListener<FollowingBloc, FollowingState>(
           listener: (context, state) {
             if (state.state == FollowingStates.loading) {
@@ -58,7 +59,6 @@ class FollowingPage extends StatelessWidget {
             }
           },
           child: BlocBuilder<FollowingBloc, FollowingState>(
-            bloc: BlocProvider.of<FollowingBloc>(context),
             builder: (context, state) => Padding(
               padding: const EdgeInsets.only(left: 0, right: 0, top: 20),
               child: ListView.separated(
