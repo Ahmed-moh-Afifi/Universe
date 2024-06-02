@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend/aspnetcore_backend.csproj": {}
+    "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend.csproj": {}
   },
   "projects": {
-    "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend/aspnetcore_backend.csproj": {
+    "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend/aspnetcore_backend.csproj",
+        "projectUniqueName": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend.csproj",
         "projectName": "aspnetcore_backend",
-        "projectPath": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend/aspnetcore_backend.csproj",
+        "projectPath": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend.csproj",
         "packagesPath": "/home/ahmedafifi/.nuget/packages/",
-        "outputPath": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend/obj/",
+        "outputPath": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/ahmedafifi/.nuget/NuGet/NuGet.Config"
@@ -32,6 +32,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -56,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/ahmedafifi/.dotnet/sdk/8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/home/ahmedafifi/.dotnet/sdk/8.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
