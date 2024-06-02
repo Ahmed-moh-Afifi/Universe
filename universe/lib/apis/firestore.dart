@@ -6,6 +6,7 @@ import 'package:universe/models/followers_response.dart';
 import 'package:universe/models/following.dart';
 import 'package:universe/models/following_response.dart';
 import 'package:universe/models/post.dart';
+import 'package:universe/models/post_reference.dart';
 import 'package:universe/models/reaction.dart';
 import 'package:universe/models/reactions_response.dart';
 import 'package:universe/models/replies_response.dart';
@@ -40,7 +41,9 @@ class FirestoreDataProvider implements IDataProvider {
 
   @override
   Future addPost(User author, Post post) async {
-    await FirebaseFirestore.instance
+    final batch = FirebaseFirestore.instance.batch();
+
+    final firestorePostReference = FirebaseFirestore.instance
         .collection(Collections.users.name)
         .doc(author.uid)
         .collection(Collections.posts.name)
@@ -48,7 +51,34 @@ class FirestoreDataProvider implements IDataProvider {
           fromFirestore: Post.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
         )
-        .add(post);
+        .doc();
+    batch.set(firestorePostReference, post);
+
+    PostReference postReference = PostReference(
+      postId: firestorePostReference.id,
+      authorId: post.authorId,
+      publishDate: post.publishDate,
+    );
+
+    final generalPostReference = FirebaseFirestore.instance
+        .collection(Collections.posts.name)
+        .withConverter(
+          fromFirestore: PostReference.fromFirestore,
+          toFirestore: (value, options) => value.toFirestore(),
+        )
+        .doc(firestorePostReference.id);
+    batch.set(generalPostReference, postReference);
+
+    batch.commit();
+    // await FirebaseFirestore.instance
+    //     .collection(Collections.users.name)
+    //     .doc(author.uid)
+    //     .collection(Collections.posts.name)
+    //     .withConverter(
+    //       fromFirestore: Post.fromFirestore,
+    //       toFirestore: (value, options) => value.toFirestore(),
+    //     )
+    //     .add(post);
   }
 
   @override
