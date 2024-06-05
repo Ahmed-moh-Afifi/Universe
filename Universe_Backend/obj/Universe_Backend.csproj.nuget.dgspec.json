@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend.csproj": {}
+    "/home/ahmedafifi/projects/Universe/Universe_Backend/Universe_Backend.csproj": {}
   },
   "projects": {
-    "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend.csproj": {
+    "/home/ahmedafifi/projects/Universe/Universe_Backend/Universe_Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend.csproj",
-        "projectName": "aspnetcore_backend",
-        "projectPath": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/aspnetcore_backend.csproj",
+        "projectUniqueName": "/home/ahmedafifi/projects/Universe/Universe_Backend/Universe_Backend.csproj",
+        "projectName": "Universe_Backend",
+        "projectPath": "/home/ahmedafifi/projects/Universe/Universe_Backend/Universe_Backend.csproj",
         "packagesPath": "/home/ahmedafifi/.nuget/packages/",
-        "outputPath": "/home/ahmedafifi/projects/Universe/aspnetcore_backend/obj/",
+        "outputPath": "/home/ahmedafifi/projects/Universe/Universe_Backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/ahmedafifi/.nuget/NuGet/NuGet.Config"
@@ -42,6 +42,16 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
