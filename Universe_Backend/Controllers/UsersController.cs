@@ -11,7 +11,8 @@ public class UsersController(ApplicationDbContext dbContext, ILogger<UsersContro
     [Route("")]
     public ActionResult<IEnumerable<User>> GetUsers()
     {
-        var users = dbContext.Set<User>().ToList();
+        var users = dbContext.Set<User>()
+        .ToList();
         return Ok(users);
     }
 
