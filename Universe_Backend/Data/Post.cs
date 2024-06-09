@@ -9,5 +9,6 @@ public class Post
     public required List<string> Images { get; set; }
     public required List<string> Videos { get; set; }
     public required DateTime PublishDate { get; set; }
-    public required int ParentPostID { get; set; }
+    public int? ReplyToPost { get; set; }
+    public int? ChildPostID { get; set; }
 }
