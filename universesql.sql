@@ -28,7 +28,7 @@
 
 -- CREATE TABLE Posts
 -- (
---     ID INT PRIMARY KEY,
+--     ID INT PRIMARY KEY IDENTITY,
 --     AuthorID INT,
 --     Title NVARCHAR(MAX),
 --     Body NVARCHAR(MAX),
@@ -42,7 +42,7 @@
 
 -- CREATE TABLE Reactions
 -- (
---     ID INT PRIMARY KEY,
+--     ID INT PRIMARY KEY IDENTITY,
 --     PostID INT,
 --     ReactionType NVARCHAR,
 --     ReactionDate DATETIME DEFAULT GETDATE(),
