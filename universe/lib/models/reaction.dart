@@ -22,7 +22,7 @@ class Reaction {
     final data = snapshot.data();
     return Reaction(
       reactionId: snapshot.reference.path,
-      userId: snapshot.reference.path,
+      userId: snapshot.reference.id,
       reactionType: data?['type'],
       reactionDate: data?['reactionDate'].toDate(),
     );
