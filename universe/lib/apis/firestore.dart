@@ -133,7 +133,7 @@ class FirestoreDataProvider implements IDataProvider {
           fromFirestore: Post.fromFirestore,
           toFirestore: (value, options) => value.toFirestore(),
         )
-        .doc(user.uid)
+        .doc()
         .set(reply);
   }
 
@@ -182,7 +182,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .doc(user.uid)
                 .collection(Collections.followers.name)
                 .orderBy('followDate')
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Follower.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -195,7 +195,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .collection(Collections.followers.name)
                 .orderBy('followDate')
                 .startAfterDocument(start as DocumentSnapshot<Follower>)
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Follower.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -236,7 +236,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .doc(user.uid)
                 .collection(Collections.following.name)
                 .orderBy('followDate')
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Following.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -249,7 +249,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .collection(Collections.following.name)
                 .orderBy('followDate')
                 .startAfterDocument(start as DocumentSnapshot<Following>)
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Following.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -288,7 +288,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .doc(user.uid)
                 .collection(Collections.posts.name)
                 .orderBy('publishDate', descending: false)
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Post.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -301,7 +301,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .collection(Collections.posts.name)
                 .orderBy('publishDate', descending: false)
                 .startAfterDocument(start as DocumentSnapshot<Post>)
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Post.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -324,7 +324,7 @@ class FirestoreDataProvider implements IDataProvider {
         ? (await FirebaseFirestore.instance
                 .collection('${post.id}/reactions')
                 .orderBy('reactionDate')
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Reaction.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -335,7 +335,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .collection('${post.id}/reactions')
                 .orderBy('reactionDate')
                 .startAfterDocument(start as DocumentSnapshot<Reaction>)
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Reaction.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -348,7 +348,7 @@ class FirestoreDataProvider implements IDataProvider {
     for (var reaction in reactionsIterableWithoutUser) {
       final userSnapshot = await FirebaseFirestore.instance
           .collection(Collections.users.name)
-          .doc(reaction.userId)
+          .doc(reaction.userId!)
           .withConverter(
             fromFirestore: User.fromFirestore,
             toFirestore: (value, options) => value.toFirestore(),
@@ -371,9 +371,9 @@ class FirestoreDataProvider implements IDataProvider {
       Post post, T start, G limit) async {
     final docsSnapshots = start == null
         ? (await FirebaseFirestore.instance
-                .collection('${post.id}/posts')
+                .collection('${post.id}/replies')
                 .orderBy('publishDate')
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Post.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -381,10 +381,10 @@ class FirestoreDataProvider implements IDataProvider {
                 .get())
             .docs
         : (await FirebaseFirestore.instance
-                .collection('${post.id}/posts')
+                .collection('${post.id}/replies')
                 .orderBy('publishDate')
                 .startAfterDocument(start as DocumentSnapshot<Post>)
-                .limit(limit as int)
+                //.limit(limit as int)
                 .withConverter(
                   fromFirestore: Post.fromFirestore,
                   toFirestore: (value, options) => value.toFirestore(),
@@ -404,6 +404,7 @@ class FirestoreDataProvider implements IDataProvider {
           .doc(reply.authorId)
           .get();
       reply.user = userSnapshot.data();
+      repliesListWithUsers.add(reply);
     }
 
     final RepliesResponse response = RepliesResponse(
@@ -426,7 +427,7 @@ class FirestoreDataProvider implements IDataProvider {
                 )
                 .where('firstName', arrayContains: query)
                 .orderBy('joinDate')
-                .limit(limit as int)
+                //.limit(limit as int)
                 .get())
             .docs
         : (await FirebaseFirestore.instance
@@ -438,7 +439,7 @@ class FirestoreDataProvider implements IDataProvider {
                 .where('firstName', arrayContains: query)
                 .orderBy('joinDate')
                 .startAfterDocument(start as DocumentSnapshot<User>)
-                .limit(limit as int)
+                //.limit(limit as int)
                 .get())
             .docs;
     final usersIterable = docsSnapshots.map((e) => e.data());

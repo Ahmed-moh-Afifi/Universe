@@ -44,6 +44,8 @@ class UserPresenter extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
+                overflow: TextOverflow.fade,
+                softWrap: false,
                 maxLines: 1,
                 '${user.firstName} ${user.lastName}',
               ),

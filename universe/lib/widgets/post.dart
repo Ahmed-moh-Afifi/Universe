@@ -5,6 +5,7 @@ import 'package:universe/blocs/post_bloc.dart';
 import 'package:universe/extensions/date_time_extensions.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
+import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/user_presenter.dart';
 
@@ -63,9 +64,35 @@ class PostWidget extends StatelessWidget {
                                 ),
                               ),
                       ),
-                      Text(
-                        (state.reactionsCount ?? '').toString(),
-                        style: TextStyles.subtitleStyle,
+                      GestureDetector(
+                        child: Text(
+                          (state.reactionsCount ?? '').toString(),
+                          style: TextStyles.subtitleStyle,
+                        ),
+                        onTap: () => RouteGenerator
+                            .mainNavigatorkey.currentState!
+                            .pushNamed(
+                          RouteGenerator.reactionsPage,
+                          arguments: post,
+                        ),
+                      ),
+                      GestureDetector(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          child: SvgPicture.asset(
+                            'lib/assets/icons/reply.svg',
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.secondary,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
+                        onTap: () => RouteGenerator
+                            .mainNavigatorkey.currentState!
+                            .pushNamed(
+                          RouteGenerator.repliesPage,
+                          arguments: [post, user],
+                        ),
                       ),
                     ],
                   ),
