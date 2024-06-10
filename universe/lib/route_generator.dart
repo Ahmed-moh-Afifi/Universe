@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:universe/blocs/new_post_bloc.dart';
 import 'package:universe/blocs/personal_profile_bloc.dart';
 import 'package:universe/blocs/search_bloc.dart';
+import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/routes/complete_account.dart';
 import 'package:universe/routes/feed.dart';
@@ -13,7 +14,9 @@ import 'package:universe/routes/messages.dart';
 import 'package:universe/routes/new_post.dart';
 import 'package:universe/routes/personal_profile.dart';
 import 'package:universe/routes/profile.dart';
+import 'package:universe/routes/reactions.dart';
 import 'package:universe/routes/register.dart';
+import 'package:universe/routes/replies.dart';
 import 'package:universe/routes/search.dart';
 import 'package:universe/routes/startup.dart';
 
@@ -36,6 +39,8 @@ class RouteGenerator {
   static const personalProfile = "personalProfile";
   static const followersPage = "followers";
   static const followingPage = "following";
+  static const reactionsPage = "reactions";
+  static const repliesPage = "replies";
 
   static SearchState searchState = const SearchState(
     previousState: SearchStates.notStarted,
@@ -67,31 +72,48 @@ class RouteGenerator {
             builder: (_) => Profile(settings.arguments as User));
       case feed:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => const Feed(),
-            transitionDuration: Duration.zero);
+          pageBuilder: (_, animation, secondaryAnimation) => const Feed(),
+          transitionDuration: Duration.zero,
+        );
       case search:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => Search(),
-            transitionDuration: Duration.zero);
+          pageBuilder: (_, animation, secondaryAnimation) => Search(),
+          transitionDuration: Duration.zero,
+        );
       case newPost:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => NewPost(),
-            transitionDuration: Duration.zero);
+          pageBuilder: (_, animation, secondaryAnimation) => NewPost(),
+          transitionDuration: Duration.zero,
+        );
       case messages:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) => const Messages(),
-            transitionDuration: Duration.zero);
+          pageBuilder: (_, animation, secondaryAnimation) => const Messages(),
+          transitionDuration: Duration.zero,
+        );
       case personalProfile:
         return PageRouteBuilder(
-            pageBuilder: (_, animation, secondaryAnimation) =>
-                PersonalProfile(),
-            transitionDuration: Duration.zero);
+          pageBuilder: (_, animation, secondaryAnimation) => PersonalProfile(),
+          transitionDuration: Duration.zero,
+        );
       case followersPage:
         return MaterialPageRoute(
-            builder: (_) => FollowersPage(settings.arguments as User));
+          builder: (_) => FollowersPage(settings.arguments as User),
+        );
       case followingPage:
         return MaterialPageRoute(
-            builder: (_) => FollowingPage(settings.arguments as User));
+          builder: (_) => FollowingPage(settings.arguments as User),
+        );
+      case reactionsPage:
+        return MaterialPageRoute(
+          builder: (_) => Reactions(post: settings.arguments as Post),
+        );
+      case repliesPage:
+        return MaterialPageRoute(
+          builder: (_) => Replies(
+            post: (settings.arguments as List)[0] as Post,
+            user: (settings.arguments as List)[1] as User,
+          ),
+        );
 
       default:
         throw const FormatException("Route not found");
