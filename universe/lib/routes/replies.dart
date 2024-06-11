@@ -110,6 +110,9 @@ class Replies extends StatelessWidget {
                             ),
                             itemCount: state.replies!.length,
                           ),
+                          const SizedBox(
+                            height: 100,
+                          )
                         ],
                       ),
                     ),
