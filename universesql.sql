@@ -40,11 +40,13 @@
 --     FOREIGN KEY (ParentPostID) REFERENCES Posts(ID),
 -- );
 
--- CREATE TABLE Reactions
--- (
---     ID INT PRIMARY KEY IDENTITY,
---     PostID INT,
---     ReactionType NVARCHAR,
---     ReactionDate DATETIME DEFAULT GETDATE(),
---     FOREIGN KEY (PostID) REFERENCES Posts(ID),
--- );
+CREATE TABLE Reactions
+(
+    ID INT PRIMARY KEY IDENTITY,
+    PostID INT,
+    UserID INT,
+    ReactionType NVARCHAR,
+    ReactionDate DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (PostID) REFERENCES Posts(ID),
+    FOREIGN KEY (UserID) REFERENCES Users(ID),
+);

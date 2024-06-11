@@ -1,4 +1,6 @@
-namespace UniverseBackend.Data;
+using UniverseBackend.Data;
+
+namespace UniverseBackend.Repositories;
 
 public interface IUsersRepository
 {

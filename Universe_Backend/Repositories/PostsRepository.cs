@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using UniverseBackend.Data;
 
-namespace UniverseBackend.Data;
+namespace UniverseBackend.Repositories;
 
 public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsRepository> logger) : IPostsRepository
 {

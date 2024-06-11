@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using UniverseBackend.Data;
+using UniverseBackend.Repositories;
 
 namespace UniverseBackend.Controllers;
 
@@ -13,14 +14,6 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     {
         User? user = await usersRepository.GetUser(id);
         return user != null ? Ok(user) : NotFound("User not found");
-    }
-
-    [HttpPost]
-    [Route("")]
-    public async Task<ActionResult> CreateUser(User user)
-    {
-        int id = await usersRepository.CreateUser(user);
-        return Ok(user.ID);
     }
 
     [HttpGet]
@@ -37,6 +30,21 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
         return Ok(await usersRepository.GetFollowers(id));
     }
 
+    [HttpGet]
+    [Route("following/{id}")]
+    public async Task<ActionResult<IEnumerable<User>>> GetFollowing(int id)
+    {
+        return Ok(await usersRepository.GetFollowing(id));
+    }
+
+    [HttpPost]
+    [Route("")]
+    public async Task<ActionResult> CreateUser(User user)
+    {
+        int id = await usersRepository.CreateUser(user);
+        return Ok(user.ID);
+    }
+
     [HttpPost]
     [Route("followers/{followerId}/{followedId}")]
     public async Task<ActionResult> AddFollower(int followerId, int followedId)
@@ -51,12 +59,5 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     {
         await usersRepository.RemoveFollower(followerId, followedId);
         return Ok();
-    }
-
-    [HttpGet]
-    [Route("following/{id}")]
-    public async Task<ActionResult<IEnumerable<User>>> GetFollowing(int id)
-    {
-        return Ok(await usersRepository.GetFollowing(id));
     }
 }
