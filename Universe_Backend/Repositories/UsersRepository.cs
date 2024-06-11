@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using UniverseBackend.Data;
 
-namespace UniverseBackend.Data;
+namespace UniverseBackend.Repositories;
 
 public class UsersRepository(ApplicationDbContext dbContext, ILogger<UsersRepository> logger) : IUsersRepository
 {

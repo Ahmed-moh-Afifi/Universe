@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using UniverseBackend.Data;
+using UniverseBackend.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
