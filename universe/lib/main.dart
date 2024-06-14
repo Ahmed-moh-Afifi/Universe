@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
-            foregroundColor: MaterialStatePropertyAll(Colors.white),
-            backgroundColor: MaterialStatePropertyAll(Colors.black),
+            foregroundColor: WidgetStatePropertyAll(Colors.white),
+            backgroundColor: WidgetStatePropertyAll(Colors.black),
           ),
         ),
       ),
@@ -54,8 +54,8 @@ class MyApp extends StatelessWidget {
             const AppBarTheme(backgroundColor: Color.fromRGBO(16, 16, 16, 1)),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
-            foregroundColor: MaterialStatePropertyAll(Colors.black),
-            backgroundColor: MaterialStatePropertyAll(Colors.white),
+            foregroundColor: WidgetStatePropertyAll(Colors.black),
+            backgroundColor: WidgetStatePropertyAll(Colors.white),
           ),
         ),
       ),

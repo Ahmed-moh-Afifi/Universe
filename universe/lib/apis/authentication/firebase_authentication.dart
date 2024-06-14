@@ -148,6 +148,7 @@ class FirebaseAuthentication implements IAuthentication {
     return await loadUser();
   }
 
+  @override
   Future<bool> isUserValid(User user) async {
     try {
       await firebase.FirebaseAuth.instance.currentUser!.reload();
