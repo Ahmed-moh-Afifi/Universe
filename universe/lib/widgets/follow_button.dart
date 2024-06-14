@@ -38,9 +38,9 @@ class FollowButton extends StatelessWidget {
                       : (state.isFollowed!
                           ? TextButton(
                               style: const ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
+                                backgroundColor: WidgetStatePropertyAll(
                                     Colors.transparent),
-                                shape: MaterialStatePropertyAll(
+                                shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(10),
@@ -53,7 +53,7 @@ class FollowButton extends StatelessWidget {
                             )
                           : ElevatedButton(
                               style: const ButtonStyle(
-                                shape: MaterialStatePropertyAll(
+                                shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(10),

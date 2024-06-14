@@ -75,9 +75,9 @@ class ProfileCard extends StatelessWidget {
                     child: TextButton(
                       style: const ButtonStyle(
                         surfaceTintColor:
-                            MaterialStatePropertyAll(Colors.transparent),
+                            WidgetStatePropertyAll(Colors.transparent),
                         overlayColor:
-                            MaterialStatePropertyAll(Colors.transparent),
+                            WidgetStatePropertyAll(Colors.transparent),
                         splashFactory: NoSplash.splashFactory,
                       ),
                       onPressed: () {},
@@ -102,9 +102,9 @@ class ProfileCard extends StatelessWidget {
                     child: TextButton(
                       style: const ButtonStyle(
                         surfaceTintColor:
-                            MaterialStatePropertyAll(Colors.transparent),
+                            WidgetStatePropertyAll(Colors.transparent),
                         overlayColor:
-                            MaterialStatePropertyAll(Colors.transparent),
+                            WidgetStatePropertyAll(Colors.transparent),
                         splashFactory: NoSplash.splashFactory,
                       ),
                       onPressed: () => RouteGenerator
@@ -134,9 +134,9 @@ class ProfileCard extends StatelessWidget {
                     child: TextButton(
                       style: const ButtonStyle(
                         surfaceTintColor:
-                            MaterialStatePropertyAll(Colors.transparent),
+                            WidgetStatePropertyAll(Colors.transparent),
                         overlayColor:
-                            MaterialStatePropertyAll(Colors.transparent),
+                            WidgetStatePropertyAll(Colors.transparent),
                         splashFactory: NoSplash.splashFactory,
                       ),
                       onPressed: () => RouteGenerator
