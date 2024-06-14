@@ -11,7 +11,7 @@ class FCM {
   static final _instance = FCM._();
   factory FCM() => _instance;
 
-  Future<void> init() async {
+  Future<String> init() async {
     // final notificationSettings =
     await FirebaseMessaging.instance.requestPermission();
 
@@ -37,5 +37,6 @@ class FCM {
         //throw an exception.
       },
     );
+    return fcmToken;
   }
 }

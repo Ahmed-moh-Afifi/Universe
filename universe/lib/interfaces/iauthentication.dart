@@ -9,4 +9,5 @@ abstract class IAuthentication {
   Future<User?> loadUser();
   User? getUser();
   Future<User?> signInWithGoogle();
+  Future<bool> isUserValid(User user);
 }

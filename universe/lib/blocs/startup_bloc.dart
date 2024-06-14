@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/firebase_cloud_messaging.dart';
 import 'package:universe/firebase_options.dart';
 import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/repositories/data_repository.dart';
 import 'package:universe/route_generator.dart';
 
 enum StartupStates {
@@ -16,13 +17,20 @@ class StartupCompleted {}
 
 class StartupBloc extends Bloc<Object, Object> {
   StartupBloc() : super(0) {
-    on<StartupCompleted>((event, emit) {
+    on<StartupCompleted>((event, emit) async {
       if (AuthenticationRepository().authenticationService.getUser() == null) {
         RouteGenerator.mainNavigatorkey.currentState!
             .pushReplacementNamed(RouteGenerator.loginPage);
       } else {
-        RouteGenerator.mainNavigatorkey.currentState!
-            .pushReplacementNamed(RouteGenerator.homePage);
+        if (await AuthenticationRepository().authenticationService.isUserValid(
+            AuthenticationRepository().authenticationService.getUser()!)) {
+          RouteGenerator.mainNavigatorkey.currentState!
+              .pushReplacementNamed(RouteGenerator.homePage);
+        } else {
+          AuthenticationRepository().authenticationService.signOut();
+          RouteGenerator.mainNavigatorkey.currentState!
+              .pushReplacementNamed(RouteGenerator.loginPage);
+        }
       }
     });
     initializeApp();
@@ -36,7 +44,11 @@ class StartupBloc extends Bloc<Object, Object> {
     await AuthenticationRepository().authenticationService.loadUser();
     if (!kIsWeb) {
       // until adding the vapid key for web support.
-      await FCM().init();
+      String fcmToken = await FCM().init();
+      if (AuthenticationRepository().authenticationService.getUser() != null) {
+        DataRepository().dataProvider.saveUserToken(fcmToken,
+            AuthenticationRepository().authenticationService.getUser()!);
+      }
     }
     add(StartupCompleted());
   }
