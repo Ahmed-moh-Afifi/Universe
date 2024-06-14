@@ -180,8 +180,8 @@ class Login extends StatelessWidget {
                               ),
                             ),
                             style: const ButtonStyle(
-                              elevation: MaterialStatePropertyAll(0),
-                              shape: MaterialStatePropertyAll(
+                              elevation: WidgetStatePropertyAll(0),
+                              shape: WidgetStatePropertyAll(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10),
@@ -227,10 +227,10 @@ class Login extends StatelessWidget {
                         height: 90,
                         child: TextButton(
                           style: ButtonStyle(
-                            backgroundColor: const MaterialStatePropertyAll(
+                            backgroundColor: const WidgetStatePropertyAll(
                               Color.fromRGBO(80, 80, 80, 0.3),
                             ),
-                            shape: MaterialStatePropertyAll(
+                            shape: WidgetStatePropertyAll(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -249,10 +249,10 @@ class Login extends StatelessWidget {
                         height: 90,
                         child: TextButton(
                           style: ButtonStyle(
-                            backgroundColor: const MaterialStatePropertyAll(
+                            backgroundColor: const WidgetStatePropertyAll(
                               Color.fromRGBO(80, 80, 80, 0.3),
                             ),
-                            shape: MaterialStatePropertyAll(
+                            shape: WidgetStatePropertyAll(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -271,10 +271,10 @@ class Login extends StatelessWidget {
                         height: 90,
                         child: TextButton(
                           style: ButtonStyle(
-                            backgroundColor: const MaterialStatePropertyAll(
+                            backgroundColor: const WidgetStatePropertyAll(
                               Color.fromRGBO(80, 80, 80, 0.3),
                             ),
-                            shape: MaterialStatePropertyAll(
+                            shape: WidgetStatePropertyAll(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),

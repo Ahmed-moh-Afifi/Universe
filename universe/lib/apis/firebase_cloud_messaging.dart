@@ -26,11 +26,11 @@ class FCM {
 
     fcmToken = (await FirebaseMessaging.instance
         .getToken())!; // vapidKey is required for this to run on the web.
-    print('fcmToken: $fcmToken');
+    // print('fcmToken: $fcmToken');
     FirebaseMessaging.instance.onTokenRefresh.listen(
       (event) {
         fcmToken = event;
-        print('fcmToken: $fcmToken');
+        // print('fcmToken: $fcmToken');
       },
     ).onError(
       (error) {

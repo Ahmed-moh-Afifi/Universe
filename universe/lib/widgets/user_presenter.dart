@@ -24,10 +24,10 @@ class UserPresenter extends StatelessWidget {
       margin: margin,
       child: TextButton(
         style: const ButtonStyle(
-          overlayColor: MaterialStatePropertyAll(Colors.transparent),
+          overlayColor: WidgetStatePropertyAll(Colors.transparent),
           splashFactory: NoSplash.splashFactory,
-          padding: MaterialStatePropertyAll(EdgeInsets.zero),
-          shape: MaterialStatePropertyAll(
+          padding: WidgetStatePropertyAll(EdgeInsets.zero),
+          shape: WidgetStatePropertyAll(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(20),

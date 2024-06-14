@@ -234,8 +234,8 @@ class Register extends StatelessWidget {
                                       confirmPasswordController.text),
                             ),
                             style: const ButtonStyle(
-                              elevation: MaterialStatePropertyAll(0),
-                              shape: MaterialStatePropertyAll(
+                              elevation: WidgetStatePropertyAll(0),
+                              shape: WidgetStatePropertyAll(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10),
