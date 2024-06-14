@@ -7,6 +7,7 @@ import 'package:universe/blocs/replies_bloc.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/route_generator.dart';
+import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/post.dart';
 
 class Replies extends StatelessWidget {
@@ -63,58 +64,62 @@ class Replies extends StatelessWidget {
         },
         builder: (context, state) {
           return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Replies',
+                style: TextStyles.titleStyle,
+              ),
+            ),
             body: state.state == RepliesStates.loaded
-                ? SafeArea(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(1),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
+                ? SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(1),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: PostWidget(
+                            post: post,
+                            user: user,
+                          ),
+                        ),
+                        const Divider(
+                          indent: 0,
+                          endIndent: 0,
+                          color: Color.fromRGBO(80, 80, 80, 0.3),
+                        ),
+                        ListView.separated(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(left: 5, right: 5),
                             child: PostWidget(
-                              post: post,
-                              user: user,
+                              post: state.replies![index],
+                              user: state.replies![index].user!,
                             ),
                           ),
-                          const Divider(
+                          separatorBuilder: (context, index) => const Divider(
                             indent: 0,
                             endIndent: 0,
                             color: Color.fromRGBO(80, 80, 80, 0.3),
                           ),
-                          ListView.separated(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.only(left: 5, right: 5),
-                              child: PostWidget(
-                                post: state.replies![index],
-                                user: state.replies![index].user!,
-                              ),
-                            ),
-                            separatorBuilder: (context, index) => const Divider(
-                              indent: 0,
-                              endIndent: 0,
-                              color: Color.fromRGBO(80, 80, 80, 0.3),
-                            ),
-                            itemCount: state.replies!.length,
-                          ),
-                          const SizedBox(
-                            height: 100,
-                          )
-                        ],
-                      ),
+                          itemCount: state.replies!.length,
+                        ),
+                        const SizedBox(
+                          height: 100,
+                        )
+                      ],
                     ),
                   )
                 : Container(),

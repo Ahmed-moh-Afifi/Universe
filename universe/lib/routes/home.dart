@@ -20,8 +20,9 @@ class HomePage extends StatelessWidget {
         extendBody: true,
         body: SafeArea(
           bottom: false,
+          top: false,
           child: Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 0),
             child: Navigator(
               initialRoute: RouteGenerator.feed,
               onGenerateRoute: RouteGenerator.generateRoute,

@@ -31,4 +31,5 @@ abstract class IDataProvider {
   Future<bool> isUserNameAvailable(String userName);
   Future<bool> isUserOneFollowingUserTwo(User userOne, User userTwo);
   Future<Reaction?> isPostReactedToByUser(Post post, User user);
+  Future<void> saveUserToken(String token, User user);
 }
