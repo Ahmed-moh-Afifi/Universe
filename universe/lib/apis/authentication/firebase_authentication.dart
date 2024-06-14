@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:universe/apis/authentication/exceptions/authentication_exception.dart';
 import 'package:universe/interfaces/iauthentication.dart';
 import 'package:universe/models/user.dart' as usr;
+import 'package:universe/models/user.dart';
 import 'package:universe/repositories/data_repository.dart';
 
 class FirebaseAuthentication implements IAuthentication {
@@ -145,5 +146,14 @@ class FirebaseAuthentication implements IAuthentication {
     }
 
     return await loadUser();
+  }
+
+  Future<bool> isUserValid(User user) async {
+    try {
+      await firebase.FirebaseAuth.instance.currentUser!.reload();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

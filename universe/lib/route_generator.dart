@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:universe/blocs/new_post_bloc.dart';
 import 'package:universe/blocs/personal_profile_bloc.dart';
 import 'package:universe/blocs/search_bloc.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
+import 'package:universe/routes/account_settings.dart';
 import 'package:universe/routes/complete_account.dart';
 import 'package:universe/routes/feed.dart';
 import 'package:universe/routes/followers.dart';
@@ -18,6 +21,7 @@ import 'package:universe/routes/reactions.dart';
 import 'package:universe/routes/register.dart';
 import 'package:universe/routes/replies.dart';
 import 'package:universe/routes/search.dart';
+import 'package:universe/routes/settings.dart';
 import 'package:universe/routes/startup.dart';
 
 class RouteGenerator {
@@ -41,6 +45,8 @@ class RouteGenerator {
   static const followingPage = "following";
   static const reactionsPage = "reactions";
   static const repliesPage = "replies";
+  static const settingsPage = "settings";
+  static const accountSettingsPage = 'accountSettings';
 
   static SearchState searchState = const SearchState(
     previousState: SearchStates.notStarted,
@@ -114,9 +120,61 @@ class RouteGenerator {
             user: (settings.arguments as List)[1] as User,
           ),
         );
+      case settingsPage:
+        return slidingRoute(const Settings());
+      case accountSettingsPage:
+        return slidingRoute(const AccountSettings());
 
       default:
         throw const FormatException("Route not found");
     }
+  }
+
+  static PageRouteBuilder slidingRoute(Widget route) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => route,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = const Offset(1, 0);
+        var tween = Tween(begin: begin, end: Offset.zero).chain(
+          CurveTween(curve: Curves.ease),
+        );
+
+        var blurTween = Tween(begin: 0.0, end: 15.0)
+            .animate(CurvedAnimation(parent: animation, curve: Curves.ease));
+        return AnimatedBuilder(
+          animation: blurTween,
+          builder: (context, child2) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: blurTween.value,
+                sigmaY: blurTween.value,
+              ),
+              child: FadeTransition(
+                opacity: animation,
+                child: SlideTransition(
+                  position: animation.drive(tween),
+                  child: child,
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  static void resetAppState() {
+    searchState = const SearchState(
+      previousState: SearchStates.notStarted,
+      state: SearchStates.notStarted,
+    );
+    newPostState = NewPostState(
+      previousState: NewPostStates.notStarted,
+      state: NewPostStates.notStarted,
+      content: '',
+      images: [],
+      videos: [],
+    );
+    personalProfileState = null;
   }
 }

@@ -11,8 +11,9 @@ class User {
   final Timestamp joinDate;
   final bool gender;
   final bool verified;
+  String? notificationToken;
 
-  const User({
+  User({
     required this.uid,
     required this.firstName,
     required this.lastName,
@@ -22,6 +23,7 @@ class User {
     required this.joinDate,
     required this.gender,
     required this.verified,
+    this.notificationToken,
   });
 
   factory User.fromFirestore(
@@ -61,6 +63,7 @@ class User {
       "joinDate": joinDate,
       "gender": gender,
       "verified": verified,
+      "fcmToken": notificationToken,
     };
   }
 }

@@ -541,4 +541,17 @@ class FirestoreDataProvider implements IDataProvider {
         .get();
     return docSnapshot.exists ? docSnapshot.data() : null;
   }
+
+  @override
+  Future<void> saveUserToken(String token, User user) async {
+    user.notificationToken = token;
+    await FirebaseFirestore.instance
+        .collection(Collections.users.name)
+        .doc(user.uid)
+        .withConverter(
+          fromFirestore: User.fromFirestore,
+          toFirestore: (value, options) => value.toFirestore(),
+        )
+        .set(user);
+  }
 }
