@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using UniverseBackend.Data;
+using Universe_Backend.Data;
+using Universe_Backend.Data.Models;
 
-namespace UniverseBackend.Repositories;
+namespace Universe_Backend.Repositories;
 
 public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsRepository> logger) : IPostsRepository
 {
@@ -9,38 +10,38 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
     {
         await dbContext.Set<Post>().AddAsync(post);
         await dbContext.SaveChangesAsync();
-        return post.ID;
+        return post.Id;
     }
 
     public async Task RemovePost(int postId)
     {
-        var post = await dbContext.Set<Post>().FindAsync(postId);
+        var post = await dbContext.Posts.FindAsync(postId);
         if (post == null)
         {
             // throw NotFoundException().
         }
 
-        dbContext.Set<Post>().Remove(post!);
+        dbContext.Posts.Remove(post!);
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Post>> GetPosts(int userId)
+    public async Task<IEnumerable<Post>> GetPosts(string userId)
     {
-        var posts = await dbContext.Set<Post>().Where(p => p.AuthorID == userId).ToListAsync();
+        var posts = await dbContext.Posts.Where(p => p.AuthorId == userId).ToListAsync();
         return posts;
     }
 
     public async Task<IEnumerable<Post>> GetReplies(int postId)
     {
-        var replies = await dbContext.Set<Post>().Where(p => p.ReplyToPost == postId).ToListAsync();
+        var replies = await dbContext.Posts.Where(p => p.ReplyToPost == postId).ToListAsync();
         return replies;
     }
 
     public async Task<int> AddReply(Post reply)
     {
-        await dbContext.Set<Post>().AddAsync(reply);
+        await dbContext.Posts.AddAsync(reply);
         await dbContext.SaveChangesAsync();
-        return reply.ID;
+        return reply.Id;
     }
 
     public async Task RemoveReply(int replyId)
@@ -51,13 +52,13 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
             // throw NotFountException().
         }
 
-        dbContext.Set<Post>().Remove(reply!);
+        dbContext.Posts.Remove(reply!);
         await dbContext.SaveChangesAsync();
     }
 
     public async Task<int> SharePost(Post post, int sharedPostId)
     {
-        post.ChildPostID = sharedPostId;
+        post.ChildPostId = sharedPostId;
         return await AddPost(post);
     }
 }

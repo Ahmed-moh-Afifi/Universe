@@ -1,38 +1,39 @@
 using Microsoft.EntityFrameworkCore;
-using UniverseBackend.Data;
+using Universe_Backend.Data;
+using Universe_Backend.Data.Models;
 
-namespace UniverseBackend.Repositories;
+namespace Universe_Backend.Repositories;
 
 class ReactionsRepository(ApplicationDbContext dbContext, Logger<ReactionsRepository> logger) : IReactionsRepository
 {
-    public async Task<int> AddReaction(Reaction reaction)
+    public async Task<int> AddReaction(PostReaction reaction)
     {
-        await dbContext.Set<Reaction>().AddAsync(reaction);
+        await dbContext.Set<PostReaction>().AddAsync(reaction);
         await dbContext.SaveChangesAsync();
-        return reaction.ID;
+        return reaction.Id;
     }
 
     public async Task RemoveReaction(int reactionId)
     {
-        var reaction = await dbContext.Set<Reaction>().FindAsync(reactionId);
+        var reaction = await dbContext.Set<PostReaction>().FindAsync(reactionId);
         if (reaction == null)
         {
             // throw NotFoundException().
         }
 
-        dbContext.Set<Reaction>().Remove(reaction!);
+        dbContext.PostsReactions.Remove(reaction!);
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Reaction>> GetReactions(int postId)
+    public async Task<IEnumerable<PostReaction>> GetReactions(int postId)
     {
-        var reactions = await dbContext.Set<Reaction>().Where(r => r.PostID == postId).ToListAsync();
+        var reactions = await dbContext.PostsReactions.Where(r => r.PostId == postId).ToListAsync();
         return reactions;
     }
 
     public async Task<int> GetReactionsCount(int postId)
     {
-        int reactionsCount = await dbContext.Set<Reaction>().Where(r => r.PostID == postId).CountAsync();
+        int reactionsCount = await dbContext.PostsReactions.Where(r => r.PostId == postId).CountAsync();
         return reactionsCount;
     }
 }
