@@ -1,75 +1,131 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using UniverseBackend.Data;
+using Universe_Backend.Data;
+using Universe_Backend.Data.Models;
 
-namespace UniverseBackend.Repositories;
+namespace Universe_Backend.Repositories;
 
-public class UsersRepository(ApplicationDbContext dbContext, ILogger<UsersRepository> logger) : IUsersRepository
+public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> userManager, ILogger<UsersRepository> logger) : IUsersRepository
 {
-    public async Task<int> CreateUser(User user)
-    {
-        user.ID = 0;
-        await dbContext.Set<User>().AddAsync(user);
-        await dbContext.SaveChangesAsync();
-        return user.ID;
-    }
-
     public async Task<List<User>> SearchUsers(string query)
     {
-        var users = await dbContext.Set<User>().Where(user => user.UserName.Contains(query) || user.FirstName.Contains(query) || user.LastName.Contains(query)).ToListAsync();
-        return users;
-    }
-
-    public async Task<User?> GetUser(int id)
-    {
-        var user = await dbContext.Set<User>().Where(user => user.ID == id).ElementAtAsync(0);
-        return user;
-    }
-
-    public async Task AddFollower(int followerId, int followedId)
-    {
-        Follower follower = new()
+        logger.LogDebug("UsersRepository.SearchUsers: Searching for users with query: {query}", query);
+        try
         {
-            FollowDate = DateTime.Now,
-            FollowerId = followerId,
-            FollowedId = followedId,
-        };
-        await dbContext.Set<Follower>().AddAsync(follower);
-        await dbContext.SaveChangesAsync();
-    }
-
-    public async Task RemoveFollower(int followerId, int followedId)
-    {
-        Follower? follower = await dbContext.Set<Follower>().FindAsync(followerId, followedId);
-        if (follower == null)
-        {
-            // throw not found exception.
+            var users = await dbContext.Users.Where(user => user.UserName!.Contains(query) || user.FirstName.Contains(query) || user.LastName.Contains(query)).ToListAsync();
+            return users;
         }
-        dbContext.Set<Follower>().Remove(follower!);
-        await dbContext.SaveChangesAsync();
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.SearchUsers: Error while searching for users with query: {query}", query);
+            throw;
+        }
     }
 
-    public async Task<List<User>> GetFollowers(int userId)
+    public async Task<User> GetUser(string id)
     {
-        var result =
-        from follower in dbContext.Set<Follower>().Where(f => f.FollowedId == userId)
-        join user in dbContext.Set<User>() on follower.FollowerId equals user.ID
-        select user;
-
-        var followers = await result.ToListAsync();
-
-        return followers;
+        logger.LogDebug("UsersRepository.GetUser: Getting user with id: {id}", id);
+        try
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                logger.LogWarning("UsersRepository.GetUser: User with id: {id} not found", id);
+                // throw new NotFoundException("User not found");
+            }
+            return user!;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.GetUser: Error while getting user with id: {id}", id);
+            throw;
+        }
     }
 
-    public async Task<List<User>> GetFollowing(int userId)
+    public async Task AddFollower(string followerId, string followedId)
     {
-        var result =
-        from follower in dbContext.Set<Follower>().Where(f => f.FollowerId == userId)
-        join user in dbContext.Set<User>() on follower.FollowedId equals user.ID
-        select user;
+        logger.LogDebug("UsersRepository.AddFollower: Adding follower with id: {followerId} to user with id: {followedId}", followerId, followedId);
+        try
+        {
+            var follower = await GetUser(followerId);
+            var followed = await GetUser(followedId);
+            follower.Following.Add(followed);
+            await dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.AddFollower: Error while adding follower with id: {followerId} to user with id: {followedId}", followerId, followedId);
+            throw;
+        }
+    }
 
-        var following = await result.ToListAsync();
+    public async Task RemoveFollower(string followerId, string followedId)
+    {
+        logger.LogDebug("UsersRepository.RemoveFollower: Removing follower with id: {followerId} from user with id: {followedId}", followerId, followedId);
+        try
+        {
+            var followed = await dbContext.Users.Include(u => u.Followers.Where(u => u.Id == followerId)).SingleAsync(u => u.Id == followedId);
+            var res = followed.Followers.Remove(followed.Followers.Single(u => u.Id == followerId));
+            await dbContext.SaveChangesAsync();
+            logger.LogDebug("UsersRepository.RemoveFollower: Removed follower with id: {followerId} from user with id: {followedId} with result {res}", followerId, followedId, res);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.RemoveFollower: Error while removing follower with id: {followerId} from user with id: {followedId}", followerId, followedId);
+            throw;
+        }
+    }
 
-        return following;
+    public async Task<List<UserDTO>> GetFollowers(string userId)
+    {
+        logger.LogDebug("UsersRepository.GetFollowers: Getting followers of user with id: {userId}", userId);
+        try
+        {
+            var user = await dbContext.Users.Where(u => u.Id == userId).
+            Select(u => new
+            {
+                Followers = u.Followers.Select(f => new UserDTO
+                {
+                    Id = f.Id,
+                    FirstName = f.FirstName,
+                    LastName = f.LastName
+                })
+            }).SingleAsync();
+
+            logger.LogDebug("UsersRepository.GetFollowers: Found followers of user with id: {userId}", userId);
+            return user.Followers.ToList();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.GetFollowers: Error while getting followers of user with id: {userId}", userId);
+            throw;
+        }
+    }
+
+    public async Task<List<UserDTO>> GetFollowing(string userId)
+    {
+        logger.LogDebug("UsersRepository.GetFollowing: Getting following of user with id: {userId}", userId);
+
+        try
+        {
+            var user = await dbContext.Users.Where(u => u.Id == userId).
+            Select(u => new
+            {
+                Following = u.Following.Select(f => new UserDTO
+                {
+                    Id = f.Id,
+                    FirstName = f.FirstName,
+                    LastName = f.LastName
+                })
+            }).SingleAsync();
+
+            logger.LogDebug("UsersRepository.GetFollowing: Found following of user with id: {userId}", userId);
+            return user.Following.ToList();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.GetFollowing: Error while getting following of user with id: {userId}", userId);
+            throw;
+        }
     }
 }

@@ -1,14 +1,13 @@
-using UniverseBackend.Data;
+using Universe_Backend.Data.Models;
 
-namespace UniverseBackend.Repositories;
+namespace Universe_Backend.Repositories;
 
 public interface IUsersRepository
 {
-    public Task<int> CreateUser(User user);
     public Task<List<User>> SearchUsers(string query);
-    public Task<User?> GetUser(int id);
-    public Task AddFollower(int followerId, int followedId);
-    public Task RemoveFollower(int followerId, int followedId);
-    public Task<List<User>> GetFollowers(int userId);
-    public Task<List<User>> GetFollowing(int userId);
+    public Task<User> GetUser(string id);
+    public Task AddFollower(string followerId, string followedId);
+    public Task RemoveFollower(string followerId, string followedId);
+    public Task<List<UserDTO>> GetFollowers(string userId);
+    public Task<List<UserDTO>> GetFollowing(string userId);
 }
