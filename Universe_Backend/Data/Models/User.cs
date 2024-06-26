@@ -16,6 +16,12 @@ public enum OnlineStatus
     Offline,
 }
 
+public enum AccountPrivacy
+{
+    Public,
+    Private,
+}
+
 public class User : IdentityUser
 {
     public required string FirstName { get; set; }
@@ -28,6 +34,7 @@ public class User : IdentityUser
     public AccountState AccountState { get; set; } = AccountState.Active;
     public DateTime? LastOnline { get; set; }
     public required OnlineStatus OnlineStatus { get; set; } = OnlineStatus.Online;
+    public AccountPrivacy AccountPrivacy { get; set; } = AccountPrivacy.Public;
 
     public virtual ICollection<User> Followers { get; set; } = [];
     public virtual ICollection<User> Following { get; set; } = [];
