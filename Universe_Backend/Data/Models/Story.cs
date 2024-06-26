@@ -9,7 +9,11 @@ public class Story
     public required string? Audio { get; set; }
     public DateTime PublishDate { get; set; } = DateTime.Now;
     public required string AuthorId { get; set; }
+    public int? SharedPostId { get; set; }
+    public int? SharedStoryId { get; set; }
 
+    public Post? SharedPost { get; set; }
+    public Story? SharedStory { get; set; }
     public virtual User? Author { get; set; }
     public virtual ICollection<User> Mentions { get; set; } = [];
     public virtual ICollection<Tag> Tags { get; set; } = [];

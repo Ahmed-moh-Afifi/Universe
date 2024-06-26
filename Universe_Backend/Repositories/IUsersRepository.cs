@@ -10,4 +10,5 @@ public interface IUsersRepository
     public Task RemoveFollower(string followerId, string followedId);
     public Task<List<UserDTO>> GetFollowers(string userId);
     public Task<List<UserDTO>> GetFollowing(string userId);
+    public Task UpdateUser(User user);
 }
