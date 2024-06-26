@@ -128,4 +128,19 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
             throw;
         }
     }
+
+    public async Task UpdateUser(User user)
+    {
+        logger.LogDebug("UsersRepository.UpdateUser: Updating user with id: {id}", user.Id);
+        try
+        {
+            dbContext.Update(user);
+            await dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.UpdateUser: Error while updating user with id: {id}", user.Id);
+            throw;
+        }
+    }
 }

@@ -12,6 +12,7 @@ public class PostsController(IPostsRepository postsRepository, ILogger<PostsCont
     [Route("{userId}")]
     public async Task<ActionResult<IEnumerable<Post>>> GetPosts(string userId)
     {
+        logger.LogDebug("PostsController.GetPosts: Getting posts for user with id {UserId}", userId);
         return Ok(await postsRepository.GetPosts(userId));
     }
 
@@ -19,6 +20,7 @@ public class PostsController(IPostsRepository postsRepository, ILogger<PostsCont
     [Route("replies/{postId}")]
     public async Task<ActionResult<IEnumerable<Post>>> GetReplies(int postId)
     {
+        logger.LogDebug("PostsController.GetReplies: Getting replies for post with id {PostId}", postId);
         return Ok(await postsRepository.GetReplies(postId));
     }
 
@@ -26,20 +28,23 @@ public class PostsController(IPostsRepository postsRepository, ILogger<PostsCont
     [Route("")]
     public async Task<ActionResult<int>> AddPost(Post post)
     {
+        logger.LogDebug("PostsController.AddPost: Adding post {@Post}", post);
         return Ok(await postsRepository.AddPost(post));
     }
 
     [HttpPost]
     [Route("replies/")]
-    public async Task<ActionResult<int>> AddReply(Post reply)
+    public async Task<ActionResult<int>> AddReply(Post reply, int postId)
     {
-        return Ok(await postsRepository.AddReply(reply));
+        logger.LogDebug("PostsController.AddReply: Adding reply {@Reply} to post with id {PostId}", reply, postId);
+        return Ok(await postsRepository.AddReply(reply, postId));
     }
 
     [HttpDelete]
     [Route("{postId}")]
     public async Task<ActionResult> RemovePost(int postId)
     {
+        logger.LogDebug("PostsController.RemovePost: Removing post with id {PostId}", postId);
         await postsRepository.RemovePost(postId);
         return Ok();
     }
@@ -48,7 +53,16 @@ public class PostsController(IPostsRepository postsRepository, ILogger<PostsCont
     [Route("replies/{replyId}")]
     public async Task<ActionResult> RemoveReply(int replyId)
     {
+        logger.LogDebug("PostsController.RemoveReply: Removing reply with id {ReplyId}", replyId);
         await postsRepository.RemoveReply(replyId);
         return Ok();
+    }
+
+    [HttpPost]
+    [Route("share/{sharedPostId}")]
+    public async Task<ActionResult<int>> SharePost(Post post, int sharedPostId)
+    {
+        logger.LogDebug("PostsController.SharePost: Sharing post {@Post} with post with id {SharedPostId}", post, sharedPostId);
+        return Ok(await postsRepository.SharePost(post, sharedPostId));
     }
 }
