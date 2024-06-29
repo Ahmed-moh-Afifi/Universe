@@ -11,6 +11,7 @@ public class Story
     public required string AuthorId { get; set; }
     public int? SharedPostId { get; set; }
     public int? SharedStoryId { get; set; }
+    public ICollection<Widget>? Widgets { get; set; }
 
     public Post? SharedPost { get; set; }
     public Story? SharedStory { get; set; }
@@ -18,4 +19,9 @@ public class Story
     public virtual ICollection<User> Mentions { get; set; } = [];
     public virtual ICollection<Tag> Tags { get; set; } = [];
     public virtual ICollection<StoryReaction> Reactions { get; set; } = [];
+
+    public bool IsActive()
+    {
+        return DateTime.Now.Subtract(PublishDate).TotalHours < 24;
+    }
 }

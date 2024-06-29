@@ -11,4 +11,6 @@ public interface IUsersRepository
     public Task<List<UserDTO>> GetFollowers(string userId);
     public Task<List<UserDTO>> GetFollowing(string userId);
     public Task UpdateUser(User user);
+    public Task<int> GetFollowersCount(string userId);
+    public Task<int> GetFollowingCount(string userId);
 }

@@ -129,4 +129,34 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
             throw;
         }
     }
+
+    public async Task<int> GetPostsCount(string userId)
+    {
+        logger.LogDebug("PostsRepository.GetPostsCount: Getting posts count for user with id {UserId}", userId);
+        try
+        {
+            var count = await dbContext.Posts.Where(p => p.AuthorId == userId).CountAsync();
+            return count;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "PostsRepository.GetPostsCount: Error getting posts count for user with id {UserId}", userId);
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<Post>> GetFollowingPosts(string userId)
+    {
+        logger.LogDebug("PostsRepository.GetFollowingPosts: Getting posts for user with id {UserId}", userId);
+        try
+        {
+            var posts = await dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).SelectMany(u => u.Posts).ToListAsync();
+            return posts;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "PostsRepository.GetFollowingPosts: Error getting posts for user with id {UserId}", userId);
+            throw;
+        }
+    }
 }
