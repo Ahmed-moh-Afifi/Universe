@@ -43,7 +43,11 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-// builder.Services.AddScoped<IPostsRepository, PostsRepository>();
+builder.Services.AddScoped<IPostsRepository, PostsRepository>();
+builder.Services.AddScoped<IPostReactionsRepository, PostReactionsRepository>();
+builder.Services.AddScoped<IStoriesRepository, StoriesRepository>();
+builder.Services.AddScoped<IStoryReactionsRepository, StoryReactionsRepository>();
+builder.Services.AddScoped<ITagsRepository, TagsRepository>();
 builder.Services.AddSingleton<TokenService>();
 
 builder.Services.AddAuthorization();
@@ -51,11 +55,11 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

@@ -12,7 +12,7 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
         logger.LogDebug("UsersRepository.SearchUsers: Searching for users with query: {query}", query);
         try
         {
-            var users = await dbContext.Users.Where(user => user.UserName!.Contains(query) || user.FirstName.Contains(query) || user.LastName.Contains(query)).ToListAsync();
+            var users = await dbContext.Users.Where(user => user.UserName!.Contains(query) || user.FirstName.Contains(query) || user.LastName.Contains(query) || query.Contains(user.UserName) || query.Contains(user.FirstName) || query.Contains(user.LastName)).ToListAsync();
             return users;
         }
         catch (Exception ex)
@@ -140,6 +140,36 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
         catch (Exception ex)
         {
             logger.LogError(ex, "UsersRepository.UpdateUser: Error while updating user with id: {id}", user.Id);
+            throw;
+        }
+    }
+
+    public async Task<int> GetFollowersCount(string userId)
+    {
+        logger.LogDebug("UsersRepository.GetFollowersCount: Getting followers count of user with id: {userId}", userId);
+        try
+        {
+            var count = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.Followers.Count).SingleAsync();
+            return count;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.GetFollowersCount: Error while getting followers count of user with id: {userId}", userId);
+            throw;
+        }
+    }
+
+    public async Task<int> GetFollowingCount(string userId)
+    {
+        logger.LogDebug("UsersRepository.GetFollowingCount: Getting following count of user with id: {userId}", userId);
+        try
+        {
+            var count = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.Following.Count).SingleAsync();
+            return count;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.GetFollowingCount: Error while getting following count of user with id: {userId}", userId);
             throw;
         }
     }

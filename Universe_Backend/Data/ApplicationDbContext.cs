@@ -27,8 +27,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<User>().ToTable("Users").HasMany(u => u.StoriesMentionedIn).WithMany(s => s.Mentions);
         modelBuilder.Entity<Post>().ToTable("Posts").HasMany(p => p.Reactions).WithOne(r => r.Post).HasForeignKey(r => r.PostId).OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Post>().ToTable("Posts").HasMany(p => p.Tags).WithMany(t => t.Posts);
+        modelBuilder.Entity<Post>().ToTable("Posts").OwnsMany(p => p.Widgets);
         modelBuilder.Entity<Story>().ToTable("Stories").HasMany(s => s.Reactions).WithOne(r => r.Story).HasForeignKey(r => r.StoryId).OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<Story>().ToTable("Stories").HasMany(s => s.Tags).WithMany(t => t.Stories);
+        modelBuilder.Entity<Story>().ToTable("Stories").OwnsMany(s => s.Widgets);
         modelBuilder.Entity<PostReaction>().ToTable("PostReactions").HasOne(pr => pr.User).WithMany(u => u.PostReactions).HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<StoryReaction>().ToTable("StoryReactions").HasOne(sr => sr.User).WithMany(u => u.StoryReactions).HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction);
     }

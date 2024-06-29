@@ -6,7 +6,7 @@ namespace Universe_Backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PostsController(IPostsRepository postsRepository, ILogger<PostsController> logger) : ControllerBase
+public class PostsController(IPostsRepository postsRepository, IPostReactionsRepository reactionsRepository, ILogger<PostsController> logger) : ControllerBase
 {
     [HttpGet]
     [Route("{userId}")]
@@ -64,5 +64,46 @@ public class PostsController(IPostsRepository postsRepository, ILogger<PostsCont
     {
         logger.LogDebug("PostsController.SharePost: Sharing post {@Post} with post with id {SharedPostId}", post, sharedPostId);
         return Ok(await postsRepository.SharePost(post, sharedPostId));
+    }
+
+    [HttpGet]
+    [Route("count/{userId}")]
+    public async Task<ActionResult<int>> GetPostsCount(string userId)
+    {
+        logger.LogDebug("PostsController.GetPostsCount: Getting posts count for user with id {UserId}", userId);
+        return Ok(await postsRepository.GetPostsCount(userId));
+    }
+
+    [HttpGet]
+    [Route("reactions/{postId}")]
+    public async Task<ActionResult<IEnumerable<PostReaction>>> GetReactions(int postId)
+    {
+        logger.LogDebug("ReactionsController.GetReactions: Getting reactions for post with id: {postId}", postId);
+        return Ok(await reactionsRepository.GetReactions(postId));
+    }
+
+    [HttpGet]
+    [Route("reactions/count/{postId}")]
+    public async Task<ActionResult<int>> GetReactionsCount(int postId)
+    {
+        logger.LogDebug("ReactionsController.GetReactionsCount: Getting reactions count for post with id: {postId}", postId);
+        return Ok(await reactionsRepository.GetReactionsCount(postId));
+    }
+
+    [HttpPost]
+    [Route("reactions/")]
+    public async Task<ActionResult<int>> AddReaction(PostReaction reaction)
+    {
+        logger.LogDebug("ReactionsController.AddReaction: Adding reaction {@Reaction}", reaction);
+        return Ok(await reactionsRepository.AddReaction(reaction));
+    }
+
+    [HttpDelete]
+    [Route("reactions/{reactionId}")]
+    public async Task<ActionResult> RemoveReaction(int reactionId)
+    {
+        logger.LogDebug("ReactionsController.RemoveReaction: Removing reaction with id: {reactionId}", reactionId);
+        await reactionsRepository.RemoveReaction(reactionId);
+        return Ok();
     }
 }

@@ -9,6 +9,9 @@
 .history
 .svn/
 migrate_working_dir/
+.VSCodeCounter
+universe/.VSCodeCounter
+Universe_Backend/.VSCodeCounter
 
 # IntelliJ related
 *.iml
