@@ -2,7 +2,7 @@ using Universe_Backend.Data.Models;
 
 namespace Universe_Backend.Repositories;
 
-public interface IReactionsRepository
+public interface IPostReactionsRepository
 {
     public Task<int> AddReaction(PostReaction reaction);
     public Task RemoveReaction(int reactionId);

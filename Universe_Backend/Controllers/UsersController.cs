@@ -58,4 +58,29 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
         await usersRepository.RemoveFollower(followerId, followedId);
         return Ok();
     }
+
+    [HttpGet]
+    [Route("followers/count/{id}")]
+    public async Task<ActionResult<int>> GetFollowersCount(string id)
+    {
+        logger.LogDebug("UsersController.GetFollowersCount: Getting followers count for user with id: {id}", id);
+        return Ok(await usersRepository.GetFollowersCount(id));
+    }
+
+    [HttpGet]
+    [Route("following/count/{id}")]
+    public async Task<ActionResult<int>> GetFollowingCount(string id)
+    {
+        logger.LogDebug("UsersController.GetFollowingCount: Getting following count for user with id: {id}", id);
+        return Ok(await usersRepository.GetFollowingCount(id));
+    }
+
+    [HttpPut]
+    [Route("")]
+    public async Task<ActionResult> UpdateUser(User user)
+    {
+        logger.LogDebug("UsersController.UpdateUser: Updating user {@User}", user);
+        await usersRepository.UpdateUser(user);
+        return Ok();
+    }
 }

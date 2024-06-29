@@ -11,4 +11,6 @@ public interface IPostsRepository
     public Task<int> AddReply(Post reply, int postId);
     public Task RemoveReply(int replyId);
     public Task<int> SharePost(Post post, int sharedPostId);
+    public Task<int> GetPostsCount(string userId);
+    public Task<IEnumerable<Post>> GetFollowingPosts(string userId);
 }

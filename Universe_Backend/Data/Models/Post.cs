@@ -12,6 +12,7 @@ public class Post
     public int? ReplyToPost { get; set; }
     public int? ChildPostId { get; set; }
     public required string AuthorId { get; set; }
+    public ICollection<Widget>? Widgets { get; set; }
 
     public virtual User? Author { get; set; }
     public virtual ICollection<PostReaction> Reactions { get; set; } = [];
