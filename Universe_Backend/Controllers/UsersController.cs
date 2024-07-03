@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
@@ -9,16 +10,18 @@ namespace Universe_Backend.Controllers;
 public class UsersController(IUsersRepository usersRepository, ILogger<UsersController> logger) : ControllerBase
 {
     [HttpGet]
-    [Route("{id}")]
-    public async Task<ActionResult<User>> GetUser(string id)
+    [Route("{userId}")]
+    [Authorize()]
+    public async Task<ActionResult<User>> GetUser(string userId)
     {
-        logger.LogDebug("UsersController.GetUser: Getting user with id: {id}", id);
-        User? user = await usersRepository.GetUser(id);
+        logger.LogDebug("UsersController.GetUser: Getting user with id: {userId}", userId);
+        User? user = await usersRepository.GetUser(userId);
         return user != null ? Ok(user) : NotFound("User not found");
     }
 
     [HttpGet]
     [Route("")]
+    [Authorize()]
     public async Task<ActionResult<IEnumerable<User>>> SearchUsers(string query)
     {
         logger.LogDebug("UsersController.SearchUsers: Searching for users with query: {query}", query);
@@ -26,23 +29,26 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     }
 
     [HttpGet]
-    [Route("followers/{id}")]
-    public async Task<ActionResult<IEnumerable<User>?>> GetFollowers(string id)
+    [Route("followers/{userId}")]
+    [Authorize(Policy = "IsFollower")]
+    public async Task<ActionResult<IEnumerable<User>?>> GetFollowers(string userId)
     {
-        logger.LogDebug("UsersController.GetFollowers: Getting followers of user with id: {id}", id);
-        return Ok(await usersRepository.GetFollowers(id));
+        logger.LogDebug("UsersController.GetFollowers: Getting followers of user with id: {id}", userId);
+        return Ok(await usersRepository.GetFollowers(userId));
     }
 
     [HttpGet]
-    [Route("following/{id}")]
-    public async Task<ActionResult<IEnumerable<User>>> GetFollowing(string id)
+    [Route("following/{userId}")]
+    [Authorize(Policy = "IsFollower")]
+    public async Task<ActionResult<IEnumerable<User>>> GetFollowing(string userId)
     {
-        logger.LogDebug("UsersController.GetFollowing: Getting users followed by user with id: {id}", id);
-        return Ok(await usersRepository.GetFollowing(id));
+        logger.LogDebug("UsersController.GetFollowing: Getting users followed by user with id: {id}", userId);
+        return Ok(await usersRepository.GetFollowing(userId));
     }
 
     [HttpPost]
     [Route("followers/{followerId}/{followedId}")]
+    [Authorize()]
     public async Task<ActionResult> AddFollower(string followerId, string followedId)
     {
         logger.LogDebug("UsersController.AddFollower: Adding follower with id: {followerId} to user with id: {followedId}", followerId, followedId);
@@ -52,6 +58,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
 
     [HttpDelete]
     [Route("followers/{followerId}/{followedId}")]
+    [Authorize()]
     public async Task<ActionResult> RemoveFollower(string followerId, string followedId)
     {
         logger.LogDebug("UsersController.RemoveFollower: Removing follower with id: {followerId} from user with id: {followedId}", followerId, followedId);
@@ -60,23 +67,26 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     }
 
     [HttpGet]
-    [Route("followers/count/{id}")]
-    public async Task<ActionResult<int>> GetFollowersCount(string id)
+    [Route("followers/count/{userId}")]
+    [Authorize()]
+    public async Task<ActionResult<int>> GetFollowersCount(string userId)
     {
-        logger.LogDebug("UsersController.GetFollowersCount: Getting followers count for user with id: {id}", id);
-        return Ok(await usersRepository.GetFollowersCount(id));
+        logger.LogDebug("UsersController.GetFollowersCount: Getting followers count for user with id: {id}", userId);
+        return Ok(await usersRepository.GetFollowersCount(userId));
     }
 
     [HttpGet]
-    [Route("following/count/{id}")]
-    public async Task<ActionResult<int>> GetFollowingCount(string id)
+    [Route("following/count/{userId}")]
+    [Authorize()]
+    public async Task<ActionResult<int>> GetFollowingCount(string userId)
     {
-        logger.LogDebug("UsersController.GetFollowingCount: Getting following count for user with id: {id}", id);
-        return Ok(await usersRepository.GetFollowingCount(id));
+        logger.LogDebug("UsersController.GetFollowingCount: Getting following count for user with id: {id}", userId);
+        return Ok(await usersRepository.GetFollowingCount(userId));
     }
 
     [HttpPut]
     [Route("")]
+    [Authorize(Policy = "Owner")]
     public async Task<ActionResult> UpdateUser(User user)
     {
         logger.LogDebug("UsersController.UpdateUser: Updating user {@User}", user);
