@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 
@@ -10,6 +11,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 {
     [HttpGet()]
     [Route("active")]
+    [Authorize(Policy = "IsFollower")]
     public async Task<IActionResult> GetActiveStories(string userId)
     {
         logger.LogDebug("StoriesController.GetStories: Getting stories for user with id {UserId}", userId);
@@ -19,6 +21,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpGet()]
     [Route("all")]
+    [Authorize(Policy = "IsFollower")]
     public async Task<IActionResult> GetAllStories(string userId)
     {
         logger.LogDebug("StoriesController.GetAllStories: Getting all stories for user with id {UserId}", userId);
@@ -28,6 +31,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpGet()]
     [Route("{storyId}")]
+    [Authorize()]
     public async Task<IActionResult> GetStory(int storyId)
     {
         logger.LogDebug("StoriesController.GetStory: Getting story with id {StoryId}", storyId);
@@ -37,6 +41,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpPost()]
     [Route("")]
+    [Authorize()]
     public async Task<IActionResult> CreateStory(Story story)
     {
         logger.LogDebug("StoriesController.CreateStory: Creating story {@Story}", story);
@@ -46,6 +51,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpPut()]
     [Route("")]
+    [Authorize(Policy = "Owner")]
     public async Task<IActionResult> UpdateStory(Story story)
     {
         logger.LogDebug("StoriesController.UpdateStory: Updating story {@Story}", story);
@@ -55,6 +61,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpDelete()]
     [Route("{storyId}")]
+    [Authorize(Policy = "Owner")]
     public async Task<IActionResult> DeleteStory(int storyId)
     {
         logger.LogDebug("StoriesController.DeleteStory: Deleting story with id {StoryId}", storyId);
@@ -64,6 +71,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpGet()]
     [Route("{storyId}/reactions")]
+    [Authorize()]
     public async Task<IActionResult> GetReactions(int storyId)
     {
         logger.LogDebug("StoriesController.GetReactions: Getting reactions for story with id {StoryId}", storyId);
@@ -73,6 +81,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpPost()]
     [Route("{storyId}/reactions")]
+    [Authorize()]
     public async Task<IActionResult> AddReaction(int storyId, StoryReaction reaction)
     {
         logger.LogDebug("StoriesController.AddReaction: Adding reaction {@Reaction} to story with id {StoryId}", reaction, storyId);
@@ -81,7 +90,8 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
     }
 
     [HttpDelete()]
-    [Route("{storyId}/reactions/{reactionId}")]
+    [Route("/reactions/{reactionId}")]
+    [Authorize()]
     public async Task<IActionResult> RemoveReaction(int reactionId)
     {
         logger.LogDebug("StoriesController.RemoveReaction: Removing reaction with id {ReactionId}", reactionId);
@@ -91,6 +101,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpGet()]
     [Route("{storyId}/reactions/count")]
+    [Authorize()]
     public async Task<IActionResult> GetReactionsCount(int storyId)
     {
         logger.LogDebug("StoriesController.GetReactionsCount: Getting reactions count for story with id {StoryId}", storyId);

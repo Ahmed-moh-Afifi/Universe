@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 
@@ -10,6 +11,7 @@ public class TagsController(ITagsRepository tagsRepository, ILogger<TagsControll
 {
     [HttpGet()]
     [Route("search")]
+    [Authorize()]
     public async Task<IActionResult> SearchTags(string query)
     {
         logger.LogDebug("TagsController.SearchTags: Searching for tags with query {Query}", query);
@@ -19,6 +21,7 @@ public class TagsController(ITagsRepository tagsRepository, ILogger<TagsControll
 
     [HttpGet()]
     [Route("{tag}/posts")]
+    [Authorize()]
     public async Task<IActionResult> GetPostsByTag(string tag)
     {
         logger.LogDebug("TagsController.GetPostsByTag: Getting posts for tag {Tag}", tag);
@@ -28,6 +31,7 @@ public class TagsController(ITagsRepository tagsRepository, ILogger<TagsControll
 
     [HttpGet()]
     [Route("{tag}/stories")]
+    [Authorize()]
     public async Task<IActionResult> GetStoriesByTag(string tag)
     {
         logger.LogDebug("TagsController.GetStoriesByTag: Getting stories for tag {Tag}", tag);
@@ -37,6 +41,7 @@ public class TagsController(ITagsRepository tagsRepository, ILogger<TagsControll
 
     [HttpPost()]
     [Route("")]
+    [Authorize()]
     public async Task<IActionResult> CreateTag(Tag tag)
     {
         logger.LogDebug("TagsController.CreateTag: Creating tag {@Tag}", tag);

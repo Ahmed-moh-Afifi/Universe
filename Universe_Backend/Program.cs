@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -49,8 +50,12 @@ builder.Services.AddScoped<IStoriesRepository, StoriesRepository>();
 builder.Services.AddScoped<IStoryReactionsRepository, StoryReactionsRepository>();
 builder.Services.AddScoped<ITagsRepository, TagsRepository>();
 builder.Services.AddSingleton<TokenService>();
+builder.Services.AddScoped<IAuthorizationHandler, IsFollowerHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, OwnerHandler>();
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("IsFollower", policy => policy.Requirements.Add(new IsFollowerRequirement(true)))
+    .AddPolicy("IsOwner", policy => policy.Requirements.Add(new OwnerRequirement()));
 
 var app = builder.Build();
 
