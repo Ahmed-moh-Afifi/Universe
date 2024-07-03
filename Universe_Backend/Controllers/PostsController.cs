@@ -2,12 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
+using Universe_Backend.Services;
 
 namespace Universe_Backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PostsController(IPostsRepository postsRepository, IPostReactionsRepository reactionsRepository, ILogger<PostsController> logger) : ControllerBase
+public class PostsController(IPostsRepository postsRepository, IPostReactionsRepository reactionsRepository, IAuthorizationService authorizationService, ILogger<PostsController> logger) : ControllerBase
 {
     [HttpGet]
     [Route("{userId}")]
@@ -19,9 +20,9 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     }
 
     [HttpGet]
-    [Route("replies/{postId}")]
-    [Authorize()]
-    public async Task<ActionResult<IEnumerable<Post>>> GetReplies(int postId)
+    [Route("{userId}/{postId}/replies")]
+    [Authorize(Policy = "IsFollower")]
+    public async Task<ActionResult<IEnumerable<Post>>> GetReplies(string userId, int postId)
     {
         logger.LogDebug("PostsController.GetReplies: Getting replies for post with id {PostId}", postId);
         return Ok(await postsRepository.GetReplies(postId));
@@ -30,16 +31,16 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddPost(Post post)
+    public async Task<ActionResult<int>> AddPost([FromBody] Post post)
     {
         logger.LogDebug("PostsController.AddPost: Adding post {@Post}", post);
         return Ok(await postsRepository.AddPost(post));
     }
 
     [HttpPost]
-    [Route("replies/")]
+    [Route("{postId}/replies/")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddReply(Post reply, int postId)
+    public async Task<ActionResult<int>> AddReply([FromBody] Post reply, int postId, int userId)
     {
         logger.LogDebug("PostsController.AddReply: Adding reply {@Reply} to post with id {PostId}", reply, postId);
         return Ok(await postsRepository.AddReply(reply, postId));
@@ -68,7 +69,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("share/{sharedPostId}")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<int>> SharePost(Post post, int sharedPostId)
+    public async Task<ActionResult<int>> SharePost([FromBody] Post post, int sharedPostId)
     {
         logger.LogDebug("PostsController.SharePost: Sharing post {@Post} with post with id {SharedPostId}", post, sharedPostId);
         return Ok(await postsRepository.SharePost(post, sharedPostId));
@@ -104,7 +105,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("reactions/")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddReaction(PostReaction reaction)
+    public async Task<ActionResult<int>> AddReaction([FromBody] PostReaction reaction)
     {
         logger.LogDebug("ReactionsController.AddReaction: Adding reaction {@Reaction}", reaction);
         return Ok(await reactionsRepository.AddReaction(reaction));
