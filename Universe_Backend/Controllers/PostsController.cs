@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
@@ -10,6 +11,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 {
     [HttpGet]
     [Route("{userId}")]
+    [Authorize(Policy = "IsFollower")]
     public async Task<ActionResult<IEnumerable<Post>>> GetPosts(string userId)
     {
         logger.LogDebug("PostsController.GetPosts: Getting posts for user with id {UserId}", userId);
@@ -18,6 +20,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpGet]
     [Route("replies/{postId}")]
+    [Authorize()]
     public async Task<ActionResult<IEnumerable<Post>>> GetReplies(int postId)
     {
         logger.LogDebug("PostsController.GetReplies: Getting replies for post with id {PostId}", postId);
@@ -26,6 +29,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpPost]
     [Route("")]
+    [Authorize()]
     public async Task<ActionResult<int>> AddPost(Post post)
     {
         logger.LogDebug("PostsController.AddPost: Adding post {@Post}", post);
@@ -34,6 +38,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpPost]
     [Route("replies/")]
+    [Authorize()]
     public async Task<ActionResult<int>> AddReply(Post reply, int postId)
     {
         logger.LogDebug("PostsController.AddReply: Adding reply {@Reply} to post with id {PostId}", reply, postId);
@@ -42,6 +47,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpDelete]
     [Route("{postId}")]
+    [Authorize()]
     public async Task<ActionResult> RemovePost(int postId)
     {
         logger.LogDebug("PostsController.RemovePost: Removing post with id {PostId}", postId);
@@ -51,6 +57,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpDelete]
     [Route("replies/{replyId}")]
+    [Authorize()]
     public async Task<ActionResult> RemoveReply(int replyId)
     {
         logger.LogDebug("PostsController.RemoveReply: Removing reply with id {ReplyId}", replyId);
@@ -60,6 +67,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpPost]
     [Route("share/{sharedPostId}")]
+    [Authorize(Policy = "IsFollower")]
     public async Task<ActionResult<int>> SharePost(Post post, int sharedPostId)
     {
         logger.LogDebug("PostsController.SharePost: Sharing post {@Post} with post with id {SharedPostId}", post, sharedPostId);
@@ -68,6 +76,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpGet]
     [Route("count/{userId}")]
+    [Authorize()]
     public async Task<ActionResult<int>> GetPostsCount(string userId)
     {
         logger.LogDebug("PostsController.GetPostsCount: Getting posts count for user with id {UserId}", userId);
@@ -76,6 +85,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpGet]
     [Route("reactions/{postId}")]
+    [Authorize(Policy = "IsFollower")]
     public async Task<ActionResult<IEnumerable<PostReaction>>> GetReactions(int postId)
     {
         logger.LogDebug("ReactionsController.GetReactions: Getting reactions for post with id: {postId}", postId);
@@ -84,6 +94,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpGet]
     [Route("reactions/count/{postId}")]
+    [Authorize()]
     public async Task<ActionResult<int>> GetReactionsCount(int postId)
     {
         logger.LogDebug("ReactionsController.GetReactionsCount: Getting reactions count for post with id: {postId}", postId);
@@ -92,6 +103,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpPost]
     [Route("reactions/")]
+    [Authorize()]
     public async Task<ActionResult<int>> AddReaction(PostReaction reaction)
     {
         logger.LogDebug("ReactionsController.AddReaction: Adding reaction {@Reaction}", reaction);
@@ -100,10 +112,20 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpDelete]
     [Route("reactions/{reactionId}")]
+    [Authorize()]
     public async Task<ActionResult> RemoveReaction(int reactionId)
     {
         logger.LogDebug("ReactionsController.RemoveReaction: Removing reaction with id: {reactionId}", reactionId);
         await reactionsRepository.RemoveReaction(reactionId);
         return Ok();
+    }
+
+    [HttpGet]
+    [Route("following/posts/{userId}")]
+    [Authorize()]
+    public async Task<ActionResult<IEnumerable<Post>>?> GetFollowingPosts(string userId)
+    {
+        logger.LogDebug("PostsController.GetFollowingPosts: Getting posts of users followed by user with id: {userId}", userId);
+        return Ok(await postsRepository.GetFollowingPosts(userId));
     }
 }
