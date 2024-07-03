@@ -5,9 +5,9 @@ using Universe_Backend.Data.Models;
 
 namespace Universe_Backend.Services;
 
-public class OwnerHandler(ApplicationDbContext dbContext, ILogger<OwnerHandler> logger) : AuthorizationHandler<OwnerRequirement>
+public class OwnerHandler(ApplicationDbContext dbContext, ILogger<OwnerHandler> logger) : AuthorizationHandler<OwnerRequirement, object>
 {
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OwnerRequirement requirement)
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OwnerRequirement requirement, object resource)
     {
         logger.LogDebug("OwnerHandler invoked");
         try
@@ -15,12 +15,11 @@ public class OwnerHandler(ApplicationDbContext dbContext, ILogger<OwnerHandler> 
             if (context.Resource is HttpContext httpContext)
             {
                 logger.LogDebug("OwnerHandler.HandleRequirementAsync: got HttpContext");
-                var param = httpContext.Request.RouteValues.First().Value;
 
-                if (param is Post paramPost)
+                if (resource is Post resourcePost)
                 {
                     logger.LogDebug("OwnerHandler.HandleRequirementAsync: got Post");
-                    var post = await dbContext.Posts.FindAsync(paramPost.Id);
+                    var post = await dbContext.Posts.FindAsync(resourcePost.Id);
                     if (post == null)
                     {
                         logger.LogDebug("OwnerHandler.HandleRequirementAsync: Post not found");
@@ -29,7 +28,7 @@ public class OwnerHandler(ApplicationDbContext dbContext, ILogger<OwnerHandler> 
                     else
                     {
                         logger.LogDebug("OwnerHandler.HandleRequirementAsync: Post found");
-                        var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+                        var userId = httpContext.User.FindFirstValue("uid")!;
                         if (post.AuthorId == userId)
                         {
                             logger.LogDebug("OwnerHandler.HandleRequirementAsync: Post author matches user");
@@ -42,10 +41,10 @@ public class OwnerHandler(ApplicationDbContext dbContext, ILogger<OwnerHandler> 
                         }
                     }
                 }
-                else if (param is Story paramStory)
+                else if (resource is Story resourceStory)
                 {
                     logger.LogDebug("OwnerHandler.HandleRequirementAsync: got Story");
-                    var story = await dbContext.Stories.FindAsync(paramStory.Id);
+                    var story = await dbContext.Stories.FindAsync(resourceStory.Id);
                     if (story == null)
                     {
                         logger.LogDebug("OwnerHandler.HandleRequirementAsync: Story not found");
@@ -54,7 +53,7 @@ public class OwnerHandler(ApplicationDbContext dbContext, ILogger<OwnerHandler> 
                     else
                     {
                         logger.LogDebug("OwnerHandler.HandleRequirementAsync: Story found");
-                        var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+                        var userId = httpContext.User.FindFirstValue("uid")!;
                         if (story.AuthorId == userId)
                         {
                             logger.LogDebug("OwnerHandler.HandleRequirementAsync: Story author matches user");
@@ -67,10 +66,10 @@ public class OwnerHandler(ApplicationDbContext dbContext, ILogger<OwnerHandler> 
                         }
                     }
                 }
-                else if (param is User paramUser)
+                else if (resource is User resourceUser)
                 {
                     logger.LogDebug("OwnerHandler.HandleRequirementAsync: got User");
-                    var user = await dbContext.Users.FindAsync(paramUser.Id);
+                    var user = await dbContext.Users.FindAsync(resourceUser.Id);
                     if (user == null)
                     {
                         logger.LogDebug("OwnerHandler.HandleRequirementAsync: User not found");
@@ -79,7 +78,7 @@ public class OwnerHandler(ApplicationDbContext dbContext, ILogger<OwnerHandler> 
                     else
                     {
                         logger.LogDebug("OwnerHandler.HandleRequirementAsync: User found");
-                        var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+                        var userId = httpContext.User.FindFirstValue("uid")!;
                         if (user.Id == userId)
                         {
                             logger.LogDebug("OwnerHandler.HandleRequirementAsync: User matches user");
