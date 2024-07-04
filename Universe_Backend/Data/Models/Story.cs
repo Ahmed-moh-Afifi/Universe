@@ -1,4 +1,6 @@
-﻿namespace Universe_Backend.Data.Models;
+﻿using Universe_Backend.Data.DTOs;
+
+namespace Universe_Backend.Data.Models;
 
 public class Story
 {
@@ -23,5 +25,22 @@ public class Story
     public bool IsActive()
     {
         return DateTime.Now.Subtract(PublishDate).TotalHours < 24;
+    }
+
+    public StoryDTO ToDTO()
+    {
+        return new StoryDTO
+        {
+            Id = Id,
+            Content = Content,
+            Image = Image,
+            Video = Video,
+            Audio = Audio,
+            PublishDate = PublishDate,
+            AuthorId = AuthorId,
+            SharedPostId = SharedPostId,
+            SharedStoryId = SharedStoryId,
+            Widgets = Widgets
+        };
     }
 }

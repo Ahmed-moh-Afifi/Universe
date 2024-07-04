@@ -1,18 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Universe_Backend.Data;
-using Universe_Backend.Data.Models;
+using Universe_Backend.Data.DTOs;
 
 namespace Universe_Backend.Repositories;
 
 public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRepository> logger) : IStoriesRepository
 {
-    public async Task<IEnumerable<Story>> GetActiveStories(string userId)
+    public async Task<IEnumerable<StoryDTO>> GetActiveStories(string userId)
     {
         logger.LogDebug("StoriesRepository.GetActiveStories: Getting active stories for user with id {UserId}", userId);
         try
         {
             var stories = await dbContext.Stories.Where(s => s.AuthorId == userId && s.IsActive()).ToListAsync();
-            return stories;
+            return stories.Select(s => s.ToDTO());
         }
         catch (Exception ex)
         {
@@ -21,13 +21,13 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         }
     }
 
-    public async Task<IEnumerable<Story>> GetAllStories(string userId)
+    public async Task<IEnumerable<StoryDTO>> GetAllStories(string userId)
     {
         logger.LogDebug("StoriesRepository.GetAllStories: Getting all stories for user with id {UserId}", userId);
         try
         {
             var stories = await dbContext.Stories.Where(s => s.AuthorId == userId).ToListAsync();
-            return stories;
+            return stories.Select(s => s.ToDTO());
         }
         catch (Exception ex)
         {
@@ -36,7 +36,7 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         }
     }
 
-    public async Task<Story> GetStory(int storyId)
+    public async Task<StoryDTO> GetStory(int storyId)
     {
         logger.LogDebug("StoriesRepository.GetStory: Getting story with id {StoryId}", storyId);
         try
@@ -48,7 +48,7 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
                 // throw NotFoundException().
             }
 
-            return story!;
+            return story!.ToDTO()!;
         }
         catch (Exception ex)
         {
@@ -57,12 +57,12 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         }
     }
 
-    public async Task<Story> CreateStory(Story story)
+    public async Task<StoryDTO> CreateStory(StoryDTO story)
     {
         logger.LogDebug("StoriesRepository.CreateStory: Creating story {@Story}", story);
         try
         {
-            await dbContext.Stories.AddAsync(story);
+            await dbContext.Stories.AddAsync(story.ToModel());
             await dbContext.SaveChangesAsync();
             return story;
         }
@@ -73,12 +73,12 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         }
     }
 
-    public async Task<Story> UpdateStory(Story story)
+    public async Task<StoryDTO> UpdateStory(StoryDTO story)
     {
         logger.LogDebug("StoriesRepository.UpdateStory: Updating story {@Story}", story);
         try
         {
-            dbContext.Stories.Update(story);
+            dbContext.Stories.Update(story.ToModel());
             await dbContext.SaveChangesAsync();
             return story;
         }
@@ -110,13 +110,13 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         }
     }
 
-    public async Task<IEnumerable<Story>> GetFollowingStories(string userId)
+    public async Task<IEnumerable<StoryDTO>> GetFollowingStories(string userId)
     {
         logger.LogDebug("StoriesRepository.GetFollowingStories: Getting following stories for user with id {UserId}", userId);
         try
         {
             var stories = await dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).SelectMany(u => u.Stories).ToListAsync();
-            return stories;
+            return stories.Select(s => s.ToDTO());
         }
         catch (Exception ex)
         {
