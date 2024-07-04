@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Universe_Backend.Data.Models;
+using Universe_Backend.Data.DTOs;
 using Universe_Backend.Repositories;
-using Universe_Backend.Services;
 
 namespace Universe_Backend.Controllers;
 
@@ -13,7 +12,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpGet]
     [Route("{userId}")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<IEnumerable<Post>>> GetPosts(string userId)
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPosts(string userId)
     {
         logger.LogDebug("PostsController.GetPosts: Getting posts for user with id {UserId}", userId);
         return Ok(await postsRepository.GetPosts(userId));
@@ -22,7 +21,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpGet]
     [Route("{userId}/{postId}/replies")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<IEnumerable<Post>>> GetReplies(string userId, int postId)
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetReplies(string userId, int postId)
     {
         logger.LogDebug("PostsController.GetReplies: Getting replies for post with id {PostId}", postId);
         return Ok(await postsRepository.GetReplies(postId));
@@ -31,7 +30,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddPost([FromBody] Post post)
+    public async Task<ActionResult<int>> AddPost([FromBody] PostDTO post)
     {
         logger.LogDebug("PostsController.AddPost: Adding post {@Post}", post);
         return Ok(await postsRepository.AddPost(post));
@@ -40,7 +39,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("{postId}/replies/")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddReply([FromBody] Post reply, int postId, int userId)
+    public async Task<ActionResult<int>> AddReply([FromBody] PostDTO reply, int postId, int userId)
     {
         logger.LogDebug("PostsController.AddReply: Adding reply {@Reply} to post with id {PostId}", reply, postId);
         return Ok(await postsRepository.AddReply(reply, postId));
@@ -69,7 +68,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("share/{sharedPostId}")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<int>> SharePost([FromBody] Post post, int sharedPostId)
+    public async Task<ActionResult<int>> SharePost([FromBody] PostDTO post, int sharedPostId)
     {
         logger.LogDebug("PostsController.SharePost: Sharing post {@Post} with post with id {SharedPostId}", post, sharedPostId);
         return Ok(await postsRepository.SharePost(post, sharedPostId));
@@ -87,7 +86,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpGet]
     [Route("reactions/{postId}")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<IEnumerable<PostReaction>>> GetReactions(int postId)
+    public async Task<ActionResult<IEnumerable<PostReactionDTO>>> GetReactions(int postId)
     {
         logger.LogDebug("ReactionsController.GetReactions: Getting reactions for post with id: {postId}", postId);
         return Ok(await reactionsRepository.GetReactions(postId));
@@ -105,7 +104,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("reactions/")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddReaction([FromBody] PostReaction reaction)
+    public async Task<ActionResult<int>> AddReaction([FromBody] PostReactionDTO reaction)
     {
         logger.LogDebug("ReactionsController.AddReaction: Adding reaction {@Reaction}", reaction);
         return Ok(await reactionsRepository.AddReaction(reaction));
@@ -124,7 +123,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpGet]
     [Route("following/posts/{userId}")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<Post>>?> GetFollowingPosts(string userId)
+    public async Task<ActionResult<IEnumerable<PostDTO>>?> GetFollowingPosts(string userId)
     {
         logger.LogDebug("PostsController.GetFollowingPosts: Getting posts of users followed by user with id: {userId}", userId);
         return Ok(await postsRepository.GetFollowingPosts(userId));

@@ -27,6 +27,7 @@ public class IsFollowerHandler(ApplicationDbContext dbContext, ILogger<IsFollowe
                 {
                     logger.LogDebug("IsFollowerHandler: User {UserId} is public or the same as the current user", userId);
                     context.Succeed(requirement);
+                    return;
                 }
 
                 var isFollower = await dbContext.Users

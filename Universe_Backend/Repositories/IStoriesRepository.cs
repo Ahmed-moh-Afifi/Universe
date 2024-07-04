@@ -1,14 +1,14 @@
-﻿using Universe_Backend.Data.Models;
+﻿using Universe_Backend.Data.DTOs;
 
 namespace Universe_Backend.Repositories;
 
 public interface IStoriesRepository
 {
-    Task<IEnumerable<Story>> GetActiveStories(string userId);
-    Task<IEnumerable<Story>> GetAllStories(string userId);
-    Task<Story> GetStory(int storyId);
-    Task<Story> CreateStory(Story story);
-    Task<Story> UpdateStory(Story story);
+    Task<IEnumerable<StoryDTO>> GetActiveStories(string userId);
+    Task<IEnumerable<StoryDTO>> GetAllStories(string userId);
+    Task<StoryDTO> GetStory(int storyId);
+    Task<StoryDTO> CreateStory(StoryDTO story);
+    Task<StoryDTO> UpdateStory(StoryDTO story);
     Task DeleteStory(int storyId);
-    Task<IEnumerable<Story>> GetFollowingStories(string userId);
+    Task<IEnumerable<StoryDTO>> GetFollowingStories(string userId);
 }

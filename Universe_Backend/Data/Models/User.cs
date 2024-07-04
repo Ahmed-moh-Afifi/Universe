@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Universe_Backend.Data.DTOs;
 
 namespace Universe_Backend.Data.Models;
 
@@ -55,6 +56,27 @@ public class User : IdentityUser
             Email = model.Email,
             UserName = model.Username,
             OnlineStatus = OnlineStatus.Online,
+        };
+    }
+
+    public UserDTO ToDTO()
+    {
+        return new UserDTO
+        {
+            Id = Id,
+            FirstName = FirstName,
+            LastName = LastName,
+            Gender = Gender,
+            Email = Email!,
+            UserName = UserName!,
+            JoinDate = JoinDate,
+            PhotoUrl = PhotoUrl,
+            Verified = Verified,
+            Bio = Bio,
+            AccountState = AccountState,
+            LastOnline = LastOnline,
+            OnlineStatus = OnlineStatus,
+            AccountPrivacy = AccountPrivacy
         };
     }
 }

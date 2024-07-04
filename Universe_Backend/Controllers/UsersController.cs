@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 
@@ -12,17 +13,17 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     [HttpGet]
     [Route("{userId}")]
     [Authorize()]
-    public async Task<ActionResult<User>> GetUser(string userId)
+    public async Task<ActionResult<UserDTO>> GetUser(string userId)
     {
         logger.LogDebug("UsersController.GetUser: Getting user with id: {userId}", userId);
-        User? user = await usersRepository.GetUser(userId);
+        UserDTO? user = await usersRepository.GetUser(userId);
         return user != null ? Ok(user) : NotFound("User not found");
     }
 
     [HttpGet]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<User>>> SearchUsers(string query)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query)
     {
         logger.LogDebug("UsersController.SearchUsers: Searching for users with query: {query}", query);
         return Ok(await usersRepository.SearchUsers(query));
@@ -31,7 +32,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     [HttpGet]
     [Route("followers/{userId}")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<IEnumerable<User>?>> GetFollowers(string userId)
+    public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId)
     {
         logger.LogDebug("UsersController.GetFollowers: Getting followers of user with id: {id}", userId);
         return Ok(await usersRepository.GetFollowers(userId));
@@ -40,7 +41,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     [HttpGet]
     [Route("following/{userId}")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<IEnumerable<User>>> GetFollowing(string userId)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId)
     {
         logger.LogDebug("UsersController.GetFollowing: Getting users followed by user with id: {id}", userId);
         return Ok(await usersRepository.GetFollowing(userId));
@@ -87,7 +88,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     [HttpPut]
     [Route("")]
     [Authorize(Policy = "Owner")]
-    public async Task<ActionResult> UpdateUser(User user)
+    public async Task<ActionResult> UpdateUser(UserDTO user)
     {
         logger.LogDebug("UsersController.UpdateUser: Updating user {@User}", user);
         await usersRepository.UpdateUser(user);
