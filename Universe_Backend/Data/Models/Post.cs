@@ -1,3 +1,5 @@
+using Universe_Backend.Data.DTOs;
+
 namespace Universe_Backend.Data.Models;
 
 public class Post
@@ -18,4 +20,22 @@ public class Post
     public virtual ICollection<PostReaction> Reactions { get; set; } = [];
     public virtual ICollection<Tag> Tags { get; set; } = [];
     public virtual ICollection<User> Mentions { get; set; } = [];
+
+    public PostDTO ToDTO()
+    {
+        return new PostDTO
+        {
+            Id = Id,
+            Title = Title,
+            Body = Body,
+            Images = Images,
+            Videos = Videos,
+            Audios = Audios,
+            PublishDate = PublishDate,
+            ReplyToPost = ReplyToPost,
+            ChildPostId = ChildPostId,
+            AuthorId = AuthorId,
+            Widgets = Widgets
+        };
+    }
 }
