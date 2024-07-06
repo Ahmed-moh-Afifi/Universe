@@ -6,51 +6,43 @@ using Universe_Backend.Data.Models;
 
 namespace Universe_Backend.Services;
 
-public class IsFollowerHandler(ApplicationDbContext dbContext, ILogger<IsFollowerHandler> logger) : AuthorizationHandler<IsFollowerRequirement>
+public class IsFollowerHandler(ApplicationDbContext dbContext, ILogger<IsFollowerHandler> logger) : AuthorizationHandler<IsFollowerRequirement, string>
 {
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsFollowerRequirement requirement)
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsFollowerRequirement requirement, string userId)
     {
         logger.LogDebug("IsFollowerHandler: Checking if user is a follower of the requested user");
         try
         {
-            if (context.Resource is HttpContext httpContext)
-            {
-                string userId = (httpContext.Request.RouteValues["userId"] as string)!;
-                logger.LogDebug("IsFollowerHandler: Requested user id is {UserId}", userId);
-                string currentUserId = context.User.FindFirstValue("uid")!;
-                logger.LogDebug("IsFollowerHandler: Current user id is {CurrentUserId}", currentUserId);
+            logger.LogDebug("IsFollowerHandler: Requested user id is {UserId}", userId);
+            string currentUserId = context.User.FindFirstValue("uid")!;
+            logger.LogDebug("IsFollowerHandler: Current user id is {CurrentUserId}", currentUserId);
 
-                if (await dbContext.Users
+            var isPublic = await dbContext.Users
                 .Where(u => u.Id == userId)
                 .Select(u => u.AccountPrivacy)
-                .SingleAsync() == AccountPrivacy.Public || currentUserId == userId)
-                {
-                    logger.LogDebug("IsFollowerHandler: User {UserId} is public or the same as the current user", userId);
-                    context.Succeed(requirement);
-                    return;
-                }
+                .SingleAsync() == AccountPrivacy.Public;
 
-                var isFollower = await dbContext.Users
+            if (isPublic || currentUserId == userId)
+            {
+                logger.LogDebug("IsFollowerHandler: User {UserId} is public or the same as the current user", userId);
+                context.Succeed(requirement);
+                return;
+            }
+
+            var isFollower = await dbContext.Users
                 .Where(u => u.Id == currentUserId)
                 .SelectMany(u => u.Following)
                 .Select(u => u.Id)
                 .ContainsAsync(userId);
-                if (isFollower)
-                {
-                    context.Succeed(requirement);
-                    return;
-                }
-                else
-                {
-                    logger.LogWarning("IsFollowerHandler: User {UserId} is not a follower of user {FollowedId}", currentUserId, userId);
-                    context.Fail();
-                    return;
-                }
+
+            if (isFollower)
+            {
+                context.Succeed(requirement);
+                return;
             }
             else
             {
-                logger.LogDebug("IsFollowerHandler: Context resource is not AuthorizationFilterContext");
-                logger.LogDebug("IsFollowerHandler: Context resource is {ResourceType}", context.Resource?.GetType().Name ?? "null");
+                logger.LogWarning("IsFollowerHandler: User {UserId} is not a follower of user {FollowedId}", currentUserId, userId);
                 context.Fail();
                 return;
             }

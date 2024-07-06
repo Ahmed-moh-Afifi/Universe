@@ -22,6 +22,29 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         }
     }
 
+    public async Task<PostDTO> UpdatePost(PostDTO post)
+    {
+        logger.LogDebug("PostsRepository.UpdatePost: Updating post {@Post}", post);
+        try
+        {
+            var existingPost = await dbContext.Posts.FindAsync(post.Id);
+            if (existingPost == null)
+            {
+                // throw new NotFoundException("Post not found");
+            }
+
+            var updated = dbContext.Posts.Update(existingPost!.UpdateFromDTO(post));
+            await dbContext.SaveChangesAsync();
+
+            return updated.Entity.ToDTO();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "PostsRepository.UpdatePost: Error updating post {@Post}", post);
+            throw;
+        }
+    }
+
     public async Task RemovePost(int postId)
     {
         logger.LogDebug("PostsRepository.RemovePost: Removing post with id {PostId}", postId);
