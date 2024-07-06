@@ -43,4 +43,18 @@ public class Story
             Widgets = Widgets
         };
     }
+
+    public Story UpdateFromDTO(StoryDTO story)
+    {
+        Content = story.Content;
+        Image = story.Image;
+        Video = story.Video;
+        Audio = story.Audio;
+        PublishDate = story.PublishDate;
+        AuthorId = story.AuthorId;
+        SharedPostId = story.SharedPostId;
+        SharedStoryId = story.SharedStoryId;
+        Widgets = story.Widgets;
+        return this;
+    }
 }
