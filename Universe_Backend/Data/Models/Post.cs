@@ -38,4 +38,19 @@ public class Post
             Widgets = Widgets
         };
     }
+
+    public Post UpdateFromDTO(PostDTO post)
+    {
+        Title = post.Title;
+        Body = post.Body;
+        Images = post.Images;
+        Videos = post.Videos;
+        Audios = post.Audios;
+        PublishDate = post.PublishDate;
+        ReplyToPost = post.ReplyToPost;
+        ChildPostId = post.ChildPostId;
+        AuthorId = post.AuthorId;
+        Widgets = post.Widgets;
+        return this;
+    }
 }

@@ -78,9 +78,16 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         logger.LogDebug("StoriesRepository.UpdateStory: Updating story {@Story}", story);
         try
         {
-            dbContext.Stories.Update(story.ToModel());
+            var existingStory = await dbContext.Stories.FindAsync(story.Id);
+            if (existingStory == null)
+            {
+                // throw NotFoundException().
+            }
+
+            var updated = dbContext.Stories.Update(existingStory!.UpdateFromDTO(story));
             await dbContext.SaveChangesAsync();
-            return story;
+
+            return updated.Entity.ToDTO();
         }
         catch (Exception ex)
         {
@@ -115,7 +122,7 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         logger.LogDebug("StoriesRepository.GetFollowingStories: Getting following stories for user with id {UserId}", userId);
         try
         {
-            var stories = await dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).SelectMany(u => u.Stories).ToListAsync();
+            var stories = await dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).SelectMany(u => u.Stories).Where(u => u.IsActive()).ToListAsync();
             return stories.Select(s => s.ToDTO());
         }
         catch (Exception ex)
