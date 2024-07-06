@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Universe_Backend.Data.DTOs;
-using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 
 namespace Universe_Backend.Controllers;
@@ -13,30 +12,30 @@ public class TagsController(ITagsRepository tagsRepository, ILogger<TagsControll
     [HttpGet()]
     [Route("search")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<TagDTO>>> SearchTags(string query)
+    public async Task<ActionResult<IEnumerable<TagDTO>>> SearchTags(string query, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("TagsController.SearchTags: Searching for tags with query {Query}", query);
-        var tags = await tagsRepository.SearchTags(query);
+        var tags = await tagsRepository.SearchTags(query, lastDate, lastId);
         return Ok(tags);
     }
 
     [HttpGet()]
     [Route("{tag}/posts")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPostsByTag(string tag)
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPostsByTag(string tag, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("TagsController.GetPostsByTag: Getting posts for tag {Tag}", tag);
-        var posts = await tagsRepository.GetPostsByTag(tag);
+        var posts = await tagsRepository.GetPostsByTag(tag, lastDate, lastId);
         return Ok(posts);
     }
 
     [HttpGet()]
     [Route("{tag}/stories")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetStoriesByTag(string tag)
+    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetStoriesByTag(string tag, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("TagsController.GetStoriesByTag: Getting stories for tag {Tag}", tag);
-        var stories = await tagsRepository.GetStoriesByTag(tag);
+        var stories = await tagsRepository.GetStoriesByTag(tag, lastDate, lastId);
         return Ok(stories);
     }
 

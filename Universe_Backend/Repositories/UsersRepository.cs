@@ -8,13 +8,49 @@ namespace Universe_Backend.Repositories;
 
 public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> userManager, ILogger<UsersRepository> logger) : IUsersRepository
 {
-    public async Task<IEnumerable<UserDTO>> SearchUsers(string query)
+    public async Task<IEnumerable<UserDTO>> SearchUsers(string query, DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersRepository.SearchUsers: Searching for users with query: {query}", query);
         try
         {
-            var users = await dbContext.Users.Where(user => user.UserName!.Contains(query) || user.FirstName.Contains(query) || user.LastName.Contains(query) || query.Contains(user.UserName) || query.Contains(user.FirstName) || query.Contains(user.LastName)).ToListAsync();
-            return users.Select(u => u.ToDTO());
+            List<UserDTO> users;
+            if (lastDate == null && lastId == null)
+            {
+                logger.LogDebug("UsersRepository.SearchUsers: Getting first 10 users with query: {query}", query);
+                users = await dbContext.Users
+                    .Where(user =>
+                        user.UserName!.Contains(query) ||
+                        user.FirstName.Contains(query) ||
+                        user.LastName.Contains(query) ||
+                        query.Contains(user.UserName) ||
+                        query.Contains(user.FirstName) ||
+                        query.Contains(user.LastName))
+                    .OrderBy(u => u.JoinDate)
+                    .ThenBy(u => u.Id)
+                    .Select(u => u.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("UsersRepository.SearchUsers: Getting users with query: {query} after date {lastDate} and id {lastId}", query, lastDate, lastId);
+                users = await dbContext.Users
+                    .Where(user =>
+                        user.UserName!.Contains(query) ||
+                        user.FirstName.Contains(query) ||
+                        user.LastName.Contains(query) ||
+                        query.Contains(user.UserName) ||
+                        query.Contains(user.FirstName) ||
+                        query.Contains(user.LastName))
+                    .OrderBy(u => u.JoinDate)
+                    .ThenBy(u => u.Id)
+                    .Where(u => u.JoinDate > lastDate || (u.JoinDate == lastDate && u.Id.CompareTo(lastId) > 0))
+                    .Select(u => u.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return users;
         }
         catch (Exception ex)
         {
@@ -97,19 +133,37 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
         }
     }
 
-    public async Task<IEnumerable<UserDTO>> GetFollowers(string userId)
+    public async Task<IEnumerable<UserDTO>> GetFollowers(string userId, DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersRepository.GetFollowers: Getting followers of user with id: {userId}", userId);
         try
         {
-            var user = await dbContext.Users.Where(u => u.Id == userId).
-            Select(u => new
+            List<UserDTO> followers;
+            if (lastDate == null && lastId == null)
             {
-                Followers = u.Followers.Select(f => f.ToDTO())
-            }).SingleAsync();
+                logger.LogDebug("UsersRepository.GetFollowers: Getting first 10 followers of user with id: {userId}", userId);
+                followers = await dbContext.Users
+                    .Where(u => u.Following.Any(f => f.Id == userId))
+                    .OrderBy(u => u.JoinDate)
+                    .ThenBy(u => u.Id)
+                    .Select(u => u.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("UsersRepository.GetFollowers: Getting followers of user with id: {userId} after date {lastDate} and id {lastId}", userId, lastDate, lastId);
+                followers = await dbContext.Users
+                    .Where(u => u.Following.Any(f => f.Id == userId))
+                    .OrderBy(u => u.JoinDate)
+                    .ThenBy(u => u.Id)
+                    .Where(u => u.JoinDate > lastDate || (u.JoinDate == lastDate && u.Id.CompareTo(lastId) > 0))
+                    .Select(u => u.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
 
-            logger.LogDebug("UsersRepository.GetFollowers: Found followers of user with id: {userId}", userId);
-            return user.Followers.ToList();
+            return followers;
         }
         catch (Exception ex)
         {
@@ -118,20 +172,37 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
         }
     }
 
-    public async Task<IEnumerable<UserDTO>> GetFollowing(string userId)
+    public async Task<IEnumerable<UserDTO>> GetFollowing(string userId, DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersRepository.GetFollowing: Getting following of user with id: {userId}", userId);
-
         try
         {
-            var user = await dbContext.Users.Where(u => u.Id == userId).
-            Select(u => new
+            List<UserDTO> following;
+            if (lastDate == null && lastId == null)
             {
-                Following = u.Following.Select(f => f.ToDTO())
-            }).SingleAsync();
+                logger.LogDebug("UsersRepository.GetFollowing: Getting first 10 following of user with id: {userId}", userId);
+                following = await dbContext.Users
+                    .Where(u => u.Followers.Any(f => f.Id == userId))
+                    .OrderBy(u => u.JoinDate)
+                    .ThenBy(u => u.Id)
+                    .Select(u => u.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("UsersRepository.GetFollowing: Getting following of user with id: {userId} after date {lastDate} and id {lastId}", userId, lastDate, lastId);
+                following = await dbContext.Users
+                    .Where(u => u.Followers.Any(f => f.Id == userId))
+                    .OrderBy(u => u.JoinDate)
+                    .ThenBy(u => u.Id)
+                    .Where(u => u.JoinDate > lastDate || (u.JoinDate == lastDate && u.Id.CompareTo(lastId) > 0))
+                    .Select(u => u.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
 
-            logger.LogDebug("UsersRepository.GetFollowing: Found following of user with id: {userId}", userId);
-            return user.Following.ToList();
+            return following;
         }
         catch (Exception ex)
         {
