@@ -9,33 +9,91 @@ public class StoryReactionsRepository(ApplicationDbContext dbContext, ILogger<St
     public async Task<int> AddReaction(StoryReactionDTO reaction)
     {
         logger.LogDebug("StoryReactionsRepository.AddReaction: Adding reaction.");
-        dbContext.StoriesReactions.Add(reaction.ToModel());
-        await dbContext.SaveChangesAsync();
-        return reaction.Id;
+        try
+        {
+            await dbContext.StoriesReactions.AddAsync(reaction.ToModel());
+            await dbContext.SaveChangesAsync();
+            return reaction.Id;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "StoryReactionsRepository.AddReaction: Error adding reaction.");
+            throw;
+        }
     }
 
     public async Task RemoveReaction(int reactionId)
     {
         logger.LogDebug("StoryReactionsRepository.RemoveReaction: Removing reaction.");
-        var reaction = await dbContext.StoriesReactions.FindAsync(reactionId);
-        if (reaction == null)
+        try
         {
-            // throw NotFoundException().
-        }
+            var reaction = await dbContext.StoriesReactions.FindAsync(reactionId);
+            if (reaction == null)
+            {
+                // throw NotFoundException().
+            }
 
-        dbContext.StoriesReactions.Remove(reaction!);
-        await dbContext.SaveChangesAsync();
+            dbContext.StoriesReactions.Remove(reaction!);
+            await dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "StoryReactionsRepository.RemoveReaction: Error removing reaction.");
+            throw;
+        }
     }
 
-    public async Task<IEnumerable<StoryReactionDTO>> GetReactions(int StoryId)
+    public async Task<IEnumerable<StoryReactionDTO>> GetReactions(int StoryId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("StoryReactionsRepository.GetReactions: Getting reactions.");
-        return await dbContext.StoriesReactions.Where(r => r.StoryId == StoryId).Select(r => r.ToDTO()).ToListAsync();
+        try
+        {
+            List<StoryReactionDTO> reactions;
+            if (lastDate == null && lastId == null)
+            {
+                logger.LogDebug("StoryReactionsRepository.GetReactions: Getting first 10 reactions.");
+                reactions = await dbContext.StoriesReactions
+                    .Where(r => r.StoryId == StoryId)
+                    .OrderBy(r => r.ReactionDate)
+                    .ThenBy(r => r.Id)
+                    .Select(r => r.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("StoryReactionsRepository.GetReactions: Getting reactions after date {LastDate} and id {LastId}.", lastDate, lastId);
+                reactions = await dbContext.StoriesReactions
+                    .Where(r => r.StoryId == StoryId)
+                    .OrderBy(r => r.ReactionDate)
+                    .ThenBy(r => r.Id)
+                    .Where(r => r.ReactionDate > lastDate || (r.ReactionDate == lastDate && r.Id > lastId))
+                    .Select(r => r.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return reactions;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "StoryReactionsRepository.GetReactions: Error getting reactions.");
+            throw;
+        }
     }
 
     public async Task<int> GetReactionsCount(int StoryId)
     {
         logger.LogDebug("StoryReactionsRepository.GetReactionsCount: Getting reactions count.");
-        return await dbContext.StoriesReactions.Where(r => r.StoryId == StoryId).CountAsync();
+        try
+        {
+            int reactionsCount = await dbContext.StoriesReactions.Where(r => r.StoryId == StoryId).CountAsync();
+            return reactionsCount;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "StoryReactionsRepository.GetReactionsCount: Error getting reactions count.");
+            throw;
+        }
     }
 }

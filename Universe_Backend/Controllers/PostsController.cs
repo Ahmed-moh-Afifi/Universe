@@ -8,14 +8,15 @@ using Universe_Backend.Repositories;
 namespace Universe_Backend.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("{userId}/[controller]")]
 public class PostsController(IPostsRepository postsRepository, IPostReactionsRepository reactionsRepository, IAuthorizationService authorizationService, ILogger<PostsController> logger) : ControllerBase
 {
     [HttpGet]
-    [Route("{userId}")]
-    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPosts(string userId)
+    [Route("")]
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPosts(string userId, [FromBody] DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostsController.GetPosts: Getting posts for user with id {UserId}", userId);
+        // Validate route parameters.
         var authorizationResult = await authorizationService.AuthorizeAsync(User, userId, "IsFollower");
         if (!authorizationResult.Succeeded)
         {
@@ -23,14 +24,15 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(await postsRepository.GetPosts(userId));
+        return Ok(await postsRepository.GetPosts(userId, lastDate, lastId));
     }
 
     [HttpGet]
-    [Route("{userId}/{postId}/replies")]
-    public async Task<ActionResult<IEnumerable<PostDTO>>> GetReplies(string userId, int postId)
+    [Route("{postId}/replies")]
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetReplies(string userId, int postId, [FromBody] DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostsController.GetReplies: Getting replies for post with id {PostId}", postId);
+        // Validate route parameters.
         var authorizationResult = await authorizationService.AuthorizeAsync(User, userId, "IsFollower");
         if (!authorizationResult.Succeeded)
         {
@@ -38,29 +40,32 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(await postsRepository.GetReplies(postId));
+        return Ok(await postsRepository.GetReplies(postId, lastDate, lastId));
     }
 
     [HttpPost]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddPost([FromBody] PostDTO post)
+    public async Task<ActionResult<int>> AddPost([FromBody] PostDTO post, string userId)
     {
         logger.LogDebug("PostsController.AddPost: Adding post {@Post}", post);
+        // Validate route parameters.
         if (post.AuthorId != User.FindFirstValue("uid"))
         {
             logger.LogWarning("PostsController.AddPost: User with id {UserId} tried to add post with author id {AuthorId}", User.FindFirstValue("uid"), post.AuthorId);
             return Unauthorized();
         }
+
         return Ok(await postsRepository.AddPost(post));
     }
 
     [HttpPost]
-    [Route("{userId}/{postId}/replies/")]
+    [Route("{postId}/replies/")]
     [Authorize()]
     public async Task<ActionResult<int>> AddReply([FromBody] PostDTO reply, int postId, string userId)
     {
         logger.LogDebug("PostsController.AddReply: Adding reply {@Reply} to post with id {PostId}", reply, postId);
+        // Validate route parameters.
         if (reply.AuthorId != User.FindFirstValue("uid"))
         {
             logger.LogWarning("PostsController.AddReply: User with id {UserId} tried to add reply with author id {AuthorId}", User.FindFirstValue("uid"), reply.AuthorId);
@@ -78,10 +83,11 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     }
 
     [HttpPut]
-    [Route("{userId}/{postId}")]
+    [Route("{postId}")]
     public async Task<ActionResult<PostDTO>> UpdatePost([FromBody] PostDTO post, string userId, int postId)
     {
         logger.LogDebug("PostsController.UpdatePost: Updating post {@Post}", post);
+        // Validate route parameters.
         var authorizationResult = await authorizationService.AuthorizeAsync(User, new KeyValuePair<string, Type>(post.Id.ToString(), typeof(Post)), "IsOwner");
         if (!authorizationResult.Succeeded)
         {
@@ -94,9 +100,10 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpDelete]
     [Route("{postId}")]
-    public async Task<ActionResult> DeletePost(int postId)
+    public async Task<ActionResult> DeletePost(int postId, string userId)
     {
         logger.LogDebug("PostsController.RemovePost: Removing post with id {PostId}", postId);
+        // Validate route parameters.
         var authorizationResult = await authorizationService.AuthorizeAsync(User, new KeyValuePair<string, Type>(postId.ToString(), typeof(Post)), "IsOwner");
         if (!authorizationResult.Succeeded)
         {
@@ -109,10 +116,11 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     }
 
     [HttpDelete]
-    [Route("replies/{replyId}")]
-    public async Task<ActionResult> DeleteReply(int replyId)
+    [Route("{postId}/replies/{replyId}")]
+    public async Task<ActionResult> DeleteReply(int replyId, string userId, int postId)
     {
         logger.LogDebug("PostsController.RemoveReply: Removing reply with id {ReplyId}", replyId);
+        // Validate route parameters.
         var authorizationResult = await authorizationService.AuthorizeAsync(User, new KeyValuePair<string, Type>(replyId.ToString(), typeof(Post)), "IsOwner");
         if (!authorizationResult.Succeeded)
         {
@@ -127,9 +135,10 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("share/{sharedPostId}")]
     [Authorize()]
-    public async Task<ActionResult<int>> SharePost([FromBody] PostDTO post, int sharedPostId)
+    public async Task<ActionResult<int>> SharePost([FromBody] PostDTO post, int sharedPostId, string userId)
     {
         logger.LogDebug("PostsController.SharePost: Sharing post {@Post} with post with id {SharedPostId}", post, sharedPostId);
+        // Validate route parameters.
         if (post.AuthorId != User.FindFirstValue("uid"))
         {
             logger.LogWarning("PostsController.SharePost: User with id {UserId} tried to share post with author id {AuthorId}", User.FindFirstValue("uid"), post.AuthorId);
@@ -140,19 +149,21 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     }
 
     [HttpGet]
-    [Route("{userId}/count")]
+    [Route("count")]
     [Authorize()]
     public async Task<ActionResult<int>> GetPostsCount(string userId)
     {
         logger.LogDebug("PostsController.GetPostsCount: Getting posts count for user with id {UserId}", userId);
+        // Validate route parameters.
         return Ok(await postsRepository.GetPostsCount(userId));
     }
 
     [HttpGet]
-    [Route("{userId}/{postId}/reactions")]
-    public async Task<ActionResult<IEnumerable<PostReactionDTO>>> GetReactions(string userId, int postId)
+    [Route("{postId}/reactions")]
+    public async Task<ActionResult<IEnumerable<PostReactionDTO>>> GetReactions(string userId, int postId, [FromBody] DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("ReactionsController.GetReactions: Getting reactions for post with id: {postId}", postId);
+        // Validate route parameters.
         var authorizationResult = await authorizationService.AuthorizeAsync(User, userId, "IsFollower");
         if (!authorizationResult.Succeeded)
         {
@@ -160,14 +171,15 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(await reactionsRepository.GetReactions(postId));
+        return Ok(await reactionsRepository.GetReactions(postId, lastDate, lastId));
     }
 
     [HttpGet]
-    [Route("{userId}/{postId}/reactions/count")]
+    [Route("{postId}/reactions/count")]
     public async Task<ActionResult<int>> GetReactionsCount(int userId, int postId)
     {
         logger.LogDebug("ReactionsController.GetReactionsCount: Getting reactions count for post with id: {postId}", postId);
+        // Validate route parameters.
         var authorizationResult = await authorizationService.AuthorizeAsync(User, userId, "IsFollower");
         if (!authorizationResult.Succeeded)
         {
@@ -179,11 +191,12 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     }
 
     [HttpPost]
-    [Route("{userId}/{postId}/reactions")]
+    [Route("{postId}/reactions")]
     [Authorize()]
     public async Task<ActionResult<int>> AddReaction([FromBody] PostReactionDTO reaction, string userId, int postId)
     {
         logger.LogDebug("ReactionsController.AddReaction: Adding reaction {@Reaction}", reaction);
+        // Validate route parameters.
         if (reaction.UserId != User.FindFirstValue("uid"))
         {
             logger.LogWarning("ReactionsController.AddReaction: User with id {UserId} tried to add reaction with user id {ReactionUserId}", User.FindFirstValue("uid"), reaction.UserId);
@@ -201,10 +214,11 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     }
 
     [HttpDelete]
-    [Route("reactions/{reactionId}")]
-    public async Task<ActionResult> RemoveReaction(int reactionId)
+    [Route("{postId}/reactions/{reactionId}")]
+    public async Task<ActionResult> RemoveReaction(int reactionId, string userId, int postId)
     {
         logger.LogDebug("ReactionsController.RemoveReaction: Removing reaction with id: {reactionId}", reactionId);
+        // Validate route parameters.
         var authorizationResult = await authorizationService.AuthorizeAsync(User, new KeyValuePair<string, Type>(reactionId.ToString(), typeof(PostReaction)), "IsOwner");
         if (!authorizationResult.Succeeded)
         {
@@ -219,9 +233,10 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpGet]
     [Route("following/")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<PostDTO>>?> GetFollowingPosts()
+    public async Task<ActionResult<IEnumerable<PostDTO>>?> GetFollowingPosts([FromBody] DateTime? lastDate, int? lastId, string userId)
     {
         logger.LogDebug("PostsController.GetFollowingPosts: Getting posts of users followed by user with id: {userId}", User.FindFirstValue("uid"));
-        return Ok(await postsRepository.GetFollowingPosts(User.FindFirstValue("uid")!));
+        // Validate route parameters.
+        return Ok(await postsRepository.GetFollowingPosts(User.FindFirstValue("uid")!, lastDate, lastId));
     }
 }

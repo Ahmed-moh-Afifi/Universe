@@ -1,18 +1,43 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Universe_Backend.Data;
 using Universe_Backend.Data.DTOs;
+using Universe_Backend.Data.Models;
 
 namespace Universe_Backend.Repositories;
 
 public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRepository> logger) : IStoriesRepository
 {
-    public async Task<IEnumerable<StoryDTO>> GetActiveStories(string userId)
+    public async Task<IEnumerable<StoryDTO>> GetActiveStories(string userId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("StoriesRepository.GetActiveStories: Getting active stories for user with id {UserId}", userId);
         try
         {
-            var stories = await dbContext.Stories.Where(s => s.AuthorId == userId && s.IsActive()).ToListAsync();
-            return stories.Select(s => s.ToDTO());
+            List<StoryDTO> stories;
+            if (lastDate == null && lastId == null)
+            {
+                logger.LogDebug("StoriesRepository.GetActiveStories: Getting first 10 active stories for user with id {UserId}", userId);
+                stories = await dbContext.Stories
+                    .Where(s => s.AuthorId == userId && s.IsActive())
+                    .OrderBy(s => s.PublishDate)
+                    .ThenBy(s => s.Id)
+                    .Select(s => s.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("StoriesRepository.GetActiveStories: Getting active stories after date {LastDate} and id {LastId} for user with id {UserId}", lastDate, lastId, userId);
+                stories = await dbContext.Stories
+                    .Where(s => s.AuthorId == userId && s.IsActive())
+                    .OrderBy(s => s.PublishDate)
+                    .ThenBy(s => s.Id)
+                    .Where(s => s.PublishDate > lastDate || (s.PublishDate == lastDate && s.Id > lastId))
+                    .Select(s => s.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return stories;
         }
         catch (Exception ex)
         {
@@ -21,13 +46,37 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         }
     }
 
-    public async Task<IEnumerable<StoryDTO>> GetAllStories(string userId)
+    public async Task<IEnumerable<StoryDTO>> GetAllStories(string userId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("StoriesRepository.GetAllStories: Getting all stories for user with id {UserId}", userId);
         try
         {
-            var stories = await dbContext.Stories.Where(s => s.AuthorId == userId).ToListAsync();
-            return stories.Select(s => s.ToDTO());
+            List<StoryDTO> stories;
+            if (lastDate == null && lastId == null)
+            {
+                logger.LogDebug("StoriesRepository.GetAllStories: Getting first 10 stories for user with id {UserId}", userId);
+                stories = await dbContext.Stories
+                    .Where(s => s.AuthorId == userId)
+                    .OrderBy(s => s.PublishDate)
+                    .ThenBy(s => s.Id)
+                    .Select(s => s.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("StoriesRepository.GetAllStories: Getting stories after date {LastDate} and id {LastId} for user with id {UserId}", lastDate, lastId, userId);
+                stories = await dbContext.Stories
+                    .Where(s => s.AuthorId == userId)
+                    .OrderBy(s => s.PublishDate)
+                    .ThenBy(s => s.Id)
+                    .Where(s => s.PublishDate > lastDate || (s.PublishDate == lastDate && s.Id > lastId))
+                    .Select(s => s.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return stories;
         }
         catch (Exception ex)
         {
@@ -117,13 +166,43 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
         }
     }
 
-    public async Task<IEnumerable<StoryDTO>> GetFollowingStories(string userId)
+    public async Task<IEnumerable<StoryDTO>> GetFollowingStories(string userId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("StoriesRepository.GetFollowingStories: Getting following stories for user with id {UserId}", userId);
         try
         {
-            var stories = await dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).SelectMany(u => u.Stories).Where(u => u.IsActive()).ToListAsync();
-            return stories.Select(s => s.ToDTO());
+            List<StoryDTO> stories;
+            if (lastDate == null && lastId == null)
+            {
+                logger.LogDebug("StoriesRepository.GetFollowingStories: Getting first 10 following stories for user with id {UserId}", userId);
+                stories = await dbContext.Users
+                    .Where(u => u.Id == userId)
+                    .SelectMany(u => u.Following)
+                    .SelectMany(u => u.Stories)
+                    .Where(u => u.IsActive())
+                    .OrderBy(s => s.PublishDate)
+                    .ThenBy(s => s.Id)
+                    .Select(s => s.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("StoriesRepository.GetFollowingStories: Getting following stories after date {LastDate} and id {LastId} for user with id {UserId}", lastDate, lastId, userId);
+                stories = await dbContext.Users
+                    .Where(u => u.Id == userId)
+                    .SelectMany(u => u.Following)
+                    .SelectMany(u => u.Stories)
+                    .Where(u => u.IsActive())
+                    .OrderBy(s => s.PublishDate)
+                    .ThenBy(s => s.Id)
+                    .Where(s => s.PublishDate > lastDate || (s.PublishDate == lastDate && s.Id > lastId))
+                    .Select(s => s.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return stories;
         }
         catch (Exception ex)
         {
