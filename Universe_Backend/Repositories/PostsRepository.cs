@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Universe_Backend.Data;
 using Universe_Backend.Data.DTOs;
+using Universe_Backend.Data.Models;
 
 namespace Universe_Backend.Repositories;
 
@@ -67,13 +68,37 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         }
     }
 
-    public async Task<IEnumerable<PostDTO>> GetPosts(string userId)
+    public async Task<IEnumerable<PostDTO>> GetPosts(string userId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostsRepository.GetPosts: Getting posts for user with id {UserId}", userId);
         try
         {
-            var posts = await dbContext.Posts.Where(p => p.AuthorId == userId).ToListAsync();
-            return posts.Select(p => p.ToDTO());
+            List<PostDTO> posts;
+            if (lastDate == null || lastId == null)
+            {
+                logger.LogDebug("PostsRepository.GetPosts: Getting first 10 posts");
+                posts = await dbContext.Posts
+                    .Where(p => p.AuthorId == userId)
+                    .OrderBy(p => p.PublishDate)
+                    .ThenBy(p => p.Id)
+                    .Select(p => p.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("PostsRepository.GetPosts: Getting posts after date {LastDate} and id {LastId}", lastDate, lastId);
+                posts = await dbContext.Posts
+                    .Where(p => p.AuthorId == userId)
+                    .OrderBy(p => p.PublishDate)
+                    .ThenBy(p => p.Id)
+                    .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
+                    .Select(p => p.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return posts;
         }
         catch (Exception ex)
         {
@@ -82,13 +107,37 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         }
     }
 
-    public async Task<IEnumerable<PostDTO>> GetReplies(int postId)
+    public async Task<IEnumerable<PostDTO>> GetReplies(int postId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostsRepository.GetReplies: Getting replies for post with id {PostId}", postId);
         try
         {
-            var replies = await dbContext.Posts.Where(p => p.ReplyToPost == postId).ToListAsync();
-            return replies.Select(r => r.ToDTO());
+            List<PostDTO> replies;
+            if (lastDate == null || lastId == null)
+            {
+                logger.LogDebug("PostsRepository.GetReplies: Getting first 10 replies");
+                replies = await dbContext.Posts
+                    .Where(p => p.ReplyToPost == postId)
+                    .OrderBy(p => p.PublishDate)
+                    .ThenBy(p => p.Id)
+                    .Select(p => p.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("PostsRepository.GetReplies: Getting replies after date {LastDate} and id {LastId}", lastDate, lastId);
+                replies = await dbContext.Posts
+                    .Where(p => p.ReplyToPost == postId)
+                    .OrderBy(p => p.PublishDate)
+                    .ThenBy(p => p.Id)
+                    .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
+                    .Select(p => p.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return replies;
         }
         catch (Exception ex)
         {
@@ -168,13 +217,37 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         }
     }
 
-    public async Task<IEnumerable<PostDTO>> GetFollowingPosts(string userId)
+    public async Task<IEnumerable<PostDTO>> GetFollowingPosts(string userId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostsRepository.GetFollowingPosts: Getting posts for user with id {UserId}", userId);
         try
         {
-            var posts = await dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).SelectMany(u => u.Posts).ToListAsync();
-            return posts.Select(p => p.ToDTO());
+            List<PostDTO> posts;
+            if (lastDate == null || lastId == null)
+            {
+                logger.LogDebug("PostsRepository.GetFollowingPosts: Getting first 10 posts");
+                posts = await dbContext.Posts
+                    .Where(p => dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).Select(u => u.Id).Contains(p.AuthorId))
+                    .OrderBy(p => p.PublishDate)
+                    .ThenBy(p => p.Id)
+                    .Select(p => p.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+            else
+            {
+                logger.LogDebug("PostsRepository.GetFollowingPosts: Getting posts after date {LastDate} and id {LastId}", lastDate, lastId);
+                posts = await dbContext.Posts
+                    .Where(p => dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).Select(u => u.Id).Contains(p.AuthorId))
+                    .OrderBy(p => p.PublishDate)
+                    .ThenBy(p => p.Id)
+                    .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
+                    .Select(p => p.ToDTO())
+                    .Take(10)
+                    .ToListAsync();
+            }
+
+            return posts;
         }
         catch (Exception ex)
         {

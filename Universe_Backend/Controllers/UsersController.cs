@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Universe_Backend.Data.DTOs;
-using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 
 namespace Universe_Backend.Controllers;
@@ -23,32 +22,32 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     [HttpGet]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query, DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.SearchUsers: Searching for users with query: {query}", query);
-        return Ok(await usersRepository.SearchUsers(query));
+        return Ok(await usersRepository.SearchUsers(query, lastDate, lastId));
     }
 
     [HttpGet]
-    [Route("followers/{userId}")]
+    [Route("{userId}/followers")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId)
+    public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId, DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.GetFollowers: Getting followers of user with id: {id}", userId);
-        return Ok(await usersRepository.GetFollowers(userId));
+        return Ok(await usersRepository.GetFollowers(userId, lastDate, lastId));
     }
 
     [HttpGet]
-    [Route("following/{userId}")]
+    [Route("{userId}/following")]
     [Authorize(Policy = "IsFollower")]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId, DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.GetFollowing: Getting users followed by user with id: {id}", userId);
-        return Ok(await usersRepository.GetFollowing(userId));
+        return Ok(await usersRepository.GetFollowing(userId, lastDate, lastId));
     }
 
     [HttpPost]
-    [Route("followers/{followerId}/{followedId}")]
+    [Route("{followedId}/followers/{followerId}")]
     [Authorize()]
     public async Task<ActionResult> AddFollower(string followerId, string followedId)
     {
@@ -58,7 +57,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     }
 
     [HttpDelete]
-    [Route("followers/{followerId}/{followedId}")]
+    [Route("{followedId}/followers/{followerId}")]
     [Authorize()]
     public async Task<ActionResult> RemoveFollower(string followerId, string followedId)
     {
@@ -68,7 +67,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     }
 
     [HttpGet]
-    [Route("followers/count/{userId}")]
+    [Route("{userId}/followers/count")]
     [Authorize()]
     public async Task<ActionResult<int>> GetFollowersCount(string userId)
     {
@@ -77,7 +76,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     }
 
     [HttpGet]
-    [Route("following/count/{userId}")]
+    [Route("{userId}following/count")]
     [Authorize()]
     public async Task<ActionResult<int>> GetFollowingCount(string userId)
     {
