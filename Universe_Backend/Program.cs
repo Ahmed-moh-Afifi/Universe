@@ -11,6 +11,7 @@ using Universe_Backend.Data;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 using Universe_Backend.Services;
+using NotificationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,11 +50,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(cfg =>
     cfg.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
 
-var firebaseApp = FirebaseApp.Create(new AppOptions
-{
-    Credential = GoogleCredential.GetApplicationDefault(),
-    ProjectId = builder.Configuration["Firebase:ProjectId"]
-});
+var fcmService = new NotificationService.Services.FcmService();
+var notificationService = new NotificationService.NotificationService(fcmService, fcmService, fcmService);
 
 builder.Services.AddIdentity<User, IdentityRole>(options => options.User.RequireUniqueEmail = true)
 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -78,7 +76,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddSingleton(firebaseApp);
+builder.Services.AddSingleton(notificationService);
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IPostReactionsRepository, PostReactionsRepository>();

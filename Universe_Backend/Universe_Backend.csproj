@@ -24,4 +24,10 @@
     <Folder Include="Exceptions/" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="NotificationService">
+      <HintPath>./Dlls/NotificationService.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
