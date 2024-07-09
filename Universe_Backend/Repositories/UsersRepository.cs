@@ -255,4 +255,19 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
             throw;
         }
     }
+
+    public async Task<string?> GetNotificationToken(string userId)
+    {
+        logger.LogDebug("UsersRepository.GetNotificationToken: Getting notification token of user with id: {userId}", userId);
+        try
+        {
+            var token = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.NotificationToken).SingleAsync();
+            return token;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.GetNotificationToken: Error while getting notification token of user with id: {userId}", userId);
+            throw;
+        }
+    }
 }

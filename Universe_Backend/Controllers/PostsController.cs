@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NotificationService.Models;
 using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
@@ -9,7 +10,7 @@ namespace Universe_Backend.Controllers;
 
 [ApiController]
 [Route("{userId}/[controller]")]
-public class PostsController(IPostsRepository postsRepository, IPostReactionsRepository reactionsRepository, IAuthorizationService authorizationService, ILogger<PostsController> logger) : ControllerBase
+public class PostsController(IPostsRepository postsRepository, IPostReactionsRepository reactionsRepository, IUsersRepository usersRepository, IAuthorizationService authorizationService, NotificationService.NotificationService notificationService, ILogger<PostsController> logger) : ControllerBase
 {
     [HttpGet]
     [Route("")]
@@ -55,6 +56,20 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             logger.LogWarning("PostsController.AddPost: User with id {UserId} tried to add post with author id {AuthorId}", User.FindFirstValue("uid"), post.AuthorId);
             return Unauthorized();
         }
+
+        var author = await usersRepository.GetUser(post.AuthorId);
+
+        var notification = new SingleUserNotification()
+        {
+            Title = "New Post",
+            Body = $"{author.UserName} has posted something new!",
+            Recipient = post.AuthorId,
+            Sender = post.AuthorId,
+            Platform = Platform.Android,
+            RecipientType = RecipientType.Topic
+        };
+        logger.LogDebug("PostsController.AddPost: Sending notification {@Notification}", notification);
+        await notificationService.SendNotificationAsync(notification);
 
         return Ok(await postsRepository.AddPost(post));
     }

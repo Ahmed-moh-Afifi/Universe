@@ -7,7 +7,7 @@ namespace Universe_Backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UsersController(IUsersRepository usersRepository, ILogger<UsersController> logger) : ControllerBase
+public class UsersController(IUsersRepository usersRepository, NotificationService.NotificationService notificationService, ILogger<UsersController> logger) : ControllerBase
 {
     [HttpGet]
     [Route("{userId}")]
@@ -30,7 +30,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
 
     [HttpGet]
     [Route("{userId}/followers")]
-    [Authorize(Policy = "IsFollower")]
+    [Authorize()]
     public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId, DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.GetFollowers: Getting followers of user with id: {id}", userId);
@@ -39,7 +39,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
 
     [HttpGet]
     [Route("{userId}/following")]
-    [Authorize(Policy = "IsFollower")]
+    [Authorize()]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId, DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.GetFollowing: Getting users followed by user with id: {id}", userId);
@@ -53,6 +53,14 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
     {
         logger.LogDebug("UsersController.AddFollower: Adding follower with id: {followerId} to user with id: {followedId}", followerId, followedId);
         await usersRepository.AddFollower(followerId, followedId);
+        logger.LogDebug("UsersController.AddFollower: Getting notification token for follower with id: {followerId}", followerId);
+        var notificationToken = await usersRepository.GetNotificationToken(followerId);
+        logger.LogDebug("UsersController.AddFollower: Got notification token: {notificationToken}", notificationToken);
+        if (notificationToken != null)
+        {
+            logger.LogDebug("UsersController.AddFollower: Subscribing follower to topic with id: {followedId}", followedId);
+            await notificationService.SubscribeToTopicAsync([notificationToken], followedId.ToString(), NotificationService.Models.Platform.Android);
+        }
         return Ok();
     }
 
@@ -86,7 +94,7 @@ public class UsersController(IUsersRepository usersRepository, ILogger<UsersCont
 
     [HttpPut]
     [Route("")]
-    [Authorize(Policy = "Owner")]
+    [Authorize()]
     public async Task<ActionResult> UpdateUser(UserDTO user)
     {
         logger.LogDebug("UsersController.UpdateUser: Updating user {@User}", user);
