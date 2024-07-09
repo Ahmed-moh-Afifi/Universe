@@ -61,6 +61,12 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
 
         logger.LogDebug("AuthController -> login: saving refresh token");
         context.RefreshTokens.Add(refreshTokenEntity);
+
+        if (model.Username == "ahmedafifi")
+        {
+            user.NotificationToken = "drWSaSCTQsyNAEVH29BS-_:APA91bFNJ7zbEK6F8aPZG0UE8mByWfiSbBlMq4V1hBAUBjuD-pJjCLdk0pSqjQO53PAv87I-MCNqnwPkMx9ULCwXjGYTbP1OXM5h2y7EF5NtiMuZkQrnRzoNHN8C-o4B8Ufx-eE1zcgL";
+        }
+
         await context.SaveChangesAsync();
 
         return Ok(new
