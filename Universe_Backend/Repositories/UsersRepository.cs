@@ -256,17 +256,17 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
         }
     }
 
-    public async Task<string?> GetNotificationToken(string userId)
+    public async Task<IEnumerable<NotificationToken>> GetNotificationTokens(string userId)
     {
-        logger.LogDebug("UsersRepository.GetNotificationToken: Getting notification token of user with id: {userId}", userId);
+        logger.LogDebug("UsersRepository.GetNotificationTokens: Getting notification tokens of user with id: {userId}", userId);
         try
         {
-            var token = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.NotificationToken).SingleAsync();
-            return token;
+            var tokens = await dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.NotificationTokens).ToListAsync();
+            return tokens;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "UsersRepository.GetNotificationToken: Error while getting notification token of user with id: {userId}", userId);
+            logger.LogError(ex, "UsersRepository.GetNotificationTokens: Error while getting notification tokens of user with id: {userId}", userId);
             throw;
         }
     }

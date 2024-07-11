@@ -1,6 +1,4 @@
 using System.Text;
-using FirebaseAdmin;
-using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +9,6 @@ using Universe_Backend.Data;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 using Universe_Backend.Services;
-using NotificationService;
 
 var builder = WebApplication.CreateBuilder(args);
 
