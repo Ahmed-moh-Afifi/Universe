@@ -48,6 +48,7 @@ dependencies:
   flutter_animated_icons: ^1.0.1
   lottie: ^1.4.3
   device_preview: ^1.1.0
+  dio: ^5.5.0+1
 
 dev_dependencies:
   flutter_test:

@@ -8,7 +8,7 @@ class User {
   final String userName;
   final String email;
   final String? photoUrl;
-  final Timestamp joinDate;
+  final DateTime joinDate;
   final bool gender;
   final bool verified;
   String? notificationToken;
@@ -46,7 +46,7 @@ class User {
       userName: data?['userName'],
       email: data?['email'],
       photoUrl: data?['photoUrl'],
-      joinDate: data?['joinDate'],
+      joinDate: (data?['joinDate'] as Timestamp).toDate(),
       gender: data?['gender'],
       verified: data?['verified'],
     );
