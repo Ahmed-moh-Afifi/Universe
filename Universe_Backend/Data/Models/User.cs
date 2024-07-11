@@ -36,8 +36,8 @@ public class User : IdentityUser
     public DateTime? LastOnline { get; set; }
     public required OnlineStatus OnlineStatus { get; set; } = OnlineStatus.Online;
     public AccountPrivacy AccountPrivacy { get; set; } = AccountPrivacy.Public;
-    public string? NotificationToken { get; set; }
 
+    public ICollection<NotificationToken> NotificationTokens { get; set; } = [];
     public virtual ICollection<User> Followers { get; set; } = [];
     public virtual ICollection<User> Following { get; set; } = [];
     public virtual ICollection<Post> Posts { get; set; } = [];

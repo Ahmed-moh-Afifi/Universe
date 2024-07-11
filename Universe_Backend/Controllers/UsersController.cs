@@ -53,14 +53,17 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     {
         logger.LogDebug("UsersController.AddFollower: Adding follower with id: {followerId} to user with id: {followedId}", followerId, followedId);
         await usersRepository.AddFollower(followerId, followedId);
+
         logger.LogDebug("UsersController.AddFollower: Getting notification token for follower with id: {followerId}", followerId);
-        var notificationToken = await usersRepository.GetNotificationToken(followerId);
-        logger.LogDebug("UsersController.AddFollower: Got notification token: {notificationToken}", notificationToken);
-        if (notificationToken != null)
+        var notificationTokens = await usersRepository.GetNotificationTokens(followerId);
+
+        logger.LogDebug("UsersController.AddFollower: Got notification token: {@notificationTokens}", notificationTokens);
+        if (notificationTokens != null)
         {
             logger.LogDebug("UsersController.AddFollower: Subscribing follower to topic with id: {followedId}", followedId);
-            await notificationService.SubscribeToTopicAsync([notificationToken], followedId.ToString(), NotificationService.Models.Platform.Android);
+            await notificationService.SubscribeToTopicAsync(notificationTokens.Select(nt => nt.Token).ToList(), followedId.ToString(), NotificationService.Models.Platform.Android);
         }
+
         return Ok();
     }
 
