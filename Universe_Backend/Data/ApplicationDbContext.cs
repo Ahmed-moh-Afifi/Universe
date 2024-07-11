@@ -33,5 +33,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<Story>().ToTable("Stories").OwnsMany(s => s.Widgets);
         modelBuilder.Entity<PostReaction>().ToTable("PostReactions").HasOne(pr => pr.User).WithMany(u => u.PostReactions).HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<StoryReaction>().ToTable("StoryReactions").HasOne(sr => sr.User).WithMany(u => u.StoryReactions).HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<NotificationToken>().ToTable("NotificationTokens").HasOne(nt => nt.User).WithMany(u => u.NotificationTokens).HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction);
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Universe_Backend.Data;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Universe_Backend.Controllers;
 
@@ -43,7 +44,6 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
         logger.LogDebug("AuthController -> login: generating claims");
         var claims = new[]
         {
-            // new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
             new Claim("uid", user.Id),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
@@ -62,11 +62,6 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
         logger.LogDebug("AuthController -> login: saving refresh token");
         context.RefreshTokens.Add(refreshTokenEntity);
 
-        if (model.Username == "ahmedafifi")
-        {
-            user.NotificationToken = "drWSaSCTQsyNAEVH29BS-_:APA91bFNJ7zbEK6F8aPZG0UE8mByWfiSbBlMq4V1hBAUBjuD-pJjCLdk0pSqjQO53PAv87I-MCNqnwPkMx9ULCwXjGYTbP1OXM5h2y7EF5NtiMuZkQrnRzoNHN8C-o4B8Ufx-eE1zcgL";
-        }
-
         await context.SaveChangesAsync();
 
         return Ok(new
@@ -84,18 +79,10 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
 
         logger.LogDebug("AuthController -> refresh: getting user id from claims");
         var userId = claims.First(c => c.Type == "uid");
-        // var userName = claims.First(c => c.Type == ClaimTypes.NameIdentifier);
 
         logger.LogDebug("AuthController -> refresh: getting saved refresh token");
         var savedRefreshToken = await context.RefreshTokens
             .FirstOrDefaultAsync(rt => rt.Token == model.RefreshToken && rt.UserId == userId!.Value);
-
-        // savedRefreshToken = from user in userManager.Users
-        //                     where user.UserName == userName.Value
-        //                     join refreshToken in context.RefreshTokens on user.Id equals refreshToken.UserId
-        //                     select refreshToken;
-
-
 
         if (savedRefreshToken == null || savedRefreshToken.ExpiryDate < DateTime.UtcNow || savedRefreshToken.IsRevoked)
             return Unauthorized();
@@ -114,5 +101,35 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
             AccessToken = newAccessToken,
             RefreshToken = newRefreshToken
         });
+    }
+
+    [HttpPost()]
+    [Route("notificationToken")]
+    [Authorize()]
+    public async Task<IActionResult> AddNotificationToken([FromBody] NotificationTokenModel model)
+    {
+        if (User.Claims.First(c => c.Type == "uid").Value != model.UserId)
+            return Unauthorized();
+
+        var user = await userManager.FindByIdAsync(model.UserId);
+        if (user == null)
+            return NotFound();
+
+        var ntExists = await context.Users.Where(u => u.Id == model.UserId).SelectMany(u => u.NotificationTokens).AnyAsync(nt => nt.Token == model.Token);
+
+        if (!ntExists)
+        {
+            user.NotificationTokens.Add(new NotificationToken()
+            {
+                Token = model.Token,
+                UserId = model.UserId,
+                Platform = model.Platform,
+                CreatedAt = DateTime.UtcNow,
+            });
+        }
+
+        await context.SaveChangesAsync();
+
+        return Ok();
     }
 }
