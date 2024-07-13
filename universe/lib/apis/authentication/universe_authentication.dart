@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:universe/interfaces/iauthentication.dart';
+import 'package:universe/models/register_model.dart';
 import 'package:universe/models/user.dart';
 
 class UniverseAuthentication implements IAuthentication {
@@ -23,11 +24,8 @@ class UniverseAuthentication implements IAuthentication {
   }
 
   @override
-  Future<User?> register(String email, String password) async {
-    var response = await dioClient.post<User>('/register', data: {
-      'email': email,
-      'password': password,
-    });
+  Future<User?> register(RegisterModel registerModel) async {
+    var response = await dioClient.post<User>('/register', data: registerModel);
     return response.data;
   }
 }

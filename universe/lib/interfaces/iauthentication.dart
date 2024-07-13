@@ -1,8 +1,8 @@
+import 'package:universe/models/register_model.dart';
 import 'package:universe/models/user.dart';
 
 abstract class IAuthentication {
-  Future<User?> register(String firstName, String lastName, String email,
-      String userName, bool gender, String password);
+  Future<User?> register(RegisterModel registerModel);
   Future<User?> signIn(String email, String password);
   Future signOut();
   Future sendPasswordResetEmail(User user);
