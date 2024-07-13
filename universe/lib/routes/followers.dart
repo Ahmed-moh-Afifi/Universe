@@ -63,7 +63,7 @@ class FollowersPage extends StatelessWidget {
               padding: const EdgeInsets.only(left: 0, right: 0, top: 20),
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  return UserPresenter(user: state.followers[index].user);
+                  return UserPresenter(user: state.followers[index]);
                 },
                 separatorBuilder: (context, index) => const Divider(
                   color: Color.fromRGBO(80, 80, 80, 0.3),

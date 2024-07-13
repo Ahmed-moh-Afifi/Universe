@@ -26,7 +26,9 @@ class FollowButtonBloc extends Bloc<Object, FollowButtonState> {
             isFollowed: await DataRepository()
                 .dataProvider
                 .isUserOneFollowingUserTwo(
-                    AuthenticationRepository().authenticationService.getUser()!,
+                    AuthenticationRepository()
+                        .authenticationService
+                        .currentUser()!,
                     user),
           ),
         );
@@ -37,8 +39,8 @@ class FollowButtonBloc extends Bloc<Object, FollowButtonState> {
 
     on<FollowEvent>(
       (event, emit) async {
-        await DataRepository().dataProvider.addFollower(
-            user, AuthenticationRepository().authenticationService.getUser()!);
+        await DataRepository().dataProvider.addFollower(user,
+            AuthenticationRepository().authenticationService.currentUser()!);
         emit(const FollowButtonState());
         add(GetFollowState());
       },
@@ -46,8 +48,8 @@ class FollowButtonBloc extends Bloc<Object, FollowButtonState> {
 
     on<UnfollowEvent>(
       (event, emit) async {
-        await DataRepository().dataProvider.removeFollower(
-            user, AuthenticationRepository().authenticationService.getUser()!);
+        await DataRepository().dataProvider.removeFollower(user,
+            AuthenticationRepository().authenticationService.currentUser()!);
         emit(const FollowButtonState());
         add(GetFollowState());
       },

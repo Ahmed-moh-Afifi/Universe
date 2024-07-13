@@ -101,7 +101,7 @@ class FirebaseAuthentication implements IAuthentication {
   }
 
   @override
-  usr.User? getUser() => user;
+  usr.User? currentUser() => user;
 
   @override
   Future<usr.User?> signInWithGoogle() async {
