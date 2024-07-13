@@ -58,7 +58,7 @@ class ProfileBloc extends Bloc<Object, ProfileState> {
     );
 
     add(GetUserEvent(
-        user: AuthenticationRepository().authenticationService.getUser()!));
+        user: AuthenticationRepository().authenticationService.currentUser()!));
   }
 
   Future<void> getUserData() async {

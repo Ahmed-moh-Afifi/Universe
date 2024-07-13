@@ -7,7 +7,7 @@ abstract class IAuthentication {
   Future signOut();
   Future sendPasswordResetEmail(User user);
   Future<User?> loadUser();
-  User? getUser();
+  User? currentUser();
   Future<User?> signInWithGoogle();
   Future<bool> isUserValid(User user);
 }

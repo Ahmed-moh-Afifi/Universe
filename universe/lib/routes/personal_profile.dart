@@ -71,7 +71,7 @@ class PersonalProfile extends StatelessWidget {
                       child: ProfileCard(
                         AuthenticationRepository()
                             .authenticationService
-                            .getUser()!,
+                            .currentUser()!,
                         state.postCount,
                         state.followersCount,
                         state.followingCount,

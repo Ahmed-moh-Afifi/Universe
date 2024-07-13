@@ -32,14 +32,14 @@ class FollowButton extends StatelessWidget {
                   ? (user.uid ==
                           AuthenticationRepository()
                               .authenticationService
-                              .getUser()!
+                              .currentUser()!
                               .uid
                       ? Container()
                       : (state.isFollowed!
                           ? TextButton(
                               style: const ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(
-                                    Colors.transparent),
+                                backgroundColor:
+                                    WidgetStatePropertyAll(Colors.transparent),
                                 shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(

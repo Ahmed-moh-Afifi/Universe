@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/authentication/exceptions/authentication_exception.dart';
+import 'package:universe/models/register_model.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 
@@ -58,10 +59,17 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
                 state: RegisterStates.loading,
               ),
             );
-            final user = await AuthenticationRepository()
-                .authenticationService
-                .register(event.firstName, event.lastName, event.email,
-                    event.userName, event.gender, event.password);
+            final user =
+                await AuthenticationRepository().authenticationService.register(
+                      RegisterModel(
+                        firstName: event.firstName,
+                        lastName: event.lastName,
+                        email: event.email,
+                        username: event.userName,
+                        gender: event.gender,
+                        password: event.password,
+                      ),
+                    );
             // await user.user
             //     ?.updateDisplayName("${event.firstName} ${event.lastName}");
             emit(

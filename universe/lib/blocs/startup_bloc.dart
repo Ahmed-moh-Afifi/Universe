@@ -18,12 +18,13 @@ class StartupCompleted {}
 class StartupBloc extends Bloc<Object, Object> {
   StartupBloc() : super(0) {
     on<StartupCompleted>((event, emit) async {
-      if (AuthenticationRepository().authenticationService.getUser() == null) {
+      if (AuthenticationRepository().authenticationService.currentUser() ==
+          null) {
         RouteGenerator.mainNavigatorkey.currentState!
             .pushReplacementNamed(RouteGenerator.loginPage);
       } else {
         if (await AuthenticationRepository().authenticationService.isUserValid(
-            AuthenticationRepository().authenticationService.getUser()!)) {
+            AuthenticationRepository().authenticationService.currentUser()!)) {
           RouteGenerator.mainNavigatorkey.currentState!
               .pushReplacementNamed(RouteGenerator.homePage);
         } else {
@@ -45,9 +46,10 @@ class StartupBloc extends Bloc<Object, Object> {
     if (!kIsWeb) {
       // until adding the vapid key for web support.
       String fcmToken = await FCM().init();
-      if (AuthenticationRepository().authenticationService.getUser() != null) {
+      if (AuthenticationRepository().authenticationService.currentUser() !=
+          null) {
         DataRepository().dataProvider.saveUserToken(fcmToken,
-            AuthenticationRepository().authenticationService.getUser()!);
+            AuthenticationRepository().authenticationService.currentUser()!);
       }
     }
     add(StartupCompleted());

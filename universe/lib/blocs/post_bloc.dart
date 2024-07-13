@@ -38,12 +38,12 @@ class PostBloc extends Bloc<Object, PostState> {
           DataRepository().dataProvider.removeReaction(post, state.reaction!);
         } else {
           DataRepository().dataProvider.addReaction(
-                AuthenticationRepository().authenticationService.getUser()!,
+                AuthenticationRepository().authenticationService.currentUser()!,
                 post,
                 Reaction(
                   userId: AuthenticationRepository()
                       .authenticationService
-                      .getUser()!
+                      .currentUser()!
                       .uid,
                   reactionType: 'like',
                   reactionDate: DateTime.now(),
@@ -71,7 +71,7 @@ class PostBloc extends Bloc<Object, PostState> {
                           post,
                           AuthenticationRepository()
                               .authenticationService
-                              .getUser()!,
+                              .currentUser()!,
                         ),
               ),
             );

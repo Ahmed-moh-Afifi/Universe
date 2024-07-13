@@ -15,7 +15,7 @@ class HomeState {
   String newPostIcon = 'lib/assets/icons/edit.svg';
   String messagesIcon = 'lib/assets/icons/message.svg';
   String profileIcon = 'lib/assets/icons/user.svg';
-  final user = AuthenticationRepository().authenticationService.getUser()!;
+  final user = AuthenticationRepository().authenticationService.currentUser()!;
   String selectedRouteName = RouteGenerator.feed;
   bool floatingActionButtonVisible;
 

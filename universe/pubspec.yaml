@@ -41,6 +41,7 @@ dependencies:
   flutter_animated_icons: ^1.0.1
   flutter_bloc: ^8.1.6
   flutter_launcher_icons: ^0.13.1
+  flutter_secure_storage: ^9.2.2
   flutter_svg: ^2.0.10+1
   google_sign_in: ^6.2.1
   logger: ^2.2.0

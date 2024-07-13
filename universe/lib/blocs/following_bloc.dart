@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/models/following.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/repositories/data_repository.dart';
 
@@ -13,7 +12,7 @@ enum FollowingStates {
 class FollowingState {
   final FollowingStates previousState;
   final FollowingStates state;
-  final List<Following> following;
+  final List<User> following;
   String? error;
 
   FollowingState(
