@@ -58,7 +58,7 @@ class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
                   state: PersonalProfileStates.notStarted,
                   user: AuthenticationRepository()
                       .authenticationService
-                      .getUser()!,
+                      .currentUser()!,
                   posts: [],
                 )
               : RouteGenerator.personalProfileState!,
@@ -68,7 +68,8 @@ class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
         emit(
           PersonalProfileState(
             state: PersonalProfileStates.loading,
-            user: AuthenticationRepository().authenticationService.getUser()!,
+            user:
+                AuthenticationRepository().authenticationService.currentUser()!,
             posts: [],
           ),
         );
@@ -83,7 +84,8 @@ class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
     if (RouteGenerator.personalProfileState!.state ==
         PersonalProfileStates.notStarted) {
       add(GetUserEvent(
-          user: AuthenticationRepository().authenticationService.getUser()!));
+          user:
+              AuthenticationRepository().authenticationService.currentUser()!));
     }
   }
 

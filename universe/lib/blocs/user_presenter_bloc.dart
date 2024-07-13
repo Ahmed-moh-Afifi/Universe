@@ -25,7 +25,9 @@ class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
             isFollowed: await DataRepository()
                 .dataProvider
                 .isUserOneFollowingUserTwo(
-                    AuthenticationRepository().authenticationService.getUser()!,
+                    AuthenticationRepository()
+                        .authenticationService
+                        .currentUser()!,
                     user),
           ),
         );
@@ -34,8 +36,8 @@ class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
 
     on<FollowEvent>(
       (event, emit) async {
-        await DataRepository().dataProvider.addFollower(
-            user, AuthenticationRepository().authenticationService.getUser()!);
+        await DataRepository().dataProvider.addFollower(user,
+            AuthenticationRepository().authenticationService.currentUser()!);
         emit(const UserPresenterState());
         add(GetFollowState());
       },
@@ -43,8 +45,8 @@ class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
 
     on<UnfollowEvent>(
       (event, emit) async {
-        await DataRepository().dataProvider.removeFollower(
-            user, AuthenticationRepository().authenticationService.getUser()!);
+        await DataRepository().dataProvider.removeFollower(user,
+            AuthenticationRepository().authenticationService.currentUser()!);
         emit(const UserPresenterState());
         add(GetFollowState());
       },

@@ -55,14 +55,14 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
         if (event.reply.isNotEmpty) {
           emit(RepliesState(state.state, RepliesStates.loading, null, null));
           await DataRepository().dataProvider.addReply(
-                AuthenticationRepository().authenticationService.getUser()!,
+                AuthenticationRepository().authenticationService.currentUser()!,
                 post,
                 Post(
                   title: '',
                   body: event.reply,
                   authorId: AuthenticationRepository()
                       .authenticationService
-                      .getUser()!
+                      .currentUser()!
                       .uid,
                   images: [],
                   videos: [],

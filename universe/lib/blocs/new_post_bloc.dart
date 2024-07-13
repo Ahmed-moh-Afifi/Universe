@@ -78,13 +78,15 @@ class NewPostBloc extends Bloc<Object, NewPostState> {
               );
             }
             await DataRepository().dataProvider.addPost(
-                  AuthenticationRepository().authenticationService.getUser()!,
+                  AuthenticationRepository()
+                      .authenticationService
+                      .currentUser()!,
                   Post(
                     title: '',
                     body: event.content,
                     authorId: AuthenticationRepository()
                         .authenticationService
-                        .getUser()!
+                        .currentUser()!
                         .uid,
                     images: event.images,
                     videos: event.videos,
