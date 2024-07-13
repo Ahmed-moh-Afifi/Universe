@@ -104,4 +104,20 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
         await usersRepository.UpdateUser(user);
         return Ok();
     }
+
+    [HttpGet]
+    [Route("username/{userName}/available")]
+    public async Task<ActionResult<bool>> IsUserNameAvailable(string userName)
+    {
+        logger.LogDebug("UsersController.IsUserNameAvailable: Checking if username {userName} is available", userName);
+        return Ok(await usersRepository.IsUserNameAvailable(userName));
+    }
+
+    [HttpGet]
+    [Route("{userOneId}/following/{userTwoId}/exists")]
+    public async Task<ActionResult<bool>> IsUserOneFollowingUserTwo(string userOneId, string userTwoId)
+    {
+        logger.LogDebug("UsersController.IsUserOneFollowingUserTwo: Checking if user with id: {userOneId} is following user with id: {userTwoId}", userOneId, userTwoId);
+        return Ok(await usersRepository.IsUserOneFollowingUserTwo(userOneId, userTwoId));
+    }
 }

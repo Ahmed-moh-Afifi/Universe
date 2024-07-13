@@ -1,7 +1,7 @@
-import 'package:universe/models/follower.dart';
+import 'package:universe/models/user.dart';
 
 class FollowersResponse {
-  final Iterable<Follower> followers;
+  final Iterable<User> followers;
   final Future<FollowersResponse> Function() nextPage;
 
   const FollowersResponse({required this.followers, required this.nextPage});

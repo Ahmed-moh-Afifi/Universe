@@ -15,4 +15,6 @@ public interface IUsersRepository
     public Task<int> GetFollowersCount(string userId);
     public Task<int> GetFollowingCount(string userId);
     public Task<IEnumerable<NotificationToken>> GetNotificationTokens(string userId);
+    public Task<bool> IsUserNameAvailable(string userName);
+    public Task<bool> IsUserOneFollowingUserTwo(string userOneId, string userTwoId);
 }
