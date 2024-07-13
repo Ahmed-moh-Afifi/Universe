@@ -262,11 +262,43 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
         try
         {
             var tokens = await dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.NotificationTokens).ToListAsync();
+            logger.LogDebug("UsersRepository.GetNotificationTokens: Got notification tokens: {@tokens}", tokens.Count);
             return tokens;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "UsersRepository.GetNotificationTokens: Error while getting notification tokens of user with id: {userId}", userId);
+            throw;
+        }
+    }
+
+    public async Task<bool> IsUserNameAvailable(string userName)
+    {
+        logger.LogDebug("UsersRepository.IsUserNameAvailable: Checking if username {userName} is available", userName);
+        try
+        {
+            var user = await userManager.FindByNameAsync(userName);
+            return user == null;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.IsUserNameAvailable: Error while checking if username {userName} is available", userName);
+            throw;
+        }
+    }
+
+    public async Task<bool> IsUserOneFollowingUserTwo(string userOneId, string userTwoId)
+    {
+        logger.LogDebug("UsersRepository.IsUserOneFollowingUserTwo: Checking if user with id {userOneId} is following user with id {userTwoId}", userOneId, userTwoId);
+        try
+        {
+            var userTwo = await GetUserRaw(userTwoId);
+            var found = dbContext.Users.Where(u => u.Id == userOneId).SelectMany(u => u.Following).Contains(userTwo);
+            return found;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "UsersRepository.IsUserOneFollowingUserTwo: Error while checking if user with id {userOneId} is following user with id {userTwoId}", userOneId, userTwoId);
             throw;
         }
     }

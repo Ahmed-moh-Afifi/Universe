@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:universe/apis/authentication/exceptions/authentication_exception.dart';
 import 'package:universe/interfaces/iauthentication.dart';
+import 'package:universe/models/register_model.dart';
 import 'package:universe/models/user.dart' as usr;
 import 'package:universe/models/user.dart';
 import 'package:universe/repositories/data_repository.dart';
@@ -16,10 +17,10 @@ class FirebaseAuthentication implements IAuthentication {
   usr.User? user;
 
   @override
-  Future<usr.User?> register(String firstName, String lastName, String email,
-      String userName, bool gender, String password) async {
-    bool userNameAvailable =
-        await DataRepository().dataProvider.isUserNameAvailable(userName);
+  Future<usr.User?> register(RegisterModel registerModel) async {
+    bool userNameAvailable = await DataRepository()
+        .dataProvider
+        .isUserNameAvailable(registerModel.username);
 
     if (!userNameAvailable) {
       throw UserNameUsedException(code: '');
@@ -28,7 +29,8 @@ class FirebaseAuthentication implements IAuthentication {
     firebase.UserCredential? auth;
     try {
       auth = await firebase.FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(
+              email: registerModel.email, password: registerModel.password);
       await auth.user!.updatePhotoURL(
           'https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9');
     } on firebase.FirebaseAuthException catch (e) {
@@ -49,14 +51,14 @@ class FirebaseAuthentication implements IAuthentication {
       await DataRepository().createUser(
         usr.User(
           uid: auth.user!.uid,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          userName: userName,
+          firstName: registerModel.firstName,
+          lastName: registerModel.lastName,
+          email: registerModel.email,
+          userName: registerModel.username,
           photoUrl:
               'https://lh3.googleusercontent.com/d/1cUl6zMQACAVh1vK7jbxH18k4xW0qyKE9',
           joinDate: auth.user!.metadata.creationTime!,
-          gender: gender,
+          gender: registerModel.gender,
           verified: false,
         ),
       );
