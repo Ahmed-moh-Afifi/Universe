@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:universe/apis/authentication/exceptions/authentication_exception.dart';
 import 'package:universe/interfaces/iauthentication.dart';
+import 'package:universe/models/login_model.dart';
 import 'package:universe/models/register_model.dart';
 import 'package:universe/models/user.dart' as usr;
 import 'package:universe/models/user.dart';
@@ -17,7 +18,7 @@ class FirebaseAuthentication implements IAuthentication {
   usr.User? user;
 
   @override
-  Future<usr.User?> register(RegisterModel registerModel) async {
+  Future<usr.User?> registerAndLogin(RegisterModel registerModel) async {
     bool userNameAvailable = await DataRepository()
         .dataProvider
         .isUserNameAvailable(registerModel.username);
@@ -68,10 +69,10 @@ class FirebaseAuthentication implements IAuthentication {
   }
 
   @override
-  Future<usr.User?> signIn(String email, String password) async {
+  Future<usr.User?> signIn(LoginModel model) async {
     try {
-      await firebase.FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+      await firebase.FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: model.username, password: model.password);
     } on firebase.FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'invalid-credential':

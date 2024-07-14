@@ -59,17 +59,18 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
                 state: RegisterStates.loading,
               ),
             );
-            final user =
-                await AuthenticationRepository().authenticationService.register(
-                      RegisterModel(
-                        firstName: event.firstName,
-                        lastName: event.lastName,
-                        email: event.email,
-                        username: event.userName,
-                        gender: event.gender,
-                        password: event.password,
-                      ),
-                    );
+            final user = await AuthenticationRepository()
+                .authenticationService
+                .registerAndLogin(
+                  RegisterModel(
+                    firstName: event.firstName,
+                    lastName: event.lastName,
+                    email: event.email,
+                    username: event.userName,
+                    gender: event.gender,
+                    password: event.password,
+                  ),
+                );
             // await user.user
             //     ?.updateDisplayName("${event.firstName} ${event.lastName}");
             emit(
