@@ -7,12 +7,14 @@ using Universe_Backend.Data;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Services;
 using Microsoft.AspNetCore.Authorization;
+using Universe_Backend.Repositories;
+using NotificationService.Models;
 
 namespace Universe_Backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthController(UserManager<User> userManager, TokenService tokenService, ApplicationDbContext context, IConfiguration configuration, ILogger<AuthController> logger) : ControllerBase
+public class AuthController(UserManager<User> userManager, TokenService tokenService, NotificationService.NotificationService notificationService, IUsersRepository usersRepository, ApplicationDbContext context, IConfiguration configuration, ILogger<AuthController> logger) : ControllerBase
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -59,10 +61,23 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
             ExpiryDate = DateTime.UtcNow.AddDays(int.Parse(configuration["Jwt:RefreshTokenExpiresInDays"]!))
         };
 
+        var notificationTokens = await usersRepository.GetNotificationTokens(user.Id);
+        var notification = new MultipleUserNotification()
+        {
+            Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
+            Sender = user.Id,
+            Title = "New Login",
+            Body = "You have logged in from a new device.",
+            Platform = Platform.Android
+        };
+
+        await notificationService.SendNotificationAsync(notification);
+
         logger.LogDebug("AuthController -> login: saving refresh token");
         context.RefreshTokens.Add(refreshTokenEntity);
 
         await context.SaveChangesAsync();
+
 
         return Ok(new
         {
