@@ -8,15 +8,15 @@ class TokensModel {
 
   factory TokensModel.fromJson(Map<String, dynamic> json) {
     return TokensModel(
-      accessToken: json['access_token'],
-      refreshToken: json['refresh_token'],
+      accessToken: json['accessToken'],
+      refreshToken: json['refreshToken'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'access_token': accessToken,
-      'refresh_token': refreshToken,
+      'accessToken': accessToken,
+      'refreshToken': refreshToken,
     };
   }
 
@@ -32,5 +32,24 @@ class TokensModel {
 
     return DateTime.fromMillisecondsSinceEpoch(
         decodedTokenPayload['exp'] * 1000);
+  }
+
+  String getIdFromAccessToken() {
+    var tokenPayload = accessToken.split('.')[1];
+    var decodedTokenPayload = jsonDecode(
+      utf8.decode(
+        base64.decode(
+          base64.normalize(tokenPayload),
+        ),
+      ),
+    );
+
+    return decodedTokenPayload['uid'];
+  }
+
+  bool isAccessTokenExpired() {
+    return getAccessTokenExpiration()
+        .subtract(const Duration(minutes: 5))
+        .isBefore(DateTime.now());
   }
 }
