@@ -67,7 +67,7 @@ class TokenManager {
         );
   }
 
-  Future<void> refreshTokens() async {
+  Future<bool> refreshTokens() async {
     var response = await _dio.post<TokensModel>(
       '/refresh',
       data: {
@@ -78,8 +78,12 @@ class TokenManager {
     if (response.statusCode == HttpStatus.ok) {
       _tokensModel = response.data;
       await saveTokens(_tokensModel!);
+
+      return true;
     } else if (response.statusCode == HttpStatus.unauthorized) {
       await deleteTokens();
     }
+
+    return false;
   }
 }
