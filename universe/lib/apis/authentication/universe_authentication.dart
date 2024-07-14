@@ -1,47 +1,85 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
+import 'package:universe/interfaces/iauthentication.dart';
+import 'package:universe/interfaces/iauthentication_api.dart';
+import 'package:universe/interfaces/iusers_data_provider.dart';
+import 'package:universe/models/login_model.dart';
 import 'package:universe/models/register_model.dart';
-import 'package:universe/models/tokens_model.dart';
+import 'package:universe/models/user.dart';
 
-class UniverseAuthentication {
-  final dioClient = Dio();
-  final tokenManager = TokenManager();
+class UniverseAuthentication implements IAuthentication {
+  final IAuthenticationApi _authenticationApi;
+  final IusersDataProvider _usersDataProvider;
 
-  UniverseAuthentication._() {
-    dioClient.options.baseUrl = 'https://localhost:5149/auth';
-  }
+  final TokenManager _tokenManager = TokenManager();
 
-  static final UniverseAuthentication _instance = UniverseAuthentication._();
+  User? _currentUser;
 
-  factory UniverseAuthentication() => _instance;
+  UniverseAuthentication(this._authenticationApi, this._usersDataProvider);
 
-  Future<bool> register(RegisterModel registerModel) async {
-    var response = await dioClient.post('/register', data: registerModel);
-
-    if (response.statusCode == HttpStatus.ok) {
-      return true;
+  @override
+  Future<User?> registerAndLogin(RegisterModel registerModel) async {
+    var apiResponse = await _authenticationApi.register(registerModel);
+    if (apiResponse) {
+      return signIn(LoginModel(
+          username: registerModel.username, password: registerModel.password));
     }
 
-    return false;
+    return null;
   }
 
-  Future<TokensModel?> login(String username, String password) async {
-    var response = await dioClient.post<TokensModel>('/login', data: {
-      'username': username,
-      'password': password,
-    });
-
-    if (response.statusCode == 200) {
-      tokenManager.saveTokens(response.data!);
-      return response.data;
+  @override
+  Future<User?> signIn(LoginModel loginModel) async {
+    var tokens = await _authenticationApi.login(loginModel);
+    if (tokens != null) {
+      await _tokenManager.saveTokens(tokens);
+      _currentUser =
+          await _usersDataProvider.getUser(tokens.getIdFromAccessToken());
+      return _currentUser;
     }
 
-    return response.data;
+    return null;
   }
 
+  @override
   Future signOut() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future sendPasswordResetEmail(User user) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<User?> loadUser() async {
+    var savedTokens = await _tokenManager.readSavedTokens();
+    if (savedTokens == null) {
+      return null;
+    } else if (savedTokens.isAccessTokenExpired()) {
+      var newTokens = await _tokenManager.refreshTokens();
+      if (newTokens == null) {
+        return null;
+      }
+    }
+
+    _currentUser =
+        await _usersDataProvider.getUser(savedTokens.getIdFromAccessToken());
+
+    return _currentUser;
+  }
+
+  @override
+  User? currentUser() {
+    return _currentUser;
+  }
+
+  @override
+  Future<User?> signInWithGoogle() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> isUserValid(User user) {
     throw UnimplementedError();
   }
 }

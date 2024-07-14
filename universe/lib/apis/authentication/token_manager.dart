@@ -16,7 +16,7 @@ class TokenManager {
     baseUrl: 'https://localhost:5149/auth',
   ));
 
-  Future<void> readSavedTokens() async {
+  Future<TokensModel?> readSavedTokens() async {
     AndroidOptions options = const AndroidOptions(
       encryptedSharedPreferences: true,
     );
@@ -28,6 +28,8 @@ class TokenManager {
       Map<String, String> decodedTokensJson = jsonDecode(tokens);
       _tokensModel = TokensModel.fromJson(decodedTokensJson);
     }
+
+    return _tokensModel;
   }
 
   Future<void> saveTokens(TokensModel tokensModel) async {
@@ -60,30 +62,23 @@ class TokenManager {
       return false;
     }
 
-    return _tokensModel!.getAccessTokenExpiration().isAfter(
-          DateTime.now().subtract(
-            const Duration(minutes: 5),
-          ),
-        );
+    return !(_tokensModel!.isAccessTokenExpired());
   }
 
-  Future<bool> refreshTokens() async {
+  Future<TokensModel?> refreshTokens() async {
     var response = await _dio.post<TokensModel>(
       '/refresh',
-      data: {
-        'token-model': _tokensModel,
-      },
+      data: _tokensModel,
     );
 
     if (response.statusCode == HttpStatus.ok) {
       _tokensModel = response.data;
       await saveTokens(_tokensModel!);
-
-      return true;
     } else if (response.statusCode == HttpStatus.unauthorized) {
       await deleteTokens();
+      _tokensModel = null;
     }
 
-    return false;
+    return _tokensModel;
   }
 }

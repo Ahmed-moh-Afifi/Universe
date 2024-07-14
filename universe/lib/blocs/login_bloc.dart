@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/authentication/exceptions/authentication_exception.dart';
+import 'package:universe/models/login_model.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
@@ -61,7 +62,8 @@ class LoginBloc extends Bloc<Object, SignInState> {
             SignInState? state;
             final user = await AuthenticationRepository()
                 .authenticationService
-                .signIn(event.email, event.password);
+                .signIn(LoginModel(
+                    username: event.email, password: event.password));
             state ??= SignInState(
               state: SignInStates.success,
               userCredential: user,
