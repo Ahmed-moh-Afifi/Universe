@@ -1,10 +1,13 @@
-import 'package:dio/dio.dart';
-import 'package:universe/interfaces/iauthentication.dart';
-import 'package:universe/models/register_model.dart';
-import 'package:universe/models/user.dart';
+import 'dart:io';
 
-class UniverseAuthentication implements IAuthentication {
+import 'package:dio/dio.dart';
+import 'package:universe/apis/authentication/token_manager.dart';
+import 'package:universe/models/register_model.dart';
+import 'package:universe/models/tokens_model.dart';
+
+class UniverseAuthentication {
   final dioClient = Dio();
+  final tokenManager = TokenManager();
 
   UniverseAuthentication._() {
     dioClient.options.baseUrl = 'https://localhost:5149/auth';
@@ -14,48 +17,31 @@ class UniverseAuthentication implements IAuthentication {
 
   factory UniverseAuthentication() => _instance;
 
-  @override
-  Future<User?> register(RegisterModel registerModel) async {
-    var response = await dioClient.post<User>('/register', data: registerModel);
-    return response.data;
+  Future<bool> register(RegisterModel registerModel) async {
+    var response = await dioClient.post('/register', data: registerModel);
+
+    if (response.statusCode == HttpStatus.ok) {
+      return true;
+    }
+
+    return false;
   }
 
-  @override
-  Future<User?> signIn(String username, String password) async {
-    var response = await dioClient.post<User>('/login', data: {
-      'email': username,
+  Future<TokensModel?> login(String username, String password) async {
+    var response = await dioClient.post<TokensModel>('/login', data: {
+      'username': username,
       'password': password,
     });
+
+    if (response.statusCode == 200) {
+      tokenManager.saveTokens(response.data!);
+      return response.data;
+    }
+
     return response.data;
   }
 
-  @override
-  Future<User?> signInWithGoogle() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future sendPasswordResetEmail(User user) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future signOut() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<User?> loadUser() async {
-    throw UnimplementedError();
-  }
-
-  @override
-  User? currentUser() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> isUserValid(User user) {
     throw UnimplementedError();
   }
 }
