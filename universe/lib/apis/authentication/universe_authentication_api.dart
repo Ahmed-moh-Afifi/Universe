@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/interfaces/iauthentication_api.dart';
 import 'package:universe/models/login_model.dart';
 import 'package:universe/models/register_model.dart';
@@ -9,7 +8,6 @@ import 'package:universe/models/tokens_model.dart';
 
 class UniverseAuthenticationApi implements IAuthenticationApi {
   final dioClient = Dio();
-  final tokenManager = TokenManager();
 
   UniverseAuthenticationApi._() {
     dioClient.options.baseUrl = 'https://localhost:5149/auth';
@@ -37,7 +35,6 @@ class UniverseAuthenticationApi implements IAuthenticationApi {
         await dioClient.post<TokensModel>('/login', data: loginModel);
 
     if (response.statusCode == 200) {
-      tokenManager.saveTokens(response.data!);
       return response.data;
     }
 
