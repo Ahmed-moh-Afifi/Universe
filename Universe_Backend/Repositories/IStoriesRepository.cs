@@ -11,4 +11,5 @@ public interface IStoriesRepository
     Task<StoryDTO> UpdateStory(StoryDTO story);
     Task DeleteStory(int storyId);
     Task<IEnumerable<StoryDTO>> GetFollowingStories(string userId, DateTime? lastDate, int? lastId);
+    Task<IEnumerable<UserDTO>> GetFollowingWithActiveStories(string userId);
 }

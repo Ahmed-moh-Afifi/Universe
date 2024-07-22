@@ -210,4 +210,28 @@ public class StoriesRepository(ApplicationDbContext dbContext, ILogger<StoriesRe
             throw;
         }
     }
+
+    public async Task<IEnumerable<UserDTO>> GetFollowingWithActiveStories(string userId)
+    {
+        logger.LogDebug("StoriesRepository.GetFollowingWithActiveStories: Getting following with active stories for user with id {UserId}", userId);
+        try
+        {
+            var following = await dbContext.Users
+                .Where(u => u.Id == userId)
+                .SelectMany(u => u.Following)
+                .SelectMany(u => u.Stories)
+                .Where(u => u.IsActive())
+                .OrderBy(s => s.PublishDate)
+                .ThenBy(s => s.Id)
+                .Select(s => s.Author!.ToDTO())
+                .ToListAsync();
+
+            return following;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "StoriesRepository.GetFollowingWithActiveStories: Error getting following with active stories for user with id {UserId}", userId);
+            throw;
+        }
+    }
 }

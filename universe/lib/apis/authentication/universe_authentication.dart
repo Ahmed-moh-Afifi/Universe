@@ -42,11 +42,13 @@ class UniverseAuthentication implements IAuthentication {
 
   @override
   Future signOut() {
+    // TODO: implement signOut
     throw UnimplementedError();
   }
 
   @override
   Future sendPasswordResetEmail(User user) {
+    // TODO: implement sendPasswordResetEmail
     throw UnimplementedError();
   }
 
@@ -75,11 +77,13 @@ class UniverseAuthentication implements IAuthentication {
 
   @override
   Future<User?> signInWithGoogle() {
+    // TODO: implement signInWithGoogle
     throw UnimplementedError();
   }
 
   @override
   Future<bool> isUserValid(User user) {
+    // TODO: implement isUserValid
     throw UnimplementedError();
   }
 }

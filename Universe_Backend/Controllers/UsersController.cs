@@ -22,7 +22,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     [HttpGet]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query, DateTime? lastDate, string? lastId)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query, [FromBody] DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.SearchUsers: Searching for users with query: {query}", query);
         return Ok(await usersRepository.SearchUsers(query, lastDate, lastId));
@@ -31,7 +31,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     [HttpGet]
     [Route("{userId}/followers")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId, DateTime? lastDate, string? lastId)
+    public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId, [FromBody] DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.GetFollowers: Getting followers of user with id: {id}", userId);
         return Ok(await usersRepository.GetFollowers(userId, lastDate, lastId));
@@ -40,7 +40,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     [HttpGet]
     [Route("{userId}/following")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId, DateTime? lastDate, string? lastId)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId, [FromBody] DateTime? lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.GetFollowing: Getting users followed by user with id: {id}", userId);
         return Ok(await usersRepository.GetFollowing(userId, lastDate, lastId));
@@ -98,7 +98,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     [HttpPut]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult> UpdateUser(UserDTO user)
+    public async Task<ActionResult> UpdateUser([FromBody] UserDTO user)
     {
         logger.LogDebug("UsersController.UpdateUser: Updating user {@User}", user);
         await usersRepository.UpdateUser(user);

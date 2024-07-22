@@ -207,4 +207,20 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
         var count = await reactionsRepository.GetReactionsCount(storyId);
         return Ok(count);
     }
+
+    [HttpGet]
+    [Route("following/active")]
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowingWithActiveStories(string userId)
+    {
+        logger.LogDebug("StoriesController.GetFollowingWithActiveStories: Getting following users with active stories for user with id {UserId}", userId);
+        var authorizationResult = await authorizationService.AuthorizeAsync(User, userId, "IsOwner");
+        if (!authorizationResult.Succeeded)
+        {
+            logger.LogWarning("StoriesController.GetFollowingWithActiveStories: User with id {UserId} is not the owner of user with id {OwnerId}", User.FindFirstValue("uid"), userId);
+            return Unauthorized();
+        }
+
+        var users = await storiesRepository.GetFollowingWithActiveStories(userId);
+        return Ok(users);
+    }
 }
