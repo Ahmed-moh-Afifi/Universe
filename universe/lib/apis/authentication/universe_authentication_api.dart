@@ -43,6 +43,7 @@ class UniverseAuthenticationApi implements IAuthenticationApi {
 
   @override
   Future signOut() {
+    // TODO: implement signOut
     throw UnimplementedError();
   }
 }
