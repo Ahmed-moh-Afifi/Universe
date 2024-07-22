@@ -1,21 +1,18 @@
 import 'package:universe/apis/api_client.dart';
 import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/models/api_call_start.dart';
-import 'package:universe/models/following_posts_response.dart';
+import 'package:universe/models/api_data_response.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/reaction.dart';
-import 'package:universe/models/reactions_response.dart';
-import 'package:universe/models/replies_response.dart';
 import 'package:universe/models/user.dart';
-import 'package:universe/models/user_posts_response.dart';
 
 class PostsDataProvider implements IPostsDataProvider {
   late ApiClient _apiClient;
 
-  PostsDataProvider.privateConstructor();
+  PostsDataProvider._privateConstructor();
 
   static final PostsDataProvider _instance =
-      PostsDataProvider.privateConstructor();
+      PostsDataProvider._privateConstructor();
 
   factory PostsDataProvider(String userId) {
     _instance._apiClient = ApiClient('$userId/Posts');
@@ -60,7 +57,7 @@ class PostsDataProvider implements IPostsDataProvider {
   }
 
   @override
-  Future<ReactionsResponse> getPostReactions<T, G>(
+  Future<ApiDataResponse<List<Reaction>>> getPostReactions<T, G>(
       Post post, T start, G limit) async {
     var reactions = await _apiClient.get<List<Reaction>>(
       '/${post.id}/Reactions',
@@ -70,20 +67,20 @@ class PostsDataProvider implements IPostsDataProvider {
       },
     );
 
-    return ReactionsResponse(
-        reactions: reactions.data!,
-        nextPage: () async {
-          return await getPostReactions<ApiCallStart, int>(
-              post,
-              ApiCallStart(
-                  lastDate: reactions.data!.last.reactionDate,
-                  lastId: reactions.data!.last.reactionId),
-              limit as int);
-        });
+    return ApiDataResponse<List<Reaction>>(
+      data: reactions.data!,
+      nextPage: () => getPostReactions<ApiCallStart, int>(
+        post,
+        ApiCallStart(
+            lastDate: reactions.data!.last.reactionDate,
+            lastId: reactions.data!.last.reactionId),
+        limit as int,
+      ),
+    );
   }
 
   @override
-  Future<RepliesResponse> getPostReplies<T, G>(
+  Future<ApiDataResponse<List<Post>>> getPostReplies<T, G>(
       Post post, T start, G limit) async {
     var replies = await _apiClient.get<List<Post>>(
       '/${post.id}/Replies',
@@ -93,20 +90,20 @@ class PostsDataProvider implements IPostsDataProvider {
       },
     );
 
-    return RepliesResponse(
-        replies: replies.data!,
-        nextPage: () async {
-          return await getPostReplies<ApiCallStart, int>(
-              post,
-              ApiCallStart(
-                  lastDate: replies.data!.last.publishDate,
-                  lastId: replies.data!.last.id),
-              limit as int);
-        });
+    return ApiDataResponse<List<Post>>(
+      data: replies.data!,
+      nextPage: () => getPostReplies<ApiCallStart, int>(
+        post,
+        ApiCallStart(
+            lastDate: replies.data!.last.publishDate,
+            lastId: replies.data!.last.id),
+        limit as int,
+      ),
+    );
   }
 
   @override
-  Future<UserPostsResponse> getUserPosts<T, G>(
+  Future<ApiDataResponse<List<Post>>> getUserPosts<T, G>(
       User user, T start, G limit) async {
     var posts = await _apiClient.get<List<Post>>(
       '/',
@@ -116,16 +113,15 @@ class PostsDataProvider implements IPostsDataProvider {
       },
     );
 
-    return UserPostsResponse(
-      posts: posts.data!,
-      nextPage: () async {
-        return await getUserPosts<ApiCallStart, int>(
-            user,
-            ApiCallStart(
-                lastDate: posts.data!.last.publishDate,
-                lastId: posts.data!.last.id),
-            limit as int);
-      },
+    return ApiDataResponse<List<Post>>(
+      data: posts.data!,
+      nextPage: () => getUserPosts<ApiCallStart, int>(
+        user,
+        ApiCallStart(
+            lastDate: posts.data!.last.publishDate,
+            lastId: posts.data!.last.id),
+        limit as int,
+      ),
     );
   }
 
@@ -135,7 +131,7 @@ class PostsDataProvider implements IPostsDataProvider {
   }
 
   @override
-  Future<FollowingPostsResponse> getFollowingPosts<T, G>(
+  Future<ApiDataResponse<List<Post>>> getFollowingPosts<T, G>(
       User user, T start, G limit) async {
     var posts = await _apiClient.get<List<Post>>(
       '/Following',
@@ -145,16 +141,15 @@ class PostsDataProvider implements IPostsDataProvider {
       },
     );
 
-    return FollowingPostsResponse(
-      posts: posts.data!,
-      nextPage: () async {
-        return await getFollowingPosts<ApiCallStart, int>(
-            user,
-            ApiCallStart(
-                lastDate: posts.data!.last.publishDate,
-                lastId: posts.data!.last.id),
-            limit as int);
-      },
+    return ApiDataResponse<List<Post>>(
+      data: posts.data!,
+      nextPage: () => getFollowingPosts<ApiCallStart, int>(
+        user,
+        ApiCallStart(
+            lastDate: posts.data!.last.publishDate,
+            lastId: posts.data!.last.id),
+        limit as int,
+      ),
     );
   }
 
