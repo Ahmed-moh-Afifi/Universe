@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iusers_data_provider.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
-import 'package:universe/repositories/data_repository.dart';
 
 class FollowButtonState {
   final bool? isFollowed;
@@ -17,19 +17,16 @@ class UnfollowEvent {}
 
 class FollowButtonBloc extends Bloc<Object, FollowButtonState> {
   bool builtOnce = false;
-  FollowButtonBloc(User user) : super(const FollowButtonState()) {
+  FollowButtonBloc(IusersDataProvider usersDataProvider, User user)
+      : super(const FollowButtonState()) {
     on<GetFollowState>(
       (event, emit) async {
         // emit(const FollowButtonState());
         emit(
           FollowButtonState(
-            isFollowed: await DataRepository()
-                .dataProvider
-                .isUserOneFollowingUserTwo(
-                    AuthenticationRepository()
-                        .authenticationService
-                        .currentUser()!,
-                    user),
+            isFollowed: await usersDataProvider.isUserOneFollowingUserTwo(
+                AuthenticationRepository().authenticationService.currentUser()!,
+                user),
           ),
         );
         Future.delayed(const Duration(milliseconds: 1000))
@@ -39,7 +36,7 @@ class FollowButtonBloc extends Bloc<Object, FollowButtonState> {
 
     on<FollowEvent>(
       (event, emit) async {
-        await DataRepository().dataProvider.addFollower(user,
+        await usersDataProvider.addFollower(user,
             AuthenticationRepository().authenticationService.currentUser()!);
         emit(const FollowButtonState());
         add(GetFollowState());
@@ -48,7 +45,7 @@ class FollowButtonBloc extends Bloc<Object, FollowButtonState> {
 
     on<UnfollowEvent>(
       (event, emit) async {
-        await DataRepository().dataProvider.removeFollower(user,
+        await usersDataProvider.removeFollower(user,
             AuthenticationRepository().authenticationService.currentUser()!);
         emit(const FollowButtonState());
         add(GetFollowState());

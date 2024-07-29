@@ -16,7 +16,7 @@ namespace Universe_Backend.Controllers;
 [Route("[controller]")]
 public class AuthController(UserManager<User> userManager, TokenService tokenService, NotificationService.NotificationService notificationService, IUsersRepository usersRepository, ApplicationDbContext context, IConfiguration configuration, ILogger<AuthController> logger) : ControllerBase
 {
-    [HttpPost("register")]
+    [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
         if (!ModelState.IsValid)
@@ -34,7 +34,7 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
         return Ok(new { Message = "User registered successfully" });
     }
 
-    [HttpPost("login")]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         logger.LogDebug("AuthController -> login: finding user");
@@ -62,16 +62,20 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
         };
 
         var notificationTokens = await usersRepository.GetNotificationTokens(user.Id);
-        var notification = new MultipleUserNotification()
-        {
-            Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
-            Sender = user.Id,
-            Title = "New Login",
-            Body = "You have logged in from a new device.",
-            Platform = Platform.Android
-        };
 
-        await notificationService.SendNotificationAsync(notification);
+        if (notificationTokens.Any())
+        {
+            var notification = new MultipleUserNotification()
+            {
+                Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
+                Sender = user.Id,
+                Title = "New Login",
+                Body = "You have logged in from a new device.",
+                Platform = Platform.Android
+            };
+
+            await notificationService.SendNotificationAsync(notification);
+        }
 
         logger.LogDebug("AuthController -> login: saving refresh token");
         context.RefreshTokens.Add(refreshTokenEntity);
@@ -86,7 +90,7 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
         });
     }
 
-    [HttpPost("refresh")]
+    [HttpPost("Refresh")]
     public async Task<IActionResult> Refresh([FromBody] TokenModel model)
     {
         logger.LogDebug("AuthController -> refresh: getting claims from expired token");
@@ -119,21 +123,25 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
     }
 
     [HttpPost()]
-    [Route("notificationToken")]
+    [Route("NotificationToken")]
     [Authorize()]
     public async Task<IActionResult> AddNotificationToken([FromBody] NotificationTokenModel model)
     {
+        logger.LogDebug("AuthController -> addNotificationToken: checking if user is authorized");
         if (User.Claims.First(c => c.Type == "uid").Value != model.UserId)
             return Unauthorized();
 
+        logger.LogDebug("AuthController -> addNotificationToken: finding user");
         var user = await userManager.FindByIdAsync(model.UserId);
         if (user == null)
             return NotFound();
 
+        logger.LogDebug("AuthController -> addNotificationToken: checking if token already exists");
         var ntExists = await context.Users.Where(u => u.Id == model.UserId).SelectMany(u => u.NotificationTokens).AnyAsync(nt => nt.Token == model.Token);
 
         if (!ntExists)
         {
+            logger.LogDebug("AuthController -> addNotificationToken: adding new notification token");
             user.NotificationTokens.Add(new NotificationToken()
             {
                 Token = model.Token,

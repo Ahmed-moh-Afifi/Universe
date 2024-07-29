@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/models/post.dart';
-import 'package:universe/models/reaction.dart';
-import 'package:universe/repositories/data_repository.dart';
+import 'package:universe/models/post_reaction.dart';
 
 enum ReactionsStates {
   loading,
@@ -12,7 +12,7 @@ enum ReactionsStates {
 class ReactionsState {
   final ReactionsStates state;
   final ReactionsStates previousState;
-  final List<Reaction>? reactions;
+  final List<PostReaction>? reactions;
   final String? error;
 
   const ReactionsState(
@@ -22,8 +22,9 @@ class ReactionsState {
 class GetReactions {}
 
 class ReactionsBloc extends Bloc<Object, ReactionsState> {
+  final IPostsDataProvider postsDataProvider;
   final Post post;
-  ReactionsBloc(this.post)
+  ReactionsBloc(this.postsDataProvider, this.post)
       : super(const ReactionsState(
             ReactionsStates.loading, ReactionsStates.loading, null, null)) {
     on<GetReactions>(
@@ -36,14 +37,13 @@ class ReactionsBloc extends Bloc<Object, ReactionsState> {
             null,
           ),
         );
-        var reactionsResponse = await DataRepository()
-            .dataProvider
-            .getPostReactions(post, null, 25);
+        var reactionsResponse =
+            await postsDataProvider.getPostReactions(post, null, 25);
         emit(
           ReactionsState(
             ReactionsStates.loaded,
             ReactionsStates.loading,
-            reactionsResponse.reactions.toList(),
+            reactionsResponse.data.toList(),
             null,
           ),
         );

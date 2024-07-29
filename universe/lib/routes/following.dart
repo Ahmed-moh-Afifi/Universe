@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/apis/users_data_provider.dart';
 import 'package:universe/blocs/following_bloc.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/route_generator.dart';
@@ -9,7 +10,8 @@ import 'package:universe/widgets/user_presenter.dart';
 class FollowingPage extends StatelessWidget {
   final User user;
   final FollowingBloc bloc;
-  FollowingPage(this.user, {super.key}) : bloc = FollowingBloc(user);
+  FollowingPage(this.user, {super.key})
+      : bloc = FollowingBloc(UsersDataProvider(), user);
 
   @override
   Widget build(BuildContext context) {

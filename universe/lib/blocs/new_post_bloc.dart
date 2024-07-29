@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/models/post.dart';
+import 'package:universe/models/widget.dart';
 import 'package:universe/repositories/authentication_repository.dart';
-import 'package:universe/repositories/data_repository.dart';
 import 'package:universe/route_generator.dart';
 
 enum NewPostStates {
@@ -40,16 +41,20 @@ class PostEvent {
   final String content;
   final List<String> images;
   final List<String> videos;
+  final List<String> audios;
+  final List<Widget> widgets;
 
   const PostEvent({
     required this.content,
     required this.images,
     required this.videos,
+    required this.audios,
+    required this.widgets,
   });
 }
 
 class NewPostBloc extends Bloc<Object, NewPostState> {
-  NewPostBloc()
+  NewPostBloc(IPostsDataProvider postsDataProvider)
       : super(RouteGenerator.newPostState.state == NewPostStates.informative ||
                 RouteGenerator.newPostState.state == NewPostStates.success
             ? NewPostState(
@@ -77,22 +82,23 @@ class NewPostBloc extends Bloc<Object, NewPostState> {
                 ),
               );
             }
-            await DataRepository().dataProvider.addPost(
-                  AuthenticationRepository()
-                      .authenticationService
-                      .currentUser()!,
-                  Post(
-                    title: '',
-                    body: event.content,
-                    authorId: AuthenticationRepository()
-                        .authenticationService
-                        .currentUser()!
-                        .uid,
-                    images: event.images,
-                    videos: event.videos,
-                    publishDate: DateTime.now(),
-                  ),
-                );
+            await postsDataProvider.addPost(
+              AuthenticationRepository().authenticationService.currentUser()!,
+              Post(
+                title: '',
+                body: event.content,
+                author: AuthenticationRepository()
+                    .authenticationService
+                    .currentUser()!,
+                images: event.images,
+                videos: event.videos,
+                audios: event.audios,
+                widgets: event.widgets,
+                replyToPost: null,
+                childPostId: null,
+                publishDate: DateTime.now(),
+              ),
+            );
             if (!isClosed) {
               emit(
                 NewPostState(

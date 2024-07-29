@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:universe/apis/api_client.dart';
 import 'package:universe/interfaces/iusers_data_provider.dart';
 import 'package:universe/models/api_call_start.dart';
@@ -11,6 +13,7 @@ class UsersDataProvider implements IusersDataProvider {
   @override
   Future<SearchUsersResponse> searchUsers<T, G>(
       String query, T start, G limit) async {
+    log("Searching users", name: "UsersDataProvider");
     var response = await _apiClient.get<List<User>>(
       '/',
       (start as ApiCallStart).lastDate,
@@ -37,31 +40,38 @@ class UsersDataProvider implements IusersDataProvider {
 
   @override
   Future<User> getUser(String uid) async {
-    var response = await _apiClient.get<User>('/$uid', null, {});
-    return response.data!;
+    log("Getting user", name: "UsersDataProvider");
+    var response =
+        await _apiClient.get<Map<String, dynamic>>('/$uid', null, {});
+    log(response.data.toString(), name: "UsersDataProvider");
+    return User.fromJson(response.data!);
   }
 
   @override
   Future addFollower(User user, User follower) async {
-    await _apiClient.post('/${user.uid}/followers/${follower.uid}', null, {});
+    log("Adding follower", name: "UsersDataProvider");
+    await _apiClient.post('/${user.uid}/Followers/${follower.uid}', null, {});
+    log("Follower added", name: "UsersDataProvider");
   }
 
   @override
   Future removeFollower(User user, User follower) async {
-    await _apiClient.delete('/${user.uid}/followers/${follower.uid}', null, {});
+    log("Removing follower", name: "UsersDataProvider");
+    await _apiClient.delete('/${user.uid}/Followers/${follower.uid}', null, {});
+    log("Follower removed", name: "UsersDataProvider");
   }
 
   @override
   Future<int> getUserFollowersCount(User user) async {
     var response =
-        await _apiClient.get<int>('/${user.uid}/followers/count', null, {});
+        await _apiClient.get<int>('/${user.uid}/Followers/Count', null, {});
     return response.data!;
   }
 
   @override
   Future<int> getUserFollowingCount(User user) async {
     var response =
-        await _apiClient.get<int>('/${user.uid}/following/count', null, {});
+        await _apiClient.get<int>('/${user.uid}/Following/Count', null, {});
     return response.data!;
   }
 
@@ -69,7 +79,7 @@ class UsersDataProvider implements IusersDataProvider {
   Future<FollowersResponse> getUserFollowers<T, G>(
       User user, T start, G limit) async {
     var response = await _apiClient.get<Iterable<User>>(
-      '/${user.uid}/followers',
+      '/${user.uid}/Followers',
       (start as ApiCallStart).lastId,
       {
         'lastDate': (start as ApiCallStart).lastDate,
@@ -95,14 +105,14 @@ class UsersDataProvider implements IusersDataProvider {
   @override
   Future<bool> isUserNameAvailable(String userName) async {
     var response =
-        await _apiClient.get<bool>('/userName/$userName/available', null, {});
+        await _apiClient.get<bool>('/UserName/$userName/Available', null, {});
     return response.data!;
   }
 
   @override
   Future<bool> isUserOneFollowingUserTwo(User userOne, User userTwo) async {
     var response = await _apiClient
-        .get<bool>('/${userOne.uid}/following/${userTwo.uid}/exists', null, {});
+        .get<bool>('/${userOne.uid}/Following/${userTwo.uid}/Exists', null, {});
     return response.data!;
   }
 
@@ -110,7 +120,7 @@ class UsersDataProvider implements IusersDataProvider {
   Future<FollowingResponse> getUserFollowing<T, G>(
       User user, T start, G limit) async {
     var response = await _apiClient.get<Iterable<User>>(
-      '/${user.uid}/following',
+      '/${user.uid}/Following',
       (start as ApiCallStart).lastDate,
       {
         'lastId': (start as ApiCallStart).lastId,

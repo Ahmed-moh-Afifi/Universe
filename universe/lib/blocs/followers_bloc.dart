@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iusers_data_provider.dart';
 import 'package:universe/models/user.dart';
-import 'package:universe/repositories/data_repository.dart';
 
 enum FollowersStates {
   notStarted,
@@ -30,7 +30,7 @@ class GetFollowers {
 
 class FollowersBloc extends Bloc<Object, FollowersState> {
   final User user;
-  FollowersBloc(this.user)
+  FollowersBloc(IusersDataProvider usersDataProvider, this.user)
       : super(
           FollowersState(
             previousState: FollowersStates.notStarted,
@@ -48,9 +48,8 @@ class FollowersBloc extends Bloc<Object, FollowersState> {
             followers: [],
           ),
         );
-        final followers = await DataRepository()
-            .dataProvider
-            .getUserFollowers(event.user, null, 50);
+        final followers =
+            await usersDataProvider.getUserFollowers(event.user, null, 50);
         emit(
           FollowersState(
             previousState: state.state,

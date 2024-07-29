@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:universe/apis/api_client.dart';
 import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/models/api_call_start.dart';
 import 'package:universe/models/api_data_response.dart';
 import 'package:universe/models/post.dart';
-import 'package:universe/models/reaction.dart';
+import 'package:universe/models/post_reaction.dart';
 import 'package:universe/models/user.dart';
 
 class PostsDataProvider implements IPostsDataProvider {
@@ -25,7 +27,7 @@ class PostsDataProvider implements IPostsDataProvider {
   }
 
   @override
-  Future addReaction(User user, Post post, Reaction reaction) async {
+  Future addReaction(User user, Post post, PostReaction reaction) async {
     await _apiClient.post('/${post.id}/Reactions', reaction, {});
   }
 
@@ -45,9 +47,10 @@ class PostsDataProvider implements IPostsDataProvider {
   }
 
   @override
-  Future<Reaction?> isPostReactedToByUser(Post post, User user) {
-    // TODO: implement isPostReactedToByUser
-    throw UnimplementedError();
+  Future<PostReaction?> isPostReactedToByUser(Post post, User user) async {
+    return (await _apiClient
+            .get<PostReaction>('/${post.id}/Reactions/${user.uid}', null, {}))
+        .data;
   }
 
   @override
@@ -57,9 +60,9 @@ class PostsDataProvider implements IPostsDataProvider {
   }
 
   @override
-  Future<ApiDataResponse<List<Reaction>>> getPostReactions<T, G>(
+  Future<ApiDataResponse<List<PostReaction>>> getPostReactions<T, G>(
       Post post, T start, G limit) async {
-    var reactions = await _apiClient.get<List<Reaction>>(
+    var reactions = await _apiClient.get<List<PostReaction>>(
       '/${post.id}/Reactions',
       (start as ApiCallStart).lastDate,
       {
@@ -67,13 +70,13 @@ class PostsDataProvider implements IPostsDataProvider {
       },
     );
 
-    return ApiDataResponse<List<Reaction>>(
+    return ApiDataResponse<List<PostReaction>>(
       data: reactions.data!,
       nextPage: () => getPostReactions<ApiCallStart, int>(
         post,
         ApiCallStart(
             lastDate: reactions.data!.last.reactionDate,
-            lastId: reactions.data!.last.reactionId),
+            lastId: reactions.data!.last.id),
         limit as int,
       ),
     );
@@ -105,21 +108,24 @@ class PostsDataProvider implements IPostsDataProvider {
   @override
   Future<ApiDataResponse<List<Post>>> getUserPosts<T, G>(
       User user, T start, G limit) async {
-    var posts = await _apiClient.get<List<Post>>(
+    var response = await _apiClient.get(
       '/',
-      (start as ApiCallStart).lastDate,
+      (start as ApiCallStart?)?.lastDate,
       {
-        'lastId': (start as ApiCallStart).lastId,
+        'lastId': (start as ApiCallStart?)?.lastId,
       },
     );
 
+    List<Post> posts =
+        (response.data! as List<dynamic>).map((e) => Post.fromJson(e)).toList();
+
+    log(response.data.toString(), name: 'PostsDataProvider');
+
     return ApiDataResponse<List<Post>>(
-      data: posts.data!,
+      data: posts,
       nextPage: () => getUserPosts<ApiCallStart, int>(
         user,
-        ApiCallStart(
-            lastDate: posts.data!.last.publishDate,
-            lastId: posts.data!.last.id),
+        ApiCallStart(lastDate: posts.last.publishDate, lastId: posts.last.id),
         limit as int,
       ),
     );
@@ -154,9 +160,8 @@ class PostsDataProvider implements IPostsDataProvider {
   }
 
   @override
-  Future removeReaction(Post post, Reaction reaction) async {
-    await _apiClient
-        .delete('/${post.id}/Reactions/${reaction.reactionId}', null, {});
+  Future removeReaction(Post post, PostReaction reaction) async {
+    await _apiClient.delete('/${post.id}/Reactions/${reaction.id}', null, {});
   }
 
   @override

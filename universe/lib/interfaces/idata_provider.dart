@@ -1,7 +1,7 @@
 import 'package:universe/models/followers_response.dart';
 import 'package:universe/models/following_response.dart';
 import 'package:universe/models/post.dart';
-import 'package:universe/models/reaction.dart';
+import 'package:universe/models/post_reaction.dart';
 import 'package:universe/models/reactions_response.dart';
 import 'package:universe/models/replies_response.dart';
 import 'package:universe/models/search_users_response.dart';
@@ -43,9 +43,9 @@ abstract class IDataProvider {
 
   Future<int> getUserPostsCount(User user);
 
-  Future addReaction(User user, Post post, Reaction reaction);
+  Future addReaction(User user, Post post, PostReaction reaction);
 
-  Future removeReaction(Post post, Reaction reaction);
+  Future removeReaction(Post post, PostReaction reaction);
 
   Future<ReactionsResponse> getPostReactions<T, G>(Post post, T start, G limit);
 
@@ -53,5 +53,5 @@ abstract class IDataProvider {
 
   Stream<int> getPostReactionsCountStream(Post post);
 
-  Future<Reaction?> isPostReactedToByUser(Post post, User user);
+  Future<PostReaction?> isPostReactedToByUser(Post post, User user);
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:universe/apis/posts_data_provider.dart';
 import 'package:universe/blocs/post_bloc.dart';
 import 'package:universe/extensions/date_time_extensions.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/user_presenter.dart';
@@ -14,12 +16,18 @@ class PostWidget extends StatelessWidget {
   final User user;
   final bool showFollowButton;
   final PostBloc bloc;
+
   PostWidget({
     required this.post,
     required this.user,
     this.showFollowButton = true,
     super.key,
-  }) : bloc = PostBloc(post);
+  }) : bloc = PostBloc(
+          PostsDataProvider(
+            AuthenticationRepository().authenticationService.currentUser()!.uid,
+          ),
+          post,
+        );
 
   @override
   Widget build(BuildContext context) {

@@ -87,7 +87,7 @@ class LoginBloc extends Bloc<Object, SignInState> {
             emit(
               SignInState(
                 state: SignInStates.failed,
-                error: 'something\'s gone wrong :(',
+                error: 'something\'s gone wrong :( \n${(e)}',
               ),
             );
           }

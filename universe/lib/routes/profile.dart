@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/apis/posts_data_provider.dart';
+import 'package:universe/apis/users_data_provider.dart';
 import 'package:universe/blocs/profile_bloc.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/widgets/follow_button.dart';
@@ -10,7 +12,14 @@ class Profile extends StatelessWidget {
   final ProfileBloc bloc;
   final User user;
 
-  Profile(this.user, {super.key}) : bloc = ProfileBloc(user);
+  Profile(this.user, {super.key})
+      : bloc = ProfileBloc(
+          UsersDataProvider(),
+          PostsDataProvider(
+            user.uid,
+          ),
+          user,
+        );
 
   @override
   Widget build(BuildContext context) {

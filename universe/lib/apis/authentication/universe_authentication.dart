@@ -84,6 +84,6 @@ class UniverseAuthentication implements IAuthentication {
   @override
   Future<bool> isUserValid(User user) {
     // TODO: implement isUserValid
-    throw UnimplementedError();
+    return Future.value(true);
   }
 }

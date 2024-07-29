@@ -13,8 +13,9 @@ public class PostDTO
     public DateTime PublishDate { get; set; } = DateTime.Now;
     public int? ReplyToPost { get; set; }
     public int? ChildPostId { get; set; }
-    public required string AuthorId { get; set; }
     public ICollection<Widget>? Widgets { get; set; }
+    // public required string AuthorId { get; set; }
+    public required UserDTO Author { get; set; }
 
     public Post ToModel()
     {
@@ -29,8 +30,26 @@ public class PostDTO
             PublishDate = PublishDate,
             ReplyToPost = ReplyToPost,
             ChildPostId = ChildPostId,
-            AuthorId = AuthorId,
+            AuthorId = Author.Id,
             Widgets = Widgets
+        };
+    }
+
+    public static PostDTO FromPost(Post post)
+    {
+        return new PostDTO
+        {
+            Id = post.Id,
+            Title = post.Title,
+            Body = post.Body,
+            Images = post.Images,
+            Videos = post.Videos,
+            Audios = post.Audios,
+            PublishDate = post.PublishDate,
+            ReplyToPost = post.ReplyToPost,
+            ChildPostId = post.ChildPostId,
+            Author = post.Author!.ToDTO(),
+            Widgets = post.Widgets
         };
     }
 }

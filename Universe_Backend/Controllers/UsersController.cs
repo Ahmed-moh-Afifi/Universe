@@ -29,7 +29,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     }
 
     [HttpGet]
-    [Route("{userId}/followers")]
+    [Route("{userId}/Followers")]
     [Authorize()]
     public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId, [FromBody] DateTime? lastDate, string? lastId)
     {
@@ -38,7 +38,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     }
 
     [HttpGet]
-    [Route("{userId}/following")]
+    [Route("{userId}/Following")]
     [Authorize()]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId, [FromBody] DateTime? lastDate, string? lastId)
     {
@@ -47,7 +47,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     }
 
     [HttpPost]
-    [Route("{followedId}/followers/{followerId}")]
+    [Route("{followedId}/Followers/{followerId}")]
     [Authorize()]
     public async Task<ActionResult> AddFollower(string followerId, string followedId)
     {
@@ -68,7 +68,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     }
 
     [HttpDelete]
-    [Route("{followedId}/followers/{followerId}")]
+    [Route("{followedId}/Followers/{followerId}")]
     [Authorize()]
     public async Task<ActionResult> RemoveFollower(string followerId, string followedId)
     {
@@ -78,7 +78,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     }
 
     [HttpGet]
-    [Route("{userId}/followers/count")]
+    [Route("{userId}/Followers/Count")]
     [Authorize()]
     public async Task<ActionResult<int>> GetFollowersCount(string userId)
     {
@@ -87,7 +87,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     }
 
     [HttpGet]
-    [Route("{userId}following/count")]
+    [Route("{userId}/Following/Count")]
     [Authorize()]
     public async Task<ActionResult<int>> GetFollowingCount(string userId)
     {
@@ -106,7 +106,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     }
 
     [HttpGet]
-    [Route("username/{userName}/available")]
+    [Route("Username/{userName}/Available")]
     public async Task<ActionResult<bool>> IsUserNameAvailable(string userName)
     {
         logger.LogDebug("UsersController.IsUserNameAvailable: Checking if username {userName} is available", userName);
@@ -114,7 +114,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     }
 
     [HttpGet]
-    [Route("{userOneId}/following/{userTwoId}/exists")]
+    [Route("{userOneId}/Following/{userTwoId}/Exists")]
     public async Task<ActionResult<bool>> IsUserOneFollowingUserTwo(string userOneId, string userTwoId)
     {
         logger.LogDebug("UsersController.IsUserOneFollowingUserTwo: Checking if user with id: {userOneId} is following user with id: {userTwoId}", userOneId, userTwoId);
