@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iusers_data_provider.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
-import 'package:universe/repositories/data_repository.dart';
 
 class UserPresenterState {
   final bool? isFollowed;
@@ -17,18 +17,15 @@ class UnfollowEvent {}
 
 class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
   final User user;
-  UserPresenterBloc(this.user) : super(const UserPresenterState()) {
+  UserPresenterBloc(IusersDataProvider usersDataProvider, this.user)
+      : super(const UserPresenterState()) {
     on<GetFollowState>(
       (event, emit) async {
         emit(
           UserPresenterState(
-            isFollowed: await DataRepository()
-                .dataProvider
-                .isUserOneFollowingUserTwo(
-                    AuthenticationRepository()
-                        .authenticationService
-                        .currentUser()!,
-                    user),
+            isFollowed: await usersDataProvider.isUserOneFollowingUserTwo(
+                AuthenticationRepository().authenticationService.currentUser()!,
+                user),
           ),
         );
       },
@@ -36,7 +33,7 @@ class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
 
     on<FollowEvent>(
       (event, emit) async {
-        await DataRepository().dataProvider.addFollower(user,
+        await usersDataProvider.addFollower(user,
             AuthenticationRepository().authenticationService.currentUser()!);
         emit(const UserPresenterState());
         add(GetFollowState());
@@ -45,7 +42,7 @@ class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
 
     on<UnfollowEvent>(
       (event, emit) async {
-        await DataRepository().dataProvider.removeFollower(user,
+        await usersDataProvider.removeFollower(user,
             AuthenticationRepository().authenticationService.currentUser()!);
         emit(const UserPresenterState());
         add(GetFollowState());

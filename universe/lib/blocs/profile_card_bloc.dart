@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_data_provider.dart';
+import 'package:universe/interfaces/iusers_data_provider.dart';
 import 'package:universe/models/user.dart';
-import 'package:universe/repositories/data_repository.dart';
 
 class ProfileCardState {
   final User user;
@@ -23,17 +24,18 @@ class GetUserEvent {
 }
 
 class ProfileCardBloc extends Bloc<Object, ProfileCardState> {
-  ProfileCardBloc(User user) : super(ProfileCardState(user: user)) {
+  final IusersDataProvider usersDataProvider;
+  final IPostsDataProvider postsDataProvider;
+
+  ProfileCardBloc(this.usersDataProvider, this.postsDataProvider, User user)
+      : super(ProfileCardState(user: user)) {
     on<GetUserEvent>(
       (event, emit) async {
         final newState = ProfileCardState(
           user: user,
-          postCount:
-              await DataRepository().dataProvider.getUserPostsCount(user),
-          followersCount:
-              await DataRepository().dataProvider.getUserFollowersCount(user),
-          followingCount:
-              await DataRepository().dataProvider.getUserFollowingCount(user),
+          postCount: await postsDataProvider.getUserPostsCount(user),
+          followersCount: await usersDataProvider.getUserFollowersCount(user),
+          followingCount: await usersDataProvider.getUserFollowingCount(user),
         );
         emit(newState);
       },

@@ -1,6 +1,6 @@
 import 'package:universe/models/api_data_response.dart';
 import 'package:universe/models/post.dart';
-import 'package:universe/models/reaction.dart';
+import 'package:universe/models/post_reaction.dart';
 import 'package:universe/models/user.dart';
 
 abstract class IPostsDataProvider {
@@ -24,18 +24,18 @@ abstract class IPostsDataProvider {
 
   Future<int> getUserPostsCount(User user);
 
-  Future<ApiDataResponse<List<Reaction>>> getPostReactions<T, G>(
+  Future<ApiDataResponse<List<PostReaction>>> getPostReactions<T, G>(
       Post post, T start, G limit);
 
-  Future addReaction(User user, Post post, Reaction reaction);
+  Future addReaction(User user, Post post, PostReaction reaction);
 
   Future<int> getPostReactionsCount(Post post);
 
-  Future removeReaction(Post post, Reaction reaction);
+  Future removeReaction(Post post, PostReaction reaction);
 
   Stream<int> getPostReactionsCountStream(Post post);
 
-  Future<Reaction?> isPostReactedToByUser(Post post, User user);
+  Future<PostReaction?> isPostReactedToByUser(Post post, User user);
 
   Future<ApiDataResponse<List<Post>>> getFollowingPosts<T, G>(
       User user, T start, G limit);

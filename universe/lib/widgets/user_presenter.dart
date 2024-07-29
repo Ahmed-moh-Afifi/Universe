@@ -74,7 +74,8 @@ class UserPresenter extends StatelessWidget {
                 Radius.circular(27.5),
               ),
             ),
-            child: Image.network(user.photoUrl!),
+            child: Image.network(
+                user.photoUrl ?? 'https://via.placeholder.com/150'),
           ),
           trailing: showFollowButton
               ? SizedBox(width: 110, child: FollowButton(user))

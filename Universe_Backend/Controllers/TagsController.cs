@@ -10,7 +10,7 @@ namespace Universe_Backend.Controllers;
 public class TagsController(ITagsRepository tagsRepository, ILogger<TagsController> logger) : ControllerBase
 {
     [HttpGet()]
-    [Route("search")]
+    [Route("Search")]
     [Authorize()]
     public async Task<ActionResult<IEnumerable<TagDTO>>> SearchTags(string query, [FromBody] DateTime? lastDate, int? lastId)
     {
@@ -20,7 +20,7 @@ public class TagsController(ITagsRepository tagsRepository, ILogger<TagsControll
     }
 
     [HttpGet()]
-    [Route("{tag}/posts")]
+    [Route("{tag}/Posts")]
     [Authorize()]
     public async Task<ActionResult<IEnumerable<PostDTO>>> GetPostsByTag(string tag, [FromBody] DateTime? lastDate, int? lastId)
     {
@@ -30,7 +30,7 @@ public class TagsController(ITagsRepository tagsRepository, ILogger<TagsControll
     }
 
     [HttpGet()]
-    [Route("{tag}/stories")]
+    [Route("{tag}/Stories")]
     [Authorize()]
     public async Task<ActionResult<IEnumerable<StoryDTO>>> GetStoriesByTag(string tag, [FromBody] DateTime? lastDate, int? lastId)
     {

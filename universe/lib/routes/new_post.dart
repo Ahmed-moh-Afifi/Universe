@@ -2,11 +2,18 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:universe/apis/posts_data_provider.dart';
 import 'package:universe/blocs/new_post_bloc.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 
 class NewPost extends StatefulWidget {
   final NewPostBloc bloc;
-  NewPost({super.key}) : bloc = NewPostBloc();
+  NewPost({super.key})
+      : bloc = NewPostBloc(
+          PostsDataProvider(
+            AuthenticationRepository().authenticationService.currentUser()!.uid,
+          ),
+        );
 
   @override
   State<NewPost> createState() => _NewPostState();
@@ -104,6 +111,8 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                         content: postController.text,
                         images: [],
                         videos: [],
+                        audios: [],
+                        widgets: [],
                       ),
                     ),
                     child: Row(

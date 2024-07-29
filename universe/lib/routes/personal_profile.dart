@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:universe/apis/posts_data_provider.dart';
+import 'package:universe/apis/users_data_provider.dart';
 import 'package:universe/blocs/personal_profile_bloc.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
@@ -10,7 +12,13 @@ import 'package:universe/widgets/user_posts_viewer.dart';
 
 class PersonalProfile extends StatelessWidget {
   final PersonalProfileBloc bloc;
-  PersonalProfile({super.key}) : bloc = PersonalProfileBloc();
+  PersonalProfile({super.key})
+      : bloc = PersonalProfileBloc(
+          UsersDataProvider(),
+          PostsDataProvider(
+            AuthenticationRepository().authenticationService.currentUser()!.uid,
+          ),
+        );
 
   @override
   Widget build(BuildContext context) {

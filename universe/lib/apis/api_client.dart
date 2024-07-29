@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
+import 'package:universe/models/config.dart';
 
 class ApiClient {
   final TokenManager _tokenManager = TokenManager();
   final Dio _dio;
 
   ApiClient(String path)
-      : _dio = Dio(BaseOptions(baseUrl: 'https://localhost:5149/$path')) {
+      : _dio = Dio(BaseOptions(baseUrl: '${Config().api}/$path')) {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

@@ -34,8 +34,8 @@ public class Post
             PublishDate = PublishDate,
             ReplyToPost = ReplyToPost,
             ChildPostId = ChildPostId,
-            AuthorId = AuthorId,
-            Widgets = Widgets
+            Widgets = Widgets,
+            Author = Author!.ToDTO()
         };
     }
 
@@ -49,7 +49,7 @@ public class Post
         PublishDate = post.PublishDate;
         ReplyToPost = post.ReplyToPost;
         ChildPostId = post.ChildPostId;
-        AuthorId = post.AuthorId;
+        AuthorId = post.Author.Id;
         Widgets = post.Widgets;
         return this;
     }
