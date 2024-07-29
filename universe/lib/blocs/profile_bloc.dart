@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_data_provider.dart';
+import 'package:universe/interfaces/iusers_data_provider.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
-import 'package:universe/repositories/data_repository.dart';
 
 enum ProfileStates {
   notStarted,
@@ -40,7 +41,11 @@ class GotUserEvent {
 }
 
 class ProfileBloc extends Bloc<Object, ProfileState> {
-  ProfileBloc(User user) : super(ProfileState(user: user, posts: [])) {
+  final IusersDataProvider usersDataProvider;
+  final IPostsDataProvider postsDataProvider;
+
+  ProfileBloc(this.usersDataProvider, this.postsDataProvider, User user)
+      : super(ProfileState(user: user, posts: [])) {
     on<GetUserEvent>(
       (event, emit) async {
         emit(
@@ -63,15 +68,13 @@ class ProfileBloc extends Bloc<Object, ProfileState> {
 
   Future<void> getUserData() async {
     final userPostsResponse =
-        await DataRepository().dataProvider.getUserPosts(state.user, null, 25);
+        await postsDataProvider.getUserPosts(state.user, null, 25);
     final newState = ProfileState(
       user: state.user,
-      posts: userPostsResponse.posts,
-      postCount: userPostsResponse.posts.length,
-      followersCount:
-          await DataRepository().dataProvider.getUserFollowersCount(state.user),
-      followingCount:
-          await DataRepository().dataProvider.getUserFollowingCount(state.user),
+      posts: userPostsResponse.data,
+      postCount: userPostsResponse.data.length,
+      followersCount: await usersDataProvider.getUserFollowersCount(state.user),
+      followingCount: await usersDataProvider.getUserFollowingCount(state.user),
     );
 
     add(GotUserEvent(state: newState));

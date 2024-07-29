@@ -1,7 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_data_provider.dart';
+import 'package:universe/models/api_data_response.dart';
+import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
-import 'package:universe/models/user_posts_response.dart';
-import 'package:universe/repositories/data_repository.dart';
 
 enum UserPostsViewerStates {
   notStarted,
@@ -12,7 +13,7 @@ enum UserPostsViewerStates {
 
 class UserPostsViewerState {
   final UserPostsViewerStates state;
-  final UserPostsResponse? response;
+  final ApiDataResponse<List<Post>>? response;
   final String? error;
 
   const UserPostsViewerState({required this.state, this.response, this.error});
@@ -26,7 +27,7 @@ class GetUserPostsEvent {
 
 class UserPostsViewerBloc extends Bloc<Object, UserPostsViewerState> {
   final User user;
-  UserPostsViewerBloc(this.user)
+  UserPostsViewerBloc(IPostsDataProvider postsDataProvider, this.user)
       : super(const UserPostsViewerState(
             state: UserPostsViewerStates.notStarted)) {
     on<GetUserPostsEvent>(
@@ -35,11 +36,11 @@ class UserPostsViewerBloc extends Bloc<Object, UserPostsViewerState> {
         emit(
           UserPostsViewerState(
             state: UserPostsViewerStates.success,
-            response: await DataRepository().dataProvider.getUserPosts(
-                  user,
-                  null,
-                  25,
-                ),
+            response: await postsDataProvider.getUserPosts(
+              user,
+              null,
+              25,
+            ),
           ),
         );
       },

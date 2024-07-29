@@ -34,7 +34,8 @@ class ProfileCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(60),
             ),
             clipBehavior: Clip.antiAlias,
-            child: Image.network(user.photoUrl!),
+            child: Image.network(
+                user.photoUrl ?? 'https://via.placeholder.com/150'),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10),

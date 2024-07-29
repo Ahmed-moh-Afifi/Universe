@@ -5,10 +5,16 @@ import 'package:flutter/services.dart';
 class Config {
   final String api;
 
-  Config({required this.api});
+  static late Config _instance;
 
-  factory Config.fromJson(Map<String, dynamic> json) {
-    return Config(
+  Config._privateConstructor({required this.api});
+
+  factory Config() {
+    return _instance;
+  }
+
+  factory Config._fromJson(Map<String, dynamic> json) {
+    return Config._privateConstructor(
       api: json['api'],
     );
   }
@@ -24,6 +30,7 @@ class Config {
     final String response =
         await rootBundle.loadString('lib/assets/config.json');
     final data = await json.decode(response);
-    return Config.fromJson(data);
+    _instance = Config._fromJson(data);
+    return _instance;
   }
 }

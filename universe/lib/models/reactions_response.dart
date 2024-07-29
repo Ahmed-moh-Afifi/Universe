@@ -1,7 +1,7 @@
-import 'package:universe/models/reaction.dart';
+import 'package:universe/models/post_reaction.dart';
 
 class ReactionsResponse {
-  final Iterable<Reaction> reactions;
+  final Iterable<PostReaction> reactions;
   final Future<ReactionsResponse> Function() nextPage;
 
   ReactionsResponse({required this.reactions, required this.nextPage});

@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:universe/apis/posts_data_provider.dart';
 import 'package:universe/blocs/replies_bloc.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/models/user.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/post.dart';
@@ -17,7 +19,12 @@ class Replies extends StatelessWidget {
   final TextEditingController replyController = TextEditingController();
 
   Replies({required this.post, required this.user, super.key})
-      : bloc = RepliesBloc(post);
+      : bloc = RepliesBloc(
+          PostsDataProvider(
+            AuthenticationRepository().authenticationService.currentUser()!.uid,
+          ),
+          post,
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +113,7 @@ class Replies extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 5, right: 5),
                             child: PostWidget(
                               post: state.replies![index],
-                              user: state.replies![index].user!,
+                              user: state.replies![index].author!,
                             ),
                           ),
                           separatorBuilder: (context, index) => const Divider(

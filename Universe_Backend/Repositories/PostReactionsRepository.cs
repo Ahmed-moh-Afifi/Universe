@@ -97,6 +97,28 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
             logger.LogError(ex, "PostReactionsRepository.GetReactionsCount: Error getting reactions count for post.");
             throw;
         }
+    }
 
+    public async Task<PostReactionDTO?> IsPostReactedToByUser(int postId, string userId)
+    {
+        logger.LogDebug("PostsRepository.IsPostReactedToByUser: Checking if post with id {PostId} is reacted to by user with id {UserId}", postId, userId);
+        try
+        {
+            var reacted = await dbContext.Posts
+                .Where(p => p.Id == postId)
+                .SelectMany(p => p.Reactions)
+                .Select(r => r.UserId)
+                .ContainsAsync(userId);
+
+            return reacted ? await dbContext.PostsReactions
+                .Where(r => r.PostId == postId && r.UserId == userId)
+                .Select(r => r.ToDTO())
+                .FirstOrDefaultAsync() : null;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "PostsRepository.IsPostReactedToByUser: Error checking if post with id {PostId} is reacted to by user with id {UserId}", postId, userId);
+            throw;
+        }
     }
 }

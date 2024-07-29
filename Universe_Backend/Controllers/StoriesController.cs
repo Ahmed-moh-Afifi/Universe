@@ -12,7 +12,7 @@ namespace Universe_Backend.Controllers;
 public class StoriesController(IStoriesRepository storiesRepository, IStoryReactionsRepository reactionsRepository, IAuthorizationService authorizationService, ILogger<StoriesController> logger) : ControllerBase
 {
     [HttpGet()]
-    [Route("active")]
+    [Route("Active")]
     public async Task<ActionResult<IEnumerable<StoryDTO>>> GetActiveStories(string userId, [FromBody] DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("StoriesController.GetStories: Getting stories for user with id {UserId}", userId);
@@ -29,7 +29,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
     }
 
     [HttpGet()]
-    [Route("all")]
+    [Route("All")]
     public async Task<ActionResult<IEnumerable<StoryDTO>>> GetAllStories(string userId, [FromBody] DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("StoriesController.GetAllStories: Getting all stories for user with id {UserId}", userId);
@@ -46,7 +46,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
     }
 
     [HttpGet()]
-    [Route("following")]
+    [Route("Following")]
     [Authorize()]
     public async Task<ActionResult<IEnumerable<StoryDTO>>> GetFollowingStories(string userId, [FromBody] DateTime? lastDate, int? lastId)
     {
@@ -136,7 +136,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
     }
 
     [HttpGet()]
-    [Route("{storyId}/reactions")]
+    [Route("{storyId}/Reactions")]
     public async Task<ActionResult<IEnumerable<StoryReactionDTO>>> GetReactions(int storyId, string userId, [FromBody] DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("StoriesController.GetReactions: Getting reactions for story with id {StoryId}", storyId);
@@ -153,7 +153,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
     }
 
     [HttpPost()]
-    [Route("{storyId}/reactions")]
+    [Route("{storyId}/Reactions")]
     public async Task<ActionResult> AddReaction(string userId, int storyId, [FromBody] StoryReactionDTO reaction)
     {
         logger.LogDebug("StoriesController.AddReaction: Adding reaction {@Reaction} to story with id {StoryId}", reaction, storyId);
@@ -176,7 +176,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
     }
 
     [HttpDelete()]
-    [Route("{storyId}/reactions/{reactionId}")]
+    [Route("{storyId}/Reactions/{reactionId}")]
     public async Task<ActionResult> DeleteReaction(string userId, int storyId, int reactionId)
     {
         logger.LogDebug("StoriesController.RemoveReaction: Removing reaction with id {ReactionId}", reactionId);
@@ -193,7 +193,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
     }
 
     [HttpGet()]
-    [Route("{storyId}/reactions/count")]
+    [Route("{storyId}/Reactions/Count")]
     public async Task<ActionResult<int>> GetReactionsCount(string userId, int storyId)
     {
         logger.LogDebug("StoriesController.GetReactionsCount: Getting reactions count for story with id {StoryId}", storyId);
@@ -209,7 +209,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
     }
 
     [HttpGet]
-    [Route("following/active")]
+    [Route("Following/Active")]
     public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowingWithActiveStories(string userId)
     {
         logger.LogDebug("StoriesController.GetFollowingWithActiveStories: Getting following users with active stories for user with id {UserId}", userId);

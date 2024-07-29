@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/models/post.dart';
 import 'package:universe/repositories/authentication_repository.dart';
-import 'package:universe/repositories/data_repository.dart';
 
 enum RepliesStates {
   notStarted,
@@ -28,8 +28,9 @@ class AddReply {
 }
 
 class RepliesBloc extends Bloc<Object, RepliesState> {
+  final IPostsDataProvider postsDataProvider;
   final Post post;
-  RepliesBloc(this.post)
+  RepliesBloc(this.postsDataProvider, this.post)
       : super(
           const RepliesState(
               RepliesStates.notStarted, RepliesStates.notStarted, null, null),
@@ -39,12 +40,12 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
         emit(RepliesState(state.state, RepliesStates.loading, null, null));
       }
       var repliesResponse =
-          await DataRepository().dataProvider.getPostReplies(post, null, 25);
+          await postsDataProvider.getPostReplies(post, null, 25);
       emit(
         RepliesState(
           state.state,
           RepliesStates.loaded,
-          repliesResponse.replies.toList(),
+          repliesResponse.data.toList(),
           null,
         ),
       );
@@ -54,21 +55,24 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
       (event, emit) async {
         if (event.reply.isNotEmpty) {
           emit(RepliesState(state.state, RepliesStates.loading, null, null));
-          await DataRepository().dataProvider.addReply(
-                AuthenticationRepository().authenticationService.currentUser()!,
-                post,
-                Post(
-                  title: '',
-                  body: event.reply,
-                  authorId: AuthenticationRepository()
-                      .authenticationService
-                      .currentUser()!
-                      .uid,
-                  images: [],
-                  videos: [],
-                  publishDate: DateTime.now(),
-                ),
-              );
+          await postsDataProvider.addReply(
+            AuthenticationRepository().authenticationService.currentUser()!,
+            post,
+            Post(
+              title: '',
+              body: event.reply,
+              author: AuthenticationRepository()
+                  .authenticationService
+                  .currentUser()!,
+              images: [],
+              videos: [],
+              audios: [],
+              widgets: [],
+              replyToPost: post.id,
+              childPostId: null,
+              publishDate: DateTime.now(),
+            ),
+          );
           add(GetReplies());
         }
       },

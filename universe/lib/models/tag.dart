@@ -10,4 +10,22 @@ class Tag {
     required this.description,
     required this.createDate,
   });
+
+  factory Tag.fromJson(Map<String, dynamic> json) {
+    return Tag(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      createDate: json['createDate'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'createDate': createDate,
+    };
+  }
 }

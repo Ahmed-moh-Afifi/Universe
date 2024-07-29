@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/apis/posts_data_provider.dart';
 import 'package:universe/blocs/reactions_bloc.dart';
 import 'package:universe/models/post.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/widgets/user_presenter.dart';
 
@@ -10,7 +12,13 @@ class Reactions extends StatelessWidget {
   final Post post;
   final ReactionsBloc bloc;
 
-  Reactions({required this.post, super.key}) : bloc = ReactionsBloc(post);
+  Reactions({required this.post, super.key})
+      : bloc = ReactionsBloc(
+          PostsDataProvider(
+            AuthenticationRepository().authenticationService.currentUser()!.uid,
+          ),
+          post,
+        );
 
   @override
   Widget build(BuildContext context) {

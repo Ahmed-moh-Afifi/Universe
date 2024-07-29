@@ -22,4 +22,32 @@ class Story {
     required this.sharedStoryId,
     required this.widgets,
   });
+
+  factory Story.fromJson(Map<String, dynamic> json) {
+    return Story(
+      id: json['id'],
+      content: json['content'],
+      image: json['image'],
+      video: json['video'],
+      audio: json['audio'],
+      publishDate: json['publishDate'],
+      sharedPostId: json['sharedPostId'],
+      sharedStoryId: json['sharedStoryId'],
+      widgets: json['widgets'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'content': content,
+      'image': image,
+      'video': video,
+      'audio': audio,
+      'publishDate': publishDate,
+      'sharedPostId': sharedPostId,
+      'sharedStoryId': sharedStoryId,
+      'widgets': widgets,
+    };
+  }
 }
