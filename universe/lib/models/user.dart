@@ -62,20 +62,26 @@ class User {
 
   Map<String, dynamic> toJson() {
     return {
-      'uid': uid,
+      'id': uid,
       'firstName': firstName,
       'lastName': lastName,
       'userName': userName,
       'email': email,
       'photoUrl': photoUrl,
-      'joinDate': joinDate,
+      'joinDate': joinDate.toIso8601String(),
       'gender': gender,
       'verified': verified,
       'bio': bio,
-      'accountState': accountState,
-      'accountPrivacy': accountPrivacy,
-      'onlineStatus': onlineStatus,
-      'lastOnline': lastOnline,
+      'accountState': accountState == null
+          ? 'null'
+          : AccountState.values.indexOf(accountState!),
+      'accountPrivacy': accountPrivacy == null
+          ? 'null'
+          : AccountPrivacy.values.indexOf(accountPrivacy!),
+      'onlineStatus': onlineStatus == null
+          ? 'null'
+          : OnlineStatus.values.indexOf(onlineStatus!),
+      'lastOnline': lastOnline?.toIso8601String(),
     };
   }
 

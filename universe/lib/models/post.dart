@@ -48,16 +48,17 @@ class Post {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id ?? 0,
       'title': title,
       'body': body,
       'images': images,
       'videos': videos,
       'audios': audios,
-      'publishDate': publishDate,
+      'publishDate': publishDate.toIso8601String(),
       'replyToPost': replyToPost,
       'childPostId': childPostId,
-      'widgets': widgets,
-      'author': author,
+      'widgets': widgets.map((widget) => widget.toJson()).toList(),
+      'author': author?.toJson(),
     };
   }
 

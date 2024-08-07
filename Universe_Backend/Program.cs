@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Universe_Backend.Data;
 using Universe_Backend.Data.Models;
+using Universe_Backend.Hubs;
 using Universe_Backend.Repositories;
 using Universe_Backend.Services;
 
@@ -50,7 +51,7 @@ builder.Services.AddCors(
         options.AddDefaultPolicy(
             builder =>
             {
-                builder.WithOrigins("http://localhost:34345")
+                builder.WithOrigins("http://localhost:51442")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -96,6 +97,8 @@ builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<IAuthorizationHandler, IsFollowerHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, OwnerHandler>();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("IsFollower", policy => policy.Requirements.Add(new IsFollowerRequirement(true)))
     .AddPolicy("IsOwner", policy => policy.Requirements.Add(new OwnerRequirement()));
@@ -110,6 +113,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapHub<ReactionsCountHub>("/ReactionsCountHub");
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();

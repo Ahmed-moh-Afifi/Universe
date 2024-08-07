@@ -4747,24 +4747,32 @@
     ]
   },
   "packageFolders": {
-    "/home/ahmedafifi/.nuget/packages/": {}
+    "C:\\Users\\Ahmed\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/ahmedafifi/projects/Universe/Universe_Backend/Universe_Backend.csproj",
+      "projectUniqueName": "C:\\Projects\\Universe\\Universe_Backend\\Universe_Backend.csproj",
       "projectName": "Universe_Backend",
-      "projectPath": "/home/ahmedafifi/projects/Universe/Universe_Backend/Universe_Backend.csproj",
-      "packagesPath": "/home/ahmedafifi/.nuget/packages/",
-      "outputPath": "/home/ahmedafifi/projects/Universe/Universe_Backend/obj/",
+      "projectPath": "C:\\Projects\\Universe\\Universe_Backend\\Universe_Backend.csproj",
+      "packagesPath": "C:\\Users\\Ahmed\\.nuget\\packages\\",
+      "outputPath": "C:\\Projects\\Universe\\Universe_Backend\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/ahmedafifi/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\Ahmed\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4838,7 +4846,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/home/ahmedafifi/.dotnet/sdk/8.0.301/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,9 +1,11 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using NotificationService.Models;
 using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;
+using Universe_Backend.Hubs;
 using Universe_Backend.Repositories;
 
 namespace Universe_Backend.Controllers;
@@ -208,7 +210,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("{postId}/Reactions")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddReaction([FromBody] PostReactionDTO reaction, string userId, int postId)
+    public async Task<ActionResult<int>> AddReaction([FromBody] PostReactionDTO reaction, string userId, int postId, [FromServices] IHubContext<ReactionsCountHub> hubContext)
     {
         logger.LogDebug("ReactionsController.AddReaction: Adding reaction {@Reaction}", reaction);
         // Validate route parameters.
@@ -225,12 +227,18 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(await reactionsRepository.AddReaction(reaction));
+        var reactionId = await reactionsRepository.AddReaction(reaction);
+        logger.LogDebug($"ReactionsController.AddReaction: Added reaction {reactionId}");
+
+        logger.LogDebug("ReactionsController.AddReaction: Sending notification to subscribers");
+        await hubContext.Clients.Group(postId.ToString()).SendAsync("UpdateReactionsCount", 1);
+
+        return Ok(reactionId);
     }
 
     [HttpDelete]
     [Route("{postId}/Reactions/{reactionId}")]
-    public async Task<ActionResult> RemoveReaction(int reactionId, string userId, int postId)
+    public async Task<ActionResult> RemoveReaction(int reactionId, string userId, int postId, [FromServices] IHubContext<ReactionsCountHub> hubContext)
     {
         logger.LogDebug("ReactionsController.RemoveReaction: Removing reaction with id: {reactionId}", reactionId);
         // Validate route parameters.
@@ -242,6 +250,9 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
         }
 
         await reactionsRepository.RemoveReaction(reactionId);
+
+        await hubContext.Clients.Group(postId.ToString()).SendAsync("UpdateReactionsCount", -1);
+
         return Ok();
     }
 
