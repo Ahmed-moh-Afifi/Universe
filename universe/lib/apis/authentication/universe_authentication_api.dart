@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -21,7 +22,10 @@ class UniverseAuthenticationApi implements IAuthenticationApi {
 
   @override
   Future<bool> register(RegisterModel registerModel) async {
-    var response = await dioClient.post('/Register', data: registerModel);
+    log('Registering user ${registerModel.username}...',
+        name: 'UniverseAuthenticationApi');
+    var response =
+        await dioClient.post('/Register', data: registerModel.toJson());
 
     if (response.statusCode == HttpStatus.ok) {
       return true;
@@ -32,6 +36,8 @@ class UniverseAuthenticationApi implements IAuthenticationApi {
 
   @override
   Future<TokensModel?> login(LoginModel loginModel) async {
+    log('Logging in user ${loginModel.username}...',
+        name: 'UniverseAuthenticationApi');
     var response = await dioClient.post<Map<String, dynamic>>('/Login',
         data: loginModel.toJson());
 
@@ -44,6 +50,7 @@ class UniverseAuthenticationApi implements IAuthenticationApi {
 
   @override
   Future signOut() {
+    log('Signing out...', name: 'UniverseAuthenticationApi');
     // TODO: implement signOut
     throw UnimplementedError();
   }

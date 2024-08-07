@@ -49,21 +49,21 @@ class ApiClient {
 
   Future<Response<T>> get<T>(
       String path, dynamic data, Map<String, dynamic> queryParams) async {
-    return _dio.get<T>(path);
+    return _dio.get<T>(path, data: data, queryParameters: queryParams);
   }
 
   Future<Response<T>> post<T>(
       String path, dynamic data, Map<String, dynamic> queryParams) async {
-    return _dio.post<T>(path, data: data);
+    return _dio.post<T>(path, data: data, queryParameters: queryParams);
   }
 
   Future<Response<T>> put<T>(
       String path, dynamic data, Map<String, dynamic> queryParams) async {
-    return _dio.put<T>(path, data: data);
+    return _dio.put<T>(path, data: data, queryParameters: queryParams);
   }
 
   Future<Response<T>> delete<T>(
       String path, dynamic data, Map<String, dynamic> queryParams) async {
-    return _dio.delete<T>(path);
+    return _dio.delete<T>(path, data: data, queryParameters: queryParams);
   }
 }
