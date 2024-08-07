@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:universe/apis/api_client.dart';
@@ -23,31 +24,41 @@ class PostsDataProvider implements IPostsDataProvider {
 
   @override
   Future addPost(User author, Post post) async {
-    await _apiClient.post('/', post, {});
+    log('Adding post: ${jsonEncode(post.toJson())}', name: 'PostsDataProvider');
+    ApiClient apiClient = ApiClient('/${author.uid}/Posts');
+    // response = await _apiClient.post('/', post.toJson(), {});
+    await apiClient.post('/', post.toJson(), {});
   }
 
   @override
   Future addReaction(User user, Post post, PostReaction reaction) async {
-    await _apiClient.post('/${post.id}/Reactions', reaction, {});
+    log('Adding reaction: ${reaction.toJson()} to post: ${post.toJson()}',
+        name: 'PostsDataProvider');
+    await _apiClient.post('/${post.id}/Reactions', reaction.toJson(), {});
   }
 
   @override
   Future addReply(User user, Post post, Post reply) async {
-    await _apiClient.post('/${post.id}/Replies', reply, {});
+    log('Adding reply: ${reply.toJson()}', name: 'PostsDataProvider');
+    await _apiClient.post('/${post.id}/Replies', reply.toJson(), {});
   }
 
   @override
   Future deletePost(Post post) async {
+    log('Deleting post: ${post.toJson()}', name: 'PostsDataProvider');
     await _apiClient.delete('/${post.id}', null, {});
   }
 
   @override
   Future deleteReply(Post post, Post reply) async {
+    log('Deleting reply: ${reply.toJson()}', name: 'PostsDataProvider');
     await _apiClient.delete('/${post.id}/Replies/${reply.id}', null, {});
   }
 
   @override
   Future<PostReaction?> isPostReactedToByUser(Post post, User user) async {
+    log('Checking if post: ${post.toJson()} is reacted to by user: ${user.toJson()}',
+        name: 'PostsDataProvider');
     return (await _apiClient
             .get<PostReaction>('/${post.id}/Reactions/${user.uid}', null, {}))
         .data;
@@ -55,6 +66,8 @@ class PostsDataProvider implements IPostsDataProvider {
 
   @override
   Future<int> getPostReactionsCount(Post post) async {
+    log('Getting post reactions count: ${post.toJson()}',
+        name: 'PostsDataProvider');
     return (await _apiClient.get<int>('/${post.id}/Reactions/Count', null, {}))
         .data!;
   }
@@ -62,6 +75,7 @@ class PostsDataProvider implements IPostsDataProvider {
   @override
   Future<ApiDataResponse<List<PostReaction>>> getPostReactions<T, G>(
       Post post, T start, G limit) async {
+    log('Getting post reactions: ${post.toJson()}', name: 'PostsDataProvider');
     var reactions = await _apiClient.get<List<PostReaction>>(
       '/${post.id}/Reactions',
       (start as ApiCallStart).lastDate,
@@ -85,6 +99,7 @@ class PostsDataProvider implements IPostsDataProvider {
   @override
   Future<ApiDataResponse<List<Post>>> getPostReplies<T, G>(
       Post post, T start, G limit) async {
+    log('Getting post replies: ${post.toJson()}', name: 'PostsDataProvider');
     var replies = await _apiClient.get<List<Post>>(
       '/${post.id}/Replies',
       (start as ApiCallStart).lastDate,
@@ -108,6 +123,7 @@ class PostsDataProvider implements IPostsDataProvider {
   @override
   Future<ApiDataResponse<List<Post>>> getUserPosts<T, G>(
       User user, T start, G limit) async {
+    log('Getting user posts: ${user.toJson()}', name: 'PostsDataProvider');
     var response = await _apiClient.get(
       '/',
       (start as ApiCallStart?)?.lastDate,
@@ -133,12 +149,16 @@ class PostsDataProvider implements IPostsDataProvider {
 
   @override
   Future<int> getUserPostsCount(User user) async {
+    log('Getting user posts count of user: ${user.toJson()}',
+        name: 'PostsDataProvider');
     return (await _apiClient.get<int>('/Count', null, {})).data!;
   }
 
   @override
   Future<ApiDataResponse<List<Post>>> getFollowingPosts<T, G>(
       User user, T start, G limit) async {
+    log('Getting following posts of user: ${user.toJson()}',
+        name: 'PostsDataProvider');
     var posts = await _apiClient.get<List<Post>>(
       '/Following',
       (start as ApiCallStart).lastDate,
@@ -161,21 +181,40 @@ class PostsDataProvider implements IPostsDataProvider {
 
   @override
   Future removeReaction(Post post, PostReaction reaction) async {
+    log('Removing reaction: ${reaction.toJson()} from post: ${post.toJson()}',
+        name: 'PostsDataProvider');
     await _apiClient.delete('/${post.id}/Reactions/${reaction.id}', null, {});
   }
 
   @override
   Future sharePost(User user, Post post) async {
-    await _apiClient.post('/${post.id}/Shares', null, {});
+    log('Sharing post: ${post.toJson()}', name: 'PostsDataProvider');
+
+    var newPost = Post(
+      title: 'title',
+      body: 'body',
+      images: [],
+      videos: [],
+      audios: [],
+      publishDate: DateTime.now(),
+      replyToPost: null,
+      childPostId: post.id,
+      widgets: [],
+    );
+
+    addPost(user, newPost);
   }
 
   @override
   Future updatePost(Post post) async {
-    await _apiClient.put('/${post.id}', post, {});
+    log('Updating post: ${post.toJson()}', name: 'PostsDataProvider');
+    await _apiClient.put('/${post.id}', post.toJson(), {});
   }
 
   @override
   Stream<int> getPostReactionsCountStream(Post post) {
+    log('Getting post reactions count stream: ${post.toJson()}',
+        name: 'PostsDataProvider');
     // TODO: implement getPostReactionsCountStream
     throw UnimplementedError();
   }

@@ -16,7 +16,7 @@ class Tag {
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      createDate: json['createDate'],
+      createDate: DateTime.parse(json['createDate']),
     );
   }
 
@@ -25,7 +25,7 @@ class Tag {
       'id': id,
       'name': name,
       'description': description,
-      'createDate': createDate,
+      'createDate': createDate.toIso8601String(),
     };
   }
 }

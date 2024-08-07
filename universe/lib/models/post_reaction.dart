@@ -16,6 +16,26 @@ class PostReaction {
     this.id,
   });
 
+  factory PostReaction.fromJson(Map<String, dynamic> data) {
+    return PostReaction(
+      userId: data['userId'],
+      reactionType: data['reactionType'],
+      reactionDate: DateTime.parse(data['reactionDate']),
+      postId: data['postId'],
+      id: data['id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'userId': userId,
+      'reactionType': reactionType,
+      'reactionDate': reactionDate.toIso8601String(),
+      'postId': postId,
+    };
+  }
+
   // factory PostReaction.fromFirestore(
   //   DocumentSnapshot<Map<String, dynamic>> snapshot,
   //   SnapshotOptions? options,
