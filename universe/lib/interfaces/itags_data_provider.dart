@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:universe/models/api_data_response.dart';
-import 'package:universe/models/post.dart';
-import 'package:universe/models/story.dart';
-import 'package:universe/models/tag.dart';
+import 'package:universe/models/responses/api_data_response.dart';
+import 'package:universe/models/data/post.dart';
+import 'package:universe/models/data/story.dart';
+import 'package:universe/models/data/tag.dart';
 
 abstract class ITagsDataProvider {
   Future<ApiDataResponse<List<Tag>>> searchTags<T, G>(

@@ -6,8 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:universe/apis/api_client.dart';
 import 'package:universe/models/config.dart';
-import 'package:universe/models/notification_token.dart';
-import 'package:universe/models/tokens_model.dart';
+import 'package:universe/models/authentication/notification_token.dart';
+import 'package:universe/models/authentication/tokens_model.dart';
 
 class TokenManager {
   TokenManager._privateConstructor();

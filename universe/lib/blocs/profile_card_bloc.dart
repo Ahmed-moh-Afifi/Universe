@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/interfaces/iusers_data_provider.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/data/user.dart';
 
 class ProfileCardState {
   final User user;

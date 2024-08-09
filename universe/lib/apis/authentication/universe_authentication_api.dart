@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:universe/interfaces/iauthentication_api.dart';
 import 'package:universe/models/config.dart';
-import 'package:universe/models/login_model.dart';
-import 'package:universe/models/register_model.dart';
-import 'package:universe/models/tokens_model.dart';
+import 'package:universe/models/authentication/login_model.dart';
+import 'package:universe/models/authentication/register_model.dart';
+import 'package:universe/models/authentication/tokens_model.dart';
 
 class UniverseAuthenticationApi implements IAuthenticationApi {
   final dioClient = Dio();

@@ -1,4 +1,4 @@
-import 'package:universe/models/post_reaction.dart';
+import 'package:universe/models/data/post_reaction.dart';
 
 class ReactionsResponse {
   final Iterable<PostReaction> reactions;

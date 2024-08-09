@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/data/user.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/follow_button.dart';

@@ -1,4 +1,4 @@
-import 'package:universe/models/widget.dart';
+import 'package:universe/models/data/widget.dart';
 
 class Story {
   int id;

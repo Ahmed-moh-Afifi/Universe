@@ -1,4 +1,4 @@
-import 'package:universe/models/user.dart';
+import 'package:universe/models/data/user.dart';
 
 class FollowersResponse {
   final Iterable<User> followers;
