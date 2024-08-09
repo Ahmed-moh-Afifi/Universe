@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\Universe\\Universe_Backend\\Universe_Backend.csproj": {}
+    "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Universe_Backend.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\Universe\\Universe_Backend\\Universe_Backend.csproj": {
+    "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Universe_Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\Universe\\Universe_Backend\\Universe_Backend.csproj",
+        "projectUniqueName": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Universe_Backend.csproj",
         "projectName": "Universe_Backend",
-        "projectPath": "C:\\Projects\\Universe\\Universe_Backend\\Universe_Backend.csproj",
+        "projectPath": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Universe_Backend.csproj",
         "packagesPath": "C:\\Users\\Ahmed\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\Universe\\Universe_Backend\\obj\\",
+        "outputPath": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
