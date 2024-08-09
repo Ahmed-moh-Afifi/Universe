@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/interfaces/iposts_data_provider.dart';
-import 'package:universe/models/post.dart';
+import 'package:universe/models/data/post.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 
 enum RepliesStates {

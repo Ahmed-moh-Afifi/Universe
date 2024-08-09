@@ -1,5 +1,5 @@
-import 'package:universe/models/user.dart';
-import 'package:universe/models/widget.dart';
+import 'package:universe/models/data/user.dart';
+import 'package:universe/models/data/widget.dart';
 
 class Post {
   String? id;

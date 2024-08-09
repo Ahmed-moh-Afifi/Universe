@@ -1,7 +1,7 @@
-import 'package:universe/models/api_data_response.dart';
-import 'package:universe/models/story.dart';
-import 'package:universe/models/story_reaction.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/responses/api_data_response.dart';
+import 'package:universe/models/data/story.dart';
+import 'package:universe/models/data/story_reaction.dart';
+import 'package:universe/models/data/user.dart';
 
 abstract class IStoriesDataProvider {
   Future<ApiDataResponse<List<Story>>> getActiveStories<T, G>(

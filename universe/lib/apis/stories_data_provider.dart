@@ -1,10 +1,10 @@
 import 'package:universe/apis/api_client.dart';
 import 'package:universe/interfaces/istories_data_provider.dart';
-import 'package:universe/models/api_call_start.dart';
-import 'package:universe/models/api_data_response.dart';
-import 'package:universe/models/story.dart';
-import 'package:universe/models/story_reaction.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/requests/api_call_start.dart';
+import 'package:universe/models/responses/api_data_response.dart';
+import 'package:universe/models/data/story.dart';
+import 'package:universe/models/data/story_reaction.dart';
+import 'package:universe/models/data/user.dart';
 
 class StoriesDataProvider implements IStoriesDataProvider {
   late ApiClient _apiClient;

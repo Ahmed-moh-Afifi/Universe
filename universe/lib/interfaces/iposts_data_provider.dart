@@ -1,7 +1,7 @@
-import 'package:universe/models/api_data_response.dart';
-import 'package:universe/models/post.dart';
-import 'package:universe/models/post_reaction.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/responses/api_data_response.dart';
+import 'package:universe/models/data/post.dart';
+import 'package:universe/models/data/post_reaction.dart';
+import 'package:universe/models/data/user.dart';
 
 abstract class IPostsDataProvider {
   Future<ApiDataResponse<List<Post>>> getUserPosts<T, G>(

@@ -7,7 +7,8 @@ import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/apis/firebase_cloud_messaging.dart';
 import 'package:universe/firebase_options.dart';
 import 'package:universe/models/config.dart';
-import 'package:universe/models/notification_token.dart' as notification_token;
+import 'package:universe/models/authentication/notification_token.dart'
+    as notification_token;
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
 

@@ -3,11 +3,11 @@ import 'dart:developer';
 
 import 'package:universe/apis/api_client.dart';
 import 'package:universe/interfaces/iposts_data_provider.dart';
-import 'package:universe/models/api_call_start.dart';
-import 'package:universe/models/api_data_response.dart';
-import 'package:universe/models/post.dart';
-import 'package:universe/models/post_reaction.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/requests/api_call_start.dart';
+import 'package:universe/models/responses/api_data_response.dart';
+import 'package:universe/models/data/post.dart';
+import 'package:universe/models/data/post_reaction.dart';
+import 'package:universe/models/data/user.dart';
 
 class PostsDataProvider implements IPostsDataProvider {
   late ApiClient _apiClient;
