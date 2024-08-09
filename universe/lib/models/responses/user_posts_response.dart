@@ -1,4 +1,4 @@
-import 'package:universe/models/post.dart';
+import 'package:universe/models/data/post.dart';
 
 class UserPostsResponse {
   final Iterable<Post> posts;

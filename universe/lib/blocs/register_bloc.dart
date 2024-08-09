@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/authentication/exceptions/authentication_exception.dart';
-import 'package:universe/models/register_model.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/authentication/register_model.dart';
+import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 
 enum RegisterStates { startup, loading, failed, success }

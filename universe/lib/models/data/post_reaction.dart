@@ -1,4 +1,4 @@
-import 'package:universe/models/user.dart';
+import 'package:universe/models/data/user.dart';
 
 class PostReaction {
   User? user;
@@ -35,24 +35,4 @@ class PostReaction {
       'postId': postId,
     };
   }
-
-  // factory PostReaction.fromFirestore(
-  //   DocumentSnapshot<Map<String, dynamic>> snapshot,
-  //   SnapshotOptions? options,
-  // ) {
-  //   final data = snapshot.data();
-  //   return PostReaction(
-  //     reactionId: snapshot.reference.path,
-  //     userId: snapshot.reference.id,
-  //     reactionType: data?['type'],
-  //     reactionDate: data?['reactionDate'].toDate(),
-  //   );
-  // }
-
-  // Map<String, dynamic> toFirestore() {
-  //   return {
-  //     'type': reactionType,
-  //     'reactionDate': Timestamp.fromDate(reactionDate),
-  //   };
-  // }
 }

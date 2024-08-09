@@ -4,9 +4,9 @@ import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/interfaces/iauthentication.dart';
 import 'package:universe/interfaces/iauthentication_api.dart';
 import 'package:universe/interfaces/iusers_data_provider.dart';
-import 'package:universe/models/login_model.dart';
-import 'package:universe/models/register_model.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/authentication/login_model.dart';
+import 'package:universe/models/authentication/register_model.dart';
+import 'package:universe/models/data/user.dart';
 
 class UniverseAuthentication implements IAuthentication {
   final IAuthenticationApi _authenticationApi;

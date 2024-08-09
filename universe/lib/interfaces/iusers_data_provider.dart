@@ -1,7 +1,7 @@
-import 'package:universe/models/followers_response.dart';
-import 'package:universe/models/following_response.dart';
-import 'package:universe/models/search_users_response.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/responses/followers_response.dart';
+import 'package:universe/models/responses/following_response.dart';
+import 'package:universe/models/responses/search_users_response.dart';
+import 'package:universe/models/data/user.dart';
 
 abstract class IusersDataProvider {
   Future<SearchUsersResponse> searchUsers<T, G>(String query, T start, G limit);

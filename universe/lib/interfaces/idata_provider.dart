@@ -1,12 +1,12 @@
-import 'package:universe/models/followers_response.dart';
-import 'package:universe/models/following_response.dart';
-import 'package:universe/models/post.dart';
-import 'package:universe/models/post_reaction.dart';
-import 'package:universe/models/reactions_response.dart';
-import 'package:universe/models/replies_response.dart';
-import 'package:universe/models/search_users_response.dart';
-import 'package:universe/models/user.dart';
-import 'package:universe/models/user_posts_response.dart';
+import 'package:universe/models/responses/followers_response.dart';
+import 'package:universe/models/responses/following_response.dart';
+import 'package:universe/models/data/post.dart';
+import 'package:universe/models/data/post_reaction.dart';
+import 'package:universe/models/responses/reactions_response.dart';
+import 'package:universe/models/responses/replies_response.dart';
+import 'package:universe/models/responses/search_users_response.dart';
+import 'package:universe/models/data/user.dart';
+import 'package:universe/models/responses/user_posts_response.dart';
 
 abstract class IDataProvider {
   Future createUser(User user);

@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:universe/apis/api_client.dart';
 import 'package:universe/interfaces/iusers_data_provider.dart';
-import 'package:universe/models/api_call_start.dart';
-import 'package:universe/models/followers_response.dart';
-import 'package:universe/models/following_response.dart';
-import 'package:universe/models/search_users_response.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/requests/api_call_start.dart';
+import 'package:universe/models/responses/followers_response.dart';
+import 'package:universe/models/responses/following_response.dart';
+import 'package:universe/models/responses/search_users_response.dart';
+import 'package:universe/models/data/user.dart';
 
 class UsersDataProvider implements IusersDataProvider {
   final ApiClient _apiClient = ApiClient("/Users");

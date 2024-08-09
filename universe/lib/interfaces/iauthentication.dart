@@ -1,6 +1,6 @@
-import 'package:universe/models/login_model.dart';
-import 'package:universe/models/register_model.dart';
-import 'package:universe/models/user.dart';
+import 'package:universe/models/authentication/login_model.dart';
+import 'package:universe/models/authentication/register_model.dart';
+import 'package:universe/models/data/user.dart';
 
 abstract class IAuthentication {
   Future<User?> registerAndLogin(RegisterModel registerModel);
