@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iusers_data_provider.dart';
+import 'package:universe/interfaces/iposts_repository.dart';
+import 'package:universe/interfaces/iusers_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
+import 'package:universe/models/requests/api_call_start.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
 
@@ -49,9 +51,10 @@ class GotUserEvent {
 }
 
 class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
-  final IusersDataProvider usersDataProvider;
-  final IPostsDataProvider postsDataProvider;
-  PersonalProfileBloc(this.usersDataProvider, this.postsDataProvider)
+  final IUsersRepository usersRepository;
+  final IPostsRepository postsRepository;
+
+  PersonalProfileBloc(this.usersRepository, this.postsRepository)
       : super(
           RouteGenerator.personalProfileState == null ||
                   RouteGenerator.personalProfileState!.state ==
@@ -92,14 +95,15 @@ class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
   }
 
   Future<void> getUserData() async {
-    final posts = await postsDataProvider.getUserPosts(state.user, null, 25);
+    final posts =
+        await postsRepository.getUserPosts(state.user.id, ApiCallStart(), 50);
     final newState = PersonalProfileState(
       state: PersonalProfileStates.success,
       user: state.user,
       posts: posts,
       postCount: posts.length,
-      followersCount: await usersDataProvider.getUserFollowersCount(state.user),
-      followingCount: await usersDataProvider.getUserFollowingCount(state.user),
+      followersCount: await usersRepository.getFollowersCount(state.user.id),
+      followingCount: await usersRepository.getFollowingCount(state.user.id),
     );
 
     add(GotUserEvent(state: newState));

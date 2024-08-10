@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/apis/users_data_provider.dart';
 import 'package:universe/blocs/follow_button_bloc.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/repositories/users_repository.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class FollowButton extends StatelessWidget {
@@ -12,7 +12,7 @@ class FollowButton extends StatelessWidget {
   final widgetKey = GlobalKey();
 
   FollowButton(this.user, {super.key})
-      : bloc = FollowButtonBloc(UsersDataProvider(), user);
+      : bloc = FollowButtonBloc(UsersRepository(), user);
 
   @override
   Widget build(BuildContext context) {

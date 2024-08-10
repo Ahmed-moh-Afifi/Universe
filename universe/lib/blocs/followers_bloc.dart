@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iusers_data_provider.dart';
 import 'package:universe/models/data/user.dart';
+import 'package:universe/models/requests/users_api_call_start.dart';
+import 'package:universe/repositories/users_repository.dart';
 
 enum FollowersStates {
   notStarted,
@@ -30,7 +31,7 @@ class GetFollowers {
 
 class FollowersBloc extends Bloc<Object, FollowersState> {
   final User user;
-  FollowersBloc(IusersDataProvider usersDataProvider, this.user)
+  FollowersBloc(UsersRepository usersRepository, this.user)
       : super(
           FollowersState(
             previousState: FollowersStates.notStarted,
@@ -40,7 +41,7 @@ class FollowersBloc extends Bloc<Object, FollowersState> {
         ) {
     on<GetFollowers>(
       (event, emit) async {
-        final currenPage = state.followers;
+        final currentPage = state.followers;
         emit(
           FollowersState(
             previousState: state.state,
@@ -48,13 +49,15 @@ class FollowersBloc extends Bloc<Object, FollowersState> {
             followers: [],
           ),
         );
-        final followers =
-            await usersDataProvider.getUserFollowers(event.user, null, 50);
+        final followers = await usersRepository.getFollowers(
+          event.user.id,
+          UsersApiCallStart(),
+        );
         emit(
           FollowersState(
             previousState: state.state,
             state: FollowersStates.success,
-            followers: [...currenPage, ...followers.followers],
+            followers: [...currentPage, ...followers],
           ),
         );
       },

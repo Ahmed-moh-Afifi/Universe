@@ -6,28 +6,28 @@ part 'post.g.dart';
 
 @JsonSerializable()
 class Post {
-  int? id;
+  int id;
   final String title;
   final String body;
   final List<dynamic> images;
   final List<dynamic> videos;
   final List<dynamic> audios;
   final DateTime publishDate;
-  final int? replyToPost;
-  final int? childPostId;
+  final int replyToPost;
+  final int childPostId;
   final List<Widget> widgets;
   final User author;
 
   Post({
-    this.id,
+    this.id = -1,
     required this.title,
     required this.body,
     required this.images,
     required this.videos,
     required this.audios,
     required this.publishDate,
-    required this.replyToPost,
-    required this.childPostId,
+    this.replyToPost = -1,
+    this.childPostId = -1,
     required this.widgets,
     required this.author,
   });

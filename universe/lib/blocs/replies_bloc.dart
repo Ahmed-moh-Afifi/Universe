@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
+import 'package:universe/models/requests/api_call_start.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 
 enum RepliesStates {
@@ -27,9 +29,9 @@ class AddReply {
 }
 
 class RepliesBloc extends Bloc<Object, RepliesState> {
-  final IPostsDataProvider postsDataProvider;
+  final IPostsRepository postsRepository;
   final Post post;
-  RepliesBloc(this.postsDataProvider, this.post)
+  RepliesBloc(this.postsRepository, this.post)
       : super(
           const RepliesState(
               RepliesStates.notStarted, RepliesStates.notStarted, null, null),
@@ -38,7 +40,12 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
       if (state.state != RepliesStates.loading) {
         emit(RepliesState(state.state, RepliesStates.loading, null, null));
       }
-      var replies = await postsDataProvider.getPostReplies(post, null, 25);
+      var replies = await postsRepository.getPostReplies(
+        post.author.id,
+        post.id,
+        ApiCallStart(),
+        25,
+      );
       emit(
         RepliesState(
           state.state,
@@ -53,9 +60,9 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
       (event, emit) async {
         if (event.reply.isNotEmpty) {
           emit(RepliesState(state.state, RepliesStates.loading, null, null));
-          await postsDataProvider.addReply(
-            AuthenticationRepository().authenticationService.currentUser()!,
-            post,
+          await postsRepository.addReply(
+            post.author.id,
+            post.id,
             Post(
               title: '',
               body: event.reply,
@@ -67,7 +74,7 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
               audios: [],
               widgets: [],
               replyToPost: post.id,
-              childPostId: null,
+              childPostId: -1,
               publishDate: DateTime.now(),
             ),
           );
