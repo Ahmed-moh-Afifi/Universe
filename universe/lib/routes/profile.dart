@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/apis/posts_data_provider.dart';
 import 'package:universe/apis/users_data_provider.dart';
 import 'package:universe/blocs/profile_bloc.dart';
 import 'package:universe/models/data/user.dart';
@@ -16,7 +15,7 @@ class Profile extends StatelessWidget {
       : bloc = ProfileBloc(
           UsersDataProvider(),
           PostsDataProvider(
-            user.uid,
+            user.id,
           ),
           user,
         );

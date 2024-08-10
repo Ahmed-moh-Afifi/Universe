@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
 
@@ -37,13 +36,13 @@ class ReactionsBloc extends Bloc<Object, ReactionsState> {
             null,
           ),
         );
-        var reactionsResponse =
+        var reactions =
             await postsDataProvider.getPostReactions(post, null, 25);
         emit(
           ReactionsState(
             ReactionsStates.loaded,
             ReactionsStates.loading,
-            reactionsResponse.data.toList(),
+            reactions,
             null,
           ),
         );

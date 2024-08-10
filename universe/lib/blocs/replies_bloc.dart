@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 
@@ -39,13 +38,12 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
       if (state.state != RepliesStates.loading) {
         emit(RepliesState(state.state, RepliesStates.loading, null, null));
       }
-      var repliesResponse =
-          await postsDataProvider.getPostReplies(post, null, 25);
+      var replies = await postsDataProvider.getPostReplies(post, null, 25);
       emit(
         RepliesState(
           state.state,
           RepliesStates.loaded,
-          repliesResponse.data.toList(),
+          replies,
           null,
         ),
       );
