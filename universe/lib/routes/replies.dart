@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:universe/apis/posts_data_provider.dart';
 import 'package:universe/blocs/replies_bloc.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
@@ -21,7 +20,7 @@ class Replies extends StatelessWidget {
   Replies({required this.post, required this.user, super.key})
       : bloc = RepliesBloc(
           PostsDataProvider(
-            AuthenticationRepository().authenticationService.currentUser()!.uid,
+            AuthenticationRepository().authenticationService.currentUser()!.id,
           ),
           post,
         );
@@ -113,7 +112,7 @@ class Replies extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 5, right: 5),
                             child: PostWidget(
                               post: state.replies![index],
-                              user: state.replies![index].author!,
+                              user: state.replies![index].author,
                             ),
                           ),
                           separatorBuilder: (context, index) => const Divider(

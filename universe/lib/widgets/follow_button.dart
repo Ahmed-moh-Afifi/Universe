@@ -31,11 +31,11 @@ class FollowButton extends StatelessWidget {
               width: 110,
               height: 40,
               child: state.isFollowed != null
-                  ? (user.uid ==
+                  ? (user.id ==
                           AuthenticationRepository()
                               .authenticationService
                               .currentUser()!
-                              .uid
+                              .id
                       ? Container()
                       : (state.isFollowed!
                           ? TextButton(

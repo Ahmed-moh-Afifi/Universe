@@ -47,6 +47,8 @@ class ApiClient {
     );
   }
 
+  Dio get dio => _dio;
+
   Future<Response<T>> get<T>(
       String path, dynamic data, Map<String, dynamic> queryParams) async {
     return _dio.get<T>(path, data: data, queryParameters: queryParams);

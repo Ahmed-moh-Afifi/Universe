@@ -1,6 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iposts_data_provider.dart';
-import 'package:universe/models/responses/api_data_response.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
 
@@ -13,7 +11,7 @@ enum UserPostsViewerStates {
 
 class UserPostsViewerState {
   final UserPostsViewerStates state;
-  final ApiDataResponse<List<Post>>? response;
+  final List<Post>? response;
   final String? error;
 
   const UserPostsViewerState({required this.state, this.response, this.error});

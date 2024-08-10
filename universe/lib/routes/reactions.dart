@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/apis/posts_data_provider.dart';
 import 'package:universe/blocs/reactions_bloc.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/repositories/authentication_repository.dart';
@@ -15,7 +14,7 @@ class Reactions extends StatelessWidget {
   Reactions({required this.post, super.key})
       : bloc = ReactionsBloc(
           PostsDataProvider(
-            AuthenticationRepository().authenticationService.currentUser()!.uid,
+            AuthenticationRepository().authenticationService.currentUser()!.id,
           ),
           post,
         );

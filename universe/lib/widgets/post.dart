@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:universe/apis/posts_data_provider.dart';
 import 'package:universe/blocs/post_bloc.dart';
 import 'package:universe/extensions/date_time_extensions.dart';
 import 'package:universe/models/data/post.dart';
@@ -24,7 +23,7 @@ class PostWidget extends StatelessWidget {
     super.key,
   }) : bloc = PostBloc(
           PostsDataProvider(
-            AuthenticationRepository().authenticationService.currentUser()!.uid,
+            AuthenticationRepository().authenticationService.currentUser()!.id,
           ),
           post,
         );

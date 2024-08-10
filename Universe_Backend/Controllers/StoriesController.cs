@@ -13,7 +13,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 {
     [HttpGet()]
     [Route("Active")]
-    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetActiveStories(string userId, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetActiveStories(string userId, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("StoriesController.GetStories: Getting stories for user with id {UserId}", userId);
         // Validate route parameters.
@@ -24,13 +24,13 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
             return Unauthorized();
         }
 
-        var stories = await storiesRepository.GetActiveStories(userId, lastDate, lastId);
+        var stories = await storiesRepository.GetActiveStories(userId, apiCallStart.LastDate, apiCallStart.LastId);
         return Ok(stories);
     }
 
     [HttpGet()]
     [Route("All")]
-    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetAllStories(string userId, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetAllStories(string userId, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("StoriesController.GetAllStories: Getting all stories for user with id {UserId}", userId);
         // Validate route parameters.
@@ -41,18 +41,18 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
             return Unauthorized();
         }
 
-        var stories = await storiesRepository.GetAllStories(userId, lastDate, lastId);
+        var stories = await storiesRepository.GetAllStories(userId, apiCallStart.LastDate, apiCallStart.LastId);
         return Ok(stories);
     }
 
     [HttpGet()]
     [Route("Following")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetFollowingStories(string userId, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetFollowingStories(string userId, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("StoriesController.GetFollowingStories: Getting following stories for user with id {UserId}", User.FindFirstValue("uid"));
         // Validate route parameters.
-        var stories = await storiesRepository.GetFollowingStories(User.FindFirstValue("uid")!, lastDate, lastId);
+        var stories = await storiesRepository.GetFollowingStories(User.FindFirstValue("uid")!, apiCallStart.LastDate, apiCallStart.LastId);
         return Ok(stories);
     }
 
@@ -137,7 +137,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
 
     [HttpGet()]
     [Route("{storyId}/Reactions")]
-    public async Task<ActionResult<IEnumerable<StoryReactionDTO>>> GetReactions(int storyId, string userId, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<StoryReactionDTO>>> GetReactions(int storyId, string userId, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("StoriesController.GetReactions: Getting reactions for story with id {StoryId}", storyId);
         // Validate route parameters.
@@ -148,7 +148,7 @@ public class StoriesController(IStoriesRepository storiesRepository, IStoryReact
             return Unauthorized();
         }
 
-        var reactions = await reactionsRepository.GetReactions(storyId, lastDate, lastId);
+        var reactions = await reactionsRepository.GetReactions(storyId, apiCallStart.LastDate, apiCallStart.LastId);
         return Ok(reactions);
     }
 

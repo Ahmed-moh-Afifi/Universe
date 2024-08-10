@@ -216,8 +216,13 @@ public class UsersRepository(ApplicationDbContext dbContext, UserManager<User> u
         logger.LogDebug("UsersRepository.UpdateUser: Updating user with id: {id}", user.Id);
         try
         {
-            dbContext.Users.Update(user.ToModel());
-            await dbContext.SaveChangesAsync();
+            var userModel = dbContext.Users.Find(user.Id);
+            userModel?.UpdateFromDTO(user);
+            if (userModel != null)
+            {
+                dbContext.Users.Update(userModel);
+                await dbContext.SaveChangesAsync();
+            }
         }
         catch (Exception ex)
         {

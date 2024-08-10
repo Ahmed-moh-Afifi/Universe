@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/interfaces/iusers_data_provider.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
@@ -67,12 +66,11 @@ class ProfileBloc extends Bloc<Object, ProfileState> {
   }
 
   Future<void> getUserData() async {
-    final userPostsResponse =
-        await postsDataProvider.getUserPosts(state.user, null, 25);
+    final posts = await postsDataProvider.getUserPosts(state.user, null, 25);
     final newState = ProfileState(
       user: state.user,
-      posts: userPostsResponse.data,
-      postCount: userPostsResponse.data.length,
+      posts: posts,
+      postCount: posts.length,
       followersCount: await usersDataProvider.getUserFollowersCount(state.user),
       followingCount: await usersDataProvider.getUserFollowingCount(state.user),
     );
