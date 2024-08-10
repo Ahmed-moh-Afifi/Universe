@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'tag.g.dart';
+
+@JsonSerializable()
 class Tag {
   int id;
   String name;
@@ -11,21 +16,7 @@ class Tag {
     required this.createDate,
   });
 
-  factory Tag.fromJson(Map<String, dynamic> json) {
-    return Tag(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      createDate: DateTime.parse(json['createDate']),
-    );
-  }
+  factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'createDate': createDate.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toJson() => _$TagToJson(this);
 }

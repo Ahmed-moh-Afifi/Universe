@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iposts_data_provider.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
 import 'package:universe/repositories/authentication_repository.dart';
@@ -45,7 +43,7 @@ class PostBloc extends Bloc<Object, PostState> {
               userId: AuthenticationRepository()
                   .authenticationService
                   .currentUser()!
-                  .uid,
+                  .id,
               reactionType: 'like',
               reactionDate: DateTime.now(),
               postId: post.id!,
@@ -57,26 +55,26 @@ class PostBloc extends Bloc<Object, PostState> {
 
     on<ListenToReactionCountChanges>(
       (event, emit) async {
-        streamSubscription =
-            postsDataProvider.getPostReactionsCountStream(post).listen(
-          (event) async {
-            // print(
-            //     'listening to post with id: ${post.id}. CURRENT LIKES COUNT: $event');
-            // if (!isClosed) {
-            add(
-              ReactionCountChanged(
-                reactionCount: event,
-                reaction: await postsDataProvider.isPostReactedToByUser(
-                  post,
-                  AuthenticationRepository()
-                      .authenticationService
-                      .currentUser()!,
-                ),
-              ),
-            );
-            // }
-          },
-        );
+        // streamSubscription =
+        //     postsDataProvider.getPostReactionsCountStream(post).listen(
+        //   (event) async {
+        //     // print(
+        //     //     'listening to post with id: ${post.id}. CURRENT LIKES COUNT: $event');
+        //     // if (!isClosed) {
+        //     add(
+        //       ReactionCountChanged(
+        //         reactionCount: event,
+        //         reaction: await postsDataProvider.isPostReactedToByUser(
+        //           post,
+        //           AuthenticationRepository()
+        //               .authenticationService
+        //               .currentUser()!,
+        //         ),
+        //       ),
+        //     );
+        //     // }
+        //   },
+        // );
       },
     );
 

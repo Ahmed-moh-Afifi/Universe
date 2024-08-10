@@ -83,7 +83,7 @@ class StoriesDataProvider implements IStoriesDataProvider {
       nextPage: () => getFollowingWithActiveStories(
         user,
         ApiCallStart(
-          lastId: response.data!.last.uid,
+          lastId: response.data!.last.id,
           lastDate: response.data!.last.joinDate,
         ),
         limit,

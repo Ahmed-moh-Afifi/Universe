@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Universe_Backend.Data.DTOs;
+using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 
 namespace Universe_Backend.Controllers;
@@ -12,30 +13,30 @@ public class TagsController(ITagsRepository tagsRepository, ILogger<TagsControll
     [HttpGet()]
     [Route("Search")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<TagDTO>>> SearchTags(string query, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<TagDTO>>> SearchTags(string query, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("TagsController.SearchTags: Searching for tags with query {Query}", query);
-        var tags = await tagsRepository.SearchTags(query, lastDate, lastId);
+        var tags = await tagsRepository.SearchTags(query, apiCallStart.LastDate, apiCallStart.LastId);
         return Ok(tags);
     }
 
     [HttpGet()]
     [Route("{tag}/Posts")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPostsByTag(string tag, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPostsByTag(string tag, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("TagsController.GetPostsByTag: Getting posts for tag {Tag}", tag);
-        var posts = await tagsRepository.GetPostsByTag(tag, lastDate, lastId);
+        var posts = await tagsRepository.GetPostsByTag(tag, apiCallStart.LastDate, apiCallStart.LastId);
         return Ok(posts);
     }
 
     [HttpGet()]
     [Route("{tag}/Stories")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetStoriesByTag(string tag, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<StoryDTO>>> GetStoriesByTag(string tag, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("TagsController.GetStoriesByTag: Getting stories for tag {Tag}", tag);
-        var stories = await tagsRepository.GetStoriesByTag(tag, lastDate, lastId);
+        var stories = await tagsRepository.GetStoriesByTag(tag, apiCallStart.LastDate, apiCallStart.LastId);
         return Ok(stories);
     }
 

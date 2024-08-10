@@ -16,7 +16,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 {
     [HttpGet]
     [Route("")]
-    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPosts(string userId, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPosts(string userId, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("PostsController.GetPosts: Getting posts for user with id {UserId}", userId);
         // Validate route parameters.
@@ -27,12 +27,12 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(postsRepository.GetPosts(userId, lastDate, lastId));
+        return Ok(postsRepository.GetPosts(userId, apiCallStart.LastDate, apiCallStart.LastId));
     }
 
     [HttpGet]
     [Route("{postId}/Replies")]
-    public async Task<ActionResult<IEnumerable<PostDTO>>> GetReplies(string userId, int postId, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetReplies(string userId, int postId, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("PostsController.GetReplies: Getting replies for post with id {PostId}", postId);
         // Validate route parameters.
@@ -43,7 +43,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(postsRepository.GetReplies(postId, lastDate, lastId));
+        return Ok(postsRepository.GetReplies(postId, apiCallStart.LastDate, apiCallStart.LastId));
     }
 
     [HttpPost]
@@ -177,7 +177,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpGet]
     [Route("{postId}/Reactions")]
-    public async Task<ActionResult<IEnumerable<PostReactionDTO>>> GetReactions(string userId, int postId, [FromBody] DateTime? lastDate, int? lastId)
+    public async Task<ActionResult<IEnumerable<PostReactionDTO>>> GetReactions(string userId, int postId, [FromBody] ApiCallStart apiCallStart)
     {
         logger.LogDebug("ReactionsController.GetReactions: Getting reactions for post with id: {postId}", postId);
         // Validate route parameters.
@@ -188,7 +188,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(await reactionsRepository.GetReactions(postId, lastDate, lastId));
+        return Ok(await reactionsRepository.GetReactions(postId, apiCallStart.LastDate, apiCallStart.LastId));
     }
 
     [HttpGet]
@@ -259,11 +259,11 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpGet]
     [Route("Following/")]
     [Authorize()]
-    public ActionResult<IEnumerable<PostDTO>>? GetFollowingPosts([FromBody] DateTime? lastDate, int? lastId, string userId)
+    public ActionResult<IEnumerable<PostDTO>>? GetFollowingPosts([FromBody] ApiCallStart apiCallStart, string userId)
     {
         logger.LogDebug("PostsController.GetFollowingPosts: Getting posts of users followed by user with id: {userId}", User.FindFirstValue("uid"));
         // Validate route parameters.
-        return Ok(postsRepository.GetFollowingPosts(User.FindFirstValue("uid")!, lastDate, lastId));
+        return Ok(postsRepository.GetFollowingPosts(User.FindFirstValue("uid")!, apiCallStart.LastDate, apiCallStart.LastId));
     }
 
     [HttpGet]

@@ -1,11 +1,35 @@
-enum AccountState { active, suspended, banned, deleted }
+import 'package:json_annotation/json_annotation.dart';
 
-enum OnlineStatus { online, offline }
+part 'user.g.dart';
 
-enum AccountPrivacy { public, private }
+enum AccountState {
+  @JsonValue(0)
+  active,
+  @JsonValue(1)
+  suspended,
+  @JsonValue(2)
+  banned,
+  @JsonValue(3)
+  deleted,
+}
 
+enum OnlineStatus {
+  @JsonValue(0)
+  online,
+  @JsonValue(1)
+  offline,
+}
+
+enum AccountPrivacy {
+  @JsonValue(0)
+  public,
+  @JsonValue(1)
+  private,
+}
+
+@JsonSerializable()
 class User {
-  final String uid;
+  final String id;
   final String firstName;
   final String lastName;
   final String userName;
@@ -22,7 +46,7 @@ class User {
   String? notificationToken;
 
   User({
-    required this.uid,
+    required this.id,
     required this.firstName,
     required this.lastName,
     required this.userName,
@@ -39,90 +63,7 @@ class User {
     this.notificationToken,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      uid: json['id'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      userName: json['userName'],
-      email: json['email'],
-      photoUrl: json['photoUrl'],
-      joinDate: DateTime.parse(json['joinDate']),
-      gender: json['gender'],
-      verified: json['verified'],
-      bio: json['bio'],
-      accountState: AccountState.values[json['accountState']],
-      accountPrivacy: AccountPrivacy.values[json['accountPrivacy']],
-      onlineStatus: OnlineStatus.values[json['onlineStatus']],
-      lastOnline: json['lastOnline'] == null
-          ? null
-          : DateTime.parse(json['lastOnline']),
-    );
-  }
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': uid,
-      'firstName': firstName,
-      'lastName': lastName,
-      'userName': userName,
-      'email': email,
-      'photoUrl': photoUrl,
-      'joinDate': joinDate.toIso8601String(),
-      'gender': gender,
-      'verified': verified,
-      'bio': bio,
-      'accountState': accountState == null
-          ? 'null'
-          : AccountState.values.indexOf(accountState!),
-      'accountPrivacy': accountPrivacy == null
-          ? 'null'
-          : AccountPrivacy.values.indexOf(accountPrivacy!),
-      'onlineStatus': onlineStatus == null
-          ? 'null'
-          : OnlineStatus.values.indexOf(onlineStatus!),
-      'lastOnline': lastOnline?.toIso8601String(),
-    };
-  }
-
-  // factory User.fromFirestore(
-  //   DocumentSnapshot<Map<String, dynamic>> snapshot,
-  //   SnapshotOptions? options,
-  // ) {
-  //   final data = snapshot.data();
-  //   final firstNameProgressiveSubStrings = data?['firstName'];
-  //   final lastNameProgressiveSubStrings = data?['lastName'];
-  //   return User(
-  //     uid: data?['uid'],
-  //     firstName: StringExtensionsClass.capitalizeWords(
-  //       firstNameProgressiveSubStrings
-  //           .elementAt(firstNameProgressiveSubStrings.length - 1),
-  //     ),
-  //     lastName: StringExtensionsClass.capitalizeWords(
-  //       lastNameProgressiveSubStrings
-  //           .elementAt(lastNameProgressiveSubStrings.length - 1),
-  //     ),
-  //     userName: data?['userName'],
-  //     email: data?['email'],
-  //     photoUrl: data?['photoUrl'],
-  //     joinDate: (data?['joinDate'] as Timestamp).toDate(),
-  //     gender: data?['gender'],
-  //     verified: data?['verified'],
-  //   );
-  // }
-
-  // Map<String, dynamic> toFirestore() {
-  //   return {
-  //     "uid": uid,
-  //     "firstName": firstName.toLowerCase().progressiveSubstrings(),
-  //     "lastName": lastName.toLowerCase().progressiveSubstrings(),
-  //     "email": email,
-  //     "userName": userName,
-  //     "photoUrl": photoUrl,
-  //     "joinDate": joinDate,
-  //     "gender": gender,
-  //     "verified": verified,
-  //     "fcmToken": notificationToken,
-  //   };
-  // }
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 }

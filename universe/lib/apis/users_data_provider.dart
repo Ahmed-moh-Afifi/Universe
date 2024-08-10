@@ -30,7 +30,7 @@ class UsersDataProvider implements IusersDataProvider {
             query,
             ApiCallStart(
                 lastDate: response.data!.last.joinDate,
-                lastId: response.data!.last.uid),
+                lastId: response.data!.last.id),
             limit as int);
       },
     );
@@ -39,10 +39,9 @@ class UsersDataProvider implements IusersDataProvider {
   }
 
   @override
-  Future<User> getUser(String uid) async {
+  Future<User> getUser(String id) async {
     log("Getting user", name: "UsersDataProvider");
-    var response =
-        await _apiClient.get<Map<String, dynamic>>('/$uid', null, {});
+    var response = await _apiClient.get<Map<String, dynamic>>('/$id', null, {});
     log(response.data.toString(), name: "UsersDataProvider");
     return User.fromJson(response.data!);
   }
@@ -50,28 +49,28 @@ class UsersDataProvider implements IusersDataProvider {
   @override
   Future addFollower(User user, User follower) async {
     log("Adding follower", name: "UsersDataProvider");
-    await _apiClient.post('/${user.uid}/Followers/${follower.uid}', null, {});
+    await _apiClient.post('/${user.id}/Followers/${follower.id}', null, {});
     log("Follower added", name: "UsersDataProvider");
   }
 
   @override
   Future removeFollower(User user, User follower) async {
     log("Removing follower", name: "UsersDataProvider");
-    await _apiClient.delete('/${user.uid}/Followers/${follower.uid}', null, {});
+    await _apiClient.delete('/${user.id}/Followers/${follower.id}', null, {});
     log("Follower removed", name: "UsersDataProvider");
   }
 
   @override
   Future<int> getUserFollowersCount(User user) async {
     var response =
-        await _apiClient.get<int>('/${user.uid}/Followers/Count', null, {});
+        await _apiClient.get<int>('/${user.id}/Followers/Count', null, {});
     return response.data!;
   }
 
   @override
   Future<int> getUserFollowingCount(User user) async {
     var response =
-        await _apiClient.get<int>('/${user.uid}/Following/Count', null, {});
+        await _apiClient.get<int>('/${user.id}/Following/Count', null, {});
     return response.data!;
   }
 
@@ -79,7 +78,7 @@ class UsersDataProvider implements IusersDataProvider {
   Future<FollowersResponse> getUserFollowers<T, G>(
       User user, T start, G limit) async {
     var response = await _apiClient.get<Iterable<User>>(
-      '/${user.uid}/Followers',
+      '/${user.id}/Followers',
       (start as ApiCallStart).lastId,
       {
         'lastDate': (start as ApiCallStart).lastDate,
@@ -94,7 +93,7 @@ class UsersDataProvider implements IusersDataProvider {
             user,
             ApiCallStart(
                 lastDate: response.data!.last.joinDate,
-                lastId: response.data!.last.uid),
+                lastId: response.data!.last.id),
             limit as int);
       },
     );
@@ -112,7 +111,7 @@ class UsersDataProvider implements IusersDataProvider {
   @override
   Future<bool> isUserOneFollowingUserTwo(User userOne, User userTwo) async {
     var response = await _apiClient
-        .get<bool>('/${userOne.uid}/Following/${userTwo.uid}/Exists', null, {});
+        .get<bool>('/${userOne.id}/Following/${userTwo.id}/Exists', null, {});
     return response.data!;
   }
 
@@ -120,7 +119,7 @@ class UsersDataProvider implements IusersDataProvider {
   Future<FollowingResponse> getUserFollowing<T, G>(
       User user, T start, G limit) async {
     var response = await _apiClient.get<Iterable<User>>(
-      '/${user.uid}/Following',
+      '/${user.id}/Following',
       (start as ApiCallStart).lastDate,
       {
         'lastId': (start as ApiCallStart).lastId,
@@ -135,7 +134,7 @@ class UsersDataProvider implements IusersDataProvider {
             user,
             ApiCallStart(
                 lastDate: response.data!.last.joinDate,
-                lastId: response.data!.last.uid),
+                lastId: response.data!.last.id),
             limit as int);
       },
     );

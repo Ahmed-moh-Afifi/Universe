@@ -1,14 +1,27 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'widget.g.dart';
+
 enum WidgetType {
+  @JsonValue(0)
   music,
+  @JsonValue(1)
   poll,
+  @JsonValue(2)
   stopWatch,
+  @JsonValue(3)
   rate,
+  @JsonValue(4)
   location,
+  @JsonValue(5)
   code,
+  @JsonValue(6)
   question,
+  @JsonValue(7)
   answer,
 }
 
+@JsonSerializable()
 class Widget {
   String title;
   String body;
@@ -22,21 +35,7 @@ class Widget {
     required this.type,
   });
 
-  factory Widget.fromJson(Map<String, dynamic> json) {
-    return Widget(
-      title: json['title'],
-      body: json['body'],
-      data: json['data'],
-      type: WidgetType.values[json['type']],
-    );
-  }
+  factory Widget.fromJson(Map<String, dynamic> json) => _$WidgetFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'title': title,
-      'body': body,
-      'data': data,
-      'type': WidgetType.values.indexOf(type),
-    };
-  }
+  Map<String, dynamic> toJson() => _$WidgetToJson(this);
 }

@@ -1,5 +1,9 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:universe/models/data/widget.dart';
 
+part 'story.g.dart';
+
+@JsonSerializable()
 class Story {
   int id;
   String content;
@@ -23,31 +27,7 @@ class Story {
     required this.widgets,
   });
 
-  factory Story.fromJson(Map<String, dynamic> json) {
-    return Story(
-      id: json['id'],
-      content: json['content'],
-      image: json['image'],
-      video: json['video'],
-      audio: json['audio'],
-      publishDate: DateTime.parse(json['publishDate']),
-      sharedPostId: json['sharedPostId'],
-      sharedStoryId: json['sharedStoryId'],
-      widgets: json['widgets'],
-    );
-  }
+  factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'content': content,
-      'image': image,
-      'video': video,
-      'audio': audio,
-      'publishDate': publishDate.toIso8601String(),
-      'sharedPostId': sharedPostId,
-      'sharedStoryId': sharedStoryId,
-      'widgets': widgets,
-    };
-  }
+  Map<String, dynamic> toJson() => _$StoryToJson(this);
 }

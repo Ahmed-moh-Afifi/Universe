@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'story_reaction.g.dart';
+
+@JsonSerializable()
 class StoryReaction {
   int id;
   String userId;
@@ -12,4 +17,9 @@ class StoryReaction {
     required this.reactionDate,
     required this.storyId,
   });
+
+  factory StoryReaction.fromJson(Map<String, dynamic> data) =>
+      _$StoryReactionFromJson(data);
+
+  Map<String, dynamic> toJson() => _$StoryReactionToJson(this);
 }

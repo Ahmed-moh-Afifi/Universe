@@ -80,4 +80,19 @@ public class User : IdentityUser
             AccountPrivacy = AccountPrivacy
         };
     }
+
+    public void UpdateFromDTO(UserDTO dto)
+    {
+        FirstName = dto.FirstName;
+        LastName = dto.LastName;
+        Gender = dto.Gender;
+        Email = dto.Email;
+        UserName = dto.UserName;
+        PhotoUrl = dto.PhotoUrl;
+        Bio = dto.Bio;
+        AccountState = dto.AccountState;
+        LastOnline = dto.LastOnline;
+        OnlineStatus = dto.OnlineStatus;
+        AccountPrivacy = dto.AccountPrivacy;
+    }
 }
