@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
+import 'package:universe/models/requests/api_call_start.dart';
 
 enum UserPostsViewerStates {
   notStarted,
@@ -25,7 +27,7 @@ class GetUserPostsEvent {
 
 class UserPostsViewerBloc extends Bloc<Object, UserPostsViewerState> {
   final User user;
-  UserPostsViewerBloc(IPostsDataProvider postsDataProvider, this.user)
+  UserPostsViewerBloc(IPostsRepository postsRepository, this.user)
       : super(const UserPostsViewerState(
             state: UserPostsViewerStates.notStarted)) {
     on<GetUserPostsEvent>(
@@ -34,9 +36,9 @@ class UserPostsViewerBloc extends Bloc<Object, UserPostsViewerState> {
         emit(
           UserPostsViewerState(
             state: UserPostsViewerStates.success,
-            response: await postsDataProvider.getUserPosts(
-              user,
-              null,
+            response: await postsRepository.getUserPosts(
+              user.id,
+              ApiCallStart(),
               25,
             ),
           ),

@@ -5,7 +5,7 @@ import 'package:universe/blocs/post_bloc.dart';
 import 'package:universe/extensions/date_time_extensions.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
-import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/repositories/posts_repository.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/user_presenter.dart';
@@ -22,9 +22,7 @@ class PostWidget extends StatelessWidget {
     this.showFollowButton = true,
     super.key,
   }) : bloc = PostBloc(
-          PostsDataProvider(
-            AuthenticationRepository().authenticationService.currentUser()!.id,
-          ),
+          PostsRepository(),
           post,
         );
 

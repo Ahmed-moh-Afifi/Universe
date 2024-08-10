@@ -3,20 +3,20 @@ import 'dart:developer';
 import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/interfaces/iauthentication.dart';
 import 'package:universe/interfaces/iauthentication_api.dart';
-import 'package:universe/interfaces/iusers_data_provider.dart';
+import 'package:universe/interfaces/iusers_repository.dart';
 import 'package:universe/models/authentication/login_model.dart';
 import 'package:universe/models/authentication/register_model.dart';
 import 'package:universe/models/data/user.dart';
 
 class UniverseAuthentication implements IAuthentication {
   final IAuthenticationApi _authenticationApi;
-  final IusersDataProvider _usersDataProvider;
+  final IUsersRepository _usersRepository;
 
   final TokenManager _tokenManager = TokenManager();
 
   User? _currentUser;
 
-  UniverseAuthentication(this._authenticationApi, this._usersDataProvider);
+  UniverseAuthentication(this._authenticationApi, this._usersRepository);
 
   @override
   Future<User?> registerAndLogin(RegisterModel registerModel) async {
@@ -39,7 +39,7 @@ class UniverseAuthentication implements IAuthentication {
     if (tokens != null) {
       await _tokenManager.saveTokens(tokens);
       _currentUser =
-          await _usersDataProvider.getUser(tokens.getIdFromAccessToken());
+          await _usersRepository.getUser(tokens.getIdFromAccessToken());
       return _currentUser;
     }
 
@@ -75,7 +75,7 @@ class UniverseAuthentication implements IAuthentication {
     }
 
     _currentUser =
-        await _usersDataProvider.getUser(savedTokens.getIdFromAccessToken());
+        await _usersRepository.getUser(savedTokens.getIdFromAccessToken());
 
     return _currentUser;
   }

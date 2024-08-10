@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/apis/users_data_provider.dart';
 import 'package:universe/blocs/search_bloc.dart';
+import 'package:universe/repositories/users_repository.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/user_presenter.dart';
@@ -10,7 +10,7 @@ import 'package:universe/widgets/user_presenter.dart';
 class Search extends StatelessWidget {
   final SearchBloc bloc;
   Search({super.key})
-      : bloc = SearchBloc(UsersDataProvider(), RouteGenerator.searchState);
+      : bloc = SearchBloc(UsersRepository(), RouteGenerator.searchState);
 
   @override
   Widget build(BuildContext context) {

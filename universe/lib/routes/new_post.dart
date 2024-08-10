@@ -2,18 +2,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:universe/apis/posts_api.dart';
 import 'package:universe/blocs/new_post_bloc.dart';
-import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/repositories/posts_repository.dart';
 
 class NewPost extends StatefulWidget {
   final NewPostBloc bloc;
-  NewPost({super.key})
-      : bloc = NewPostBloc(
-          PostsApi(
-            AuthenticationRepository().authenticationService.currentUser()!.id,
-          ),
-        );
+  NewPost({super.key}) : bloc = NewPostBloc(PostsRepository());
 
   @override
   State<NewPost> createState() => _NewPostState();

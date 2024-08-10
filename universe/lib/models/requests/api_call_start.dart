@@ -4,10 +4,10 @@ part 'api_call_start.g.dart';
 
 @JsonSerializable()
 class ApiCallStart {
-  final DateTime lastDate;
-  final String lastId;
+  final DateTime? lastDate;
+  final String? lastId;
 
-  ApiCallStart({required this.lastDate, required this.lastId});
+  ApiCallStart({this.lastDate, this.lastId});
 
   factory ApiCallStart.fromJson(Map<String, dynamic> json) =>
       _$ApiCallStartFromJson(json);

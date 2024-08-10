@@ -7,15 +7,15 @@ part of 'post.dart';
 // **************************************************************************
 
 Post _$PostFromJson(Map<String, dynamic> json) => Post(
-      id: (json['id'] as num?)?.toInt(),
+      id: (json['id'] as num?)?.toInt() ?? -1,
       title: json['title'] as String,
       body: json['body'] as String,
       images: json['images'] as List<dynamic>,
       videos: json['videos'] as List<dynamic>,
       audios: json['audios'] as List<dynamic>,
       publishDate: DateTime.parse(json['publishDate'] as String),
-      replyToPost: (json['replyToPost'] as num?)?.toInt(),
-      childPostId: (json['childPostId'] as num?)?.toInt(),
+      replyToPost: (json['replyToPost'] as num?)?.toInt() ?? -1,
+      childPostId: (json['childPostId'] as num?)?.toInt() ?? -1,
       widgets: (json['widgets'] as List<dynamic>)
           .map((e) => Widget.fromJson(e as Map<String, dynamic>))
           .toList(),

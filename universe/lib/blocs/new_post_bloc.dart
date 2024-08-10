@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/widget.dart';
 import 'package:universe/repositories/authentication_repository.dart';
@@ -53,7 +54,7 @@ class PostEvent {
 }
 
 class NewPostBloc extends Bloc<Object, NewPostState> {
-  NewPostBloc(IPostsDataProvider postsDataProvider)
+  NewPostBloc(IPostsRepository postsRepository)
       : super(RouteGenerator.newPostState.state == NewPostStates.informative ||
                 RouteGenerator.newPostState.state == NewPostStates.success
             ? NewPostState(
@@ -81,8 +82,8 @@ class NewPostBloc extends Bloc<Object, NewPostState> {
                 ),
               );
             }
-            await postsDataProvider.addPost(
-              AuthenticationRepository().authenticationService.currentUser()!,
+
+            await postsRepository.addPost(
               Post(
                 title: '',
                 body: event.content,
@@ -93,11 +94,12 @@ class NewPostBloc extends Bloc<Object, NewPostState> {
                 videos: event.videos,
                 audios: event.audios,
                 widgets: event.widgets,
-                replyToPost: null,
-                childPostId: null,
+                replyToPost: -1,
+                childPostId: -1,
                 publishDate: DateTime.now(),
               ),
             );
+
             if (!isClosed) {
               emit(
                 NewPostState(
