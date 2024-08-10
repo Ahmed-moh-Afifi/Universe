@@ -5,33 +5,34 @@ import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
 import 'package:universe/models/requests/api_call_start.dart';
 
-class PostsRepository implements IpostsRepository {
+class PostsRepository implements IPostsRepository {
   final _postsApi = PostsApi(ApiClient('').dio);
 
   @override
-  Future<List<Post>> getUserPosts<T>(
-      String authorId, T start, int limit) async {
-    return await _postsApi.getUserPosts(authorId, start as ApiCallStart);
+  Future<List<Post>> getUserPosts(
+      String authorId, ApiCallStart start, int limit) async {
+    return await _postsApi.getUserPosts(authorId, start);
   }
 
   @override
   Future addPost(Post post) async {
+    post.id = -1;
     await _postsApi.addPost(post.author.id, post);
   }
 
   @override
-  Future<List<Post>> getPostReplies<T>(
-      String authorId, Post post, T start, int limit) async {
+  Future<List<Post>> getPostReplies(
+      String authorId, int postId, ApiCallStart start, int limit) async {
     return await _postsApi.getPostReplies(
       authorId,
-      post.id!,
-      start as ApiCallStart,
+      postId,
+      start,
     );
   }
 
   @override
-  Future addReply(Post post, Post reply) async {
-    await _postsApi.addReply(post.author.id, post.id!, reply);
+  Future addReply(String authorId, int postId, Post reply) async {
+    await _postsApi.addReply(authorId, postId, reply);
   }
 
   @override
@@ -46,12 +47,12 @@ class PostsRepository implements IpostsRepository {
 
   @override
   Future deleteReply(Post post, Post reply) async {
-    await _postsApi.deleteReply(post.author.id, post.id!, reply.id!);
+    await _postsApi.deleteReply(post.author.id, post.id, reply.id);
   }
 
   @override
   Future sharePost(String sharedPostAuthorId, Post post) async {
-    await _postsApi.sharePost(sharedPostAuthorId, post.childPostId!, post);
+    await _postsApi.sharePost(sharedPostAuthorId, post.childPostId, post);
   }
 
   @override
@@ -60,10 +61,9 @@ class PostsRepository implements IpostsRepository {
   }
 
   @override
-  Future<List<PostReaction>> getPostReactions<T>(
-      String authorId, int postId, T start, int limit) async {
-    return await _postsApi.getPostReactions(
-        authorId, postId, start as ApiCallStart);
+  Future<List<PostReaction>> getPostReactions(
+      String authorId, int postId, ApiCallStart start, int limit) async {
+    return await _postsApi.getPostReactions(authorId, postId, start);
   }
 
   @override
@@ -89,8 +89,8 @@ class PostsRepository implements IpostsRepository {
   }
 
   @override
-  Future<List<Post>> getFollowingPosts<T>(
-      String userId, T start, int limit) async {
-    return await _postsApi.getFollowingPosts(userId, start as ApiCallStart);
+  Future<List<Post>> getFollowingPosts(
+      String userId, ApiCallStart start, int limit) async {
+    return await _postsApi.getFollowingPosts(userId, start);
   }
 }

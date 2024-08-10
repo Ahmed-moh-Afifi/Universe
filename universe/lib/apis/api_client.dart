@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/models/config.dart';
@@ -11,6 +13,7 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          log('Raw Request: ${options.method} ${options.uri} ${options.data}');
           try {
             var tokens = await _tokenManager.readSavedTokens();
             if (tokens != null) {
@@ -42,6 +45,10 @@ class ApiClient {
               ),
             );
           }
+        },
+        onResponse: (response, handler) {
+          log('Raw Response: ${response.statusCode} ${response.requestOptions.uri}');
+          return handler.next(response);
         },
       ),
     );

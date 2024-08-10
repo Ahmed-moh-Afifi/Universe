@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iusers_data_provider.dart';
+import 'package:universe/interfaces/iusers_repository.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 
@@ -17,15 +17,19 @@ class UnfollowEvent {}
 
 class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
   final User user;
-  UserPresenterBloc(IusersDataProvider usersDataProvider, this.user)
+  UserPresenterBloc(IUsersRepository usersRepository, this.user)
       : super(const UserPresenterState()) {
     on<GetFollowState>(
       (event, emit) async {
         emit(
           UserPresenterState(
-            isFollowed: await usersDataProvider.isUserOneFollowingUserTwo(
-                AuthenticationRepository().authenticationService.currentUser()!,
-                user),
+            isFollowed: await usersRepository.isFollowing(
+              AuthenticationRepository()
+                  .authenticationService
+                  .currentUser()!
+                  .id,
+              user.id,
+            ),
           ),
         );
       },
@@ -33,8 +37,10 @@ class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
 
     on<FollowEvent>(
       (event, emit) async {
-        await usersDataProvider.addFollower(user,
-            AuthenticationRepository().authenticationService.currentUser()!);
+        await usersRepository.followUser(
+          user.id,
+          AuthenticationRepository().authenticationService.currentUser()!.id,
+        );
         emit(const UserPresenterState());
         add(GetFollowState());
       },
@@ -42,8 +48,8 @@ class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
 
     on<UnfollowEvent>(
       (event, emit) async {
-        await usersDataProvider.removeFollower(user,
-            AuthenticationRepository().authenticationService.currentUser()!);
+        await usersRepository.unfollowUser(user.id,
+            AuthenticationRepository().authenticationService.currentUser()!.id);
         emit(const UserPresenterState());
         add(GetFollowState());
       },

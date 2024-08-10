@@ -12,6 +12,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         logger.LogDebug("PostsRepository.AddPost: Adding post {@Post}", post);
         try
         {
+            post.Id = 0;
             await dbContext.Posts.AddAsync(post.ToModel());
             await dbContext.SaveChangesAsync();
             return post.Id;
@@ -78,7 +79,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
             {
                 logger.LogDebug("PostsRepository.GetPosts: Getting first 10 posts");
                 posts = dbContext.Posts
-                    .Where(p => p.AuthorId == userId)
+                    .Where(p => p.AuthorId == userId && p.ReplyToPost == -1)
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
@@ -151,6 +152,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         logger.LogDebug("PostsRepository.AddReply: Adding reply {@Reply} to post with id {PostId}", reply, postId);
         try
         {
+            reply.Id = 0;
             reply.ReplyToPost = postId;
             await dbContext.Posts.AddAsync(reply.ToModel());
             await dbContext.SaveChangesAsync();

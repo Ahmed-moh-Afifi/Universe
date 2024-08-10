@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
+import 'package:universe/models/requests/api_call_start.dart';
 
 enum ReactionsStates {
   loading,
@@ -21,9 +23,9 @@ class ReactionsState {
 class GetReactions {}
 
 class ReactionsBloc extends Bloc<Object, ReactionsState> {
-  final IPostsDataProvider postsDataProvider;
+  final IPostsRepository postsRepository;
   final Post post;
-  ReactionsBloc(this.postsDataProvider, this.post)
+  ReactionsBloc(this.postsRepository, this.post)
       : super(const ReactionsState(
             ReactionsStates.loading, ReactionsStates.loading, null, null)) {
     on<GetReactions>(
@@ -36,8 +38,12 @@ class ReactionsBloc extends Bloc<Object, ReactionsState> {
             null,
           ),
         );
-        var reactions =
-            await postsDataProvider.getPostReactions(post, null, 25);
+        var reactions = await postsRepository.getPostReactions(
+          post.author.id,
+          post.id,
+          ApiCallStart(),
+          25,
+        );
         emit(
           ReactionsState(
             ReactionsStates.loaded,

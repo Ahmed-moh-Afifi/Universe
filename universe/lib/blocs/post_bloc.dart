@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
 import 'package:universe/repositories/authentication_repository.dart';
@@ -27,18 +28,22 @@ class ReactionCountChanged {
 }
 
 class PostBloc extends Bloc<Object, PostState> {
-  final IPostsDataProvider postsDataProvider;
+  final IPostsRepository postsRepository;
   StreamSubscription<int>? streamSubscription;
   final Post post;
-  PostBloc(this.postsDataProvider, this.post) : super(const PostState()) {
+  PostBloc(this.postsRepository, this.post) : super(const PostState()) {
     on<LikeClicked>(
       (event, emit) {
         if (state.reaction != null) {
-          postsDataProvider.removeReaction(post, state.reaction!);
+          postsRepository.removeReaction(
+            post.author.id,
+            post.id,
+            state.reaction!.id!,
+          );
         } else {
-          postsDataProvider.addReaction(
-            AuthenticationRepository().authenticationService.currentUser()!,
-            post,
+          postsRepository.addReaction(
+            post.author.id,
+            post.id,
             PostReaction(
               userId: AuthenticationRepository()
                   .authenticationService
@@ -46,7 +51,7 @@ class PostBloc extends Bloc<Object, PostState> {
                   .id,
               reactionType: 'like',
               reactionDate: DateTime.now(),
-              postId: post.id!,
+              postId: post.id,
             ),
           );
         }

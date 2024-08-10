@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:universe/blocs/replies_bloc.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
-import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/repositories/posts_repository.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/post.dart';
@@ -19,9 +19,7 @@ class Replies extends StatelessWidget {
 
   Replies({required this.post, required this.user, super.key})
       : bloc = RepliesBloc(
-          PostsDataProvider(
-            AuthenticationRepository().authenticationService.currentUser()!.id,
-          ),
+          PostsRepository(),
           post,
         );
 

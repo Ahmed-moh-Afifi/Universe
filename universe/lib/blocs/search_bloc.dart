@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/interfaces/iusers_data_provider.dart';
+import 'package:universe/interfaces/iusers_repository.dart';
 import 'package:universe/models/data/user.dart';
+import 'package:universe/models/requests/users_api_call_start.dart';
 
 enum SearchStates {
   notStarted,
@@ -29,8 +30,8 @@ class SearchState {
 }
 
 class SearchBloc extends Bloc<Object, SearchState> {
-  final IusersDataProvider usersDataProvider;
-  SearchBloc(this.usersDataProvider, super.initialState) {
+  final IUsersRepository usersRepository;
+  SearchBloc(this.usersRepository, super.initialState) {
     on<SearchEvent>(
       (event, emit) async {
         if (event.query != '') {
@@ -39,13 +40,13 @@ class SearchBloc extends Bloc<Object, SearchState> {
                 state: SearchStates.loading, previousState: state.state),
           );
           try {
-            final results =
-                await usersDataProvider.searchUsers(event.query, null, 25);
+            final results = await usersRepository.searchUsers(
+                event.query, UsersApiCallStart(), 25);
             emit(
               SearchState(
                   state: SearchStates.loaded,
                   previousState: state.state,
-                  data: results.users),
+                  data: results),
             );
           } catch (e) {
             emit(

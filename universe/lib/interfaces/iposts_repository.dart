@@ -1,15 +1,17 @@
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
+import 'package:universe/models/requests/api_call_start.dart';
 
-abstract class IpostsRepository {
-  Future<List<Post>> getUserPosts<T>(String authorId, T start, int limit);
+abstract class IPostsRepository {
+  Future<List<Post>> getUserPosts(
+      String authorId, ApiCallStart start, int limit);
 
   Future addPost(Post post);
 
-  Future<List<Post>> getPostReplies<T>(
-      String authorId, Post post, T start, int limit);
+  Future<List<Post>> getPostReplies(
+      String authorId, int postId, ApiCallStart start, int limit);
 
-  Future addReply(Post post, Post reply);
+  Future addReply(String authorId, int postId, Post reply);
 
   Future updatePost(Post post);
 
@@ -21,8 +23,8 @@ abstract class IpostsRepository {
 
   Future<int> getUserPostsCount(String userId);
 
-  Future<List<PostReaction>> getPostReactions<T>(
-      String authorId, int postId, T start, int limit);
+  Future<List<PostReaction>> getPostReactions(
+      String authorId, int postId, ApiCallStart start, int limit);
 
   Future addReaction(String postAuthorId, int postId, PostReaction reaction);
 
@@ -33,5 +35,6 @@ abstract class IpostsRepository {
   Future<PostReaction?> isPostReactedToByUser(
       String postAuthorId, int postId, String userId);
 
-  Future<List<Post>> getFollowingPosts<T>(String userId, T start, int limit);
+  Future<List<Post>> getFollowingPosts(
+      String userId, ApiCallStart start, int limit);
 }
