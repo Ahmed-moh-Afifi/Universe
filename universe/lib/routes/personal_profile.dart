@@ -59,16 +59,6 @@ class PersonalProfile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 0, top: 2),
-                    //   child: Align(
-                    //     alignment: Alignment.centerLeft,
-                    //     child: Text(
-                    //       'Profile',
-                    //       style: TextStyles.titleStyle,
-                    //     ),
-                    //   ),
-                    // ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: ProfileCard(

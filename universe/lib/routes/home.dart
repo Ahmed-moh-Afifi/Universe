@@ -30,39 +30,10 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ),
-        // floatingActionButton: BlocBuilder<HomeBloc, HomeState>(
-        //   builder: (context, state) => state.floatingActionButtonVisible
-        //       ? FloatingActionButton(
-        //           shape: const CircleBorder(),
-        //           onPressed: () => showModalBottomSheet(
-        //             context: context,
-        //             builder: (context) => Padding(
-        //               padding: EdgeInsets.only(
-        //                   bottom: MediaQuery.of(context).viewInsets.bottom),
-        //               child: const NewPost(),
-        //             ),
-        //             enableDrag: true,
-        //             showDragHandle: true,
-        //             isScrollControlled: true,
-        //           ),
-        //           // onPressed: () =>
-        //           //     bloc.add(const Navigate(RouteGenerator.newPost)),
-        //           child: SvgPicture.asset(
-        //             state.newPostIcon,
-        //             colorFilter:
-        //                 const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-        //           ),
-        //         )
-        //       : const SizedBox(
-        //           width: 65,
-        //           height: 65,
-        //         ),
-        // ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) => Container(
             clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
             margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
@@ -110,8 +81,6 @@ class HomePage extends StatelessWidget {
                         showDragHandle: true,
                         isScrollControlled: true,
                       ),
-                      // onPressed: () =>
-                      //     bloc.add(const Navigate(RouteGenerator.newPost)),
                       icon: SvgPicture.asset(
                         state.newPostIcon,
                         colorFilter: ColorFilter.mode(

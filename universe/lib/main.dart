@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
         primaryColorLight: const Color.fromRGBO(80, 80, 80, 0.3),
         indicatorColor: Colors.black,
         colorScheme: const ColorScheme.dark(
+          surface: Color.fromRGBO(80, 80, 80, 0.1),
           primary: Colors.white,
           secondary: Color.fromRGBO(80, 80, 80, 0.3),
           tertiary: Colors.grey,
