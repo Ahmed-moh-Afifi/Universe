@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
-import 'package:universe/apis/firebase_cloud_messaging.dart';
-import 'package:universe/firebase_options.dart';
+// import 'package:universe/apis/firebase_cloud_messaging.dart';
+// import 'package:universe/firebase_options.dart';
 import 'package:universe/models/config.dart';
 import 'package:universe/models/authentication/notification_token.dart'
     as notification_token;
@@ -50,10 +50,10 @@ class StartupBloc extends Bloc<Object, Object> {
 
   Future initializeApp() async {
     Config.load();
-    late final Future<FirebaseApp> initialization;
-    initialization =
-        Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    await initialization;
+    // late final Future<FirebaseApp> initialization;
+    // initialization =
+    //     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    // await initialization;
     await AuthenticationRepository().authenticationService.loadUser();
 
     late notification_token.Platform platform;
@@ -65,25 +65,25 @@ class StartupBloc extends Bloc<Object, Object> {
       platform = notification_token.Platform.web;
     }
 
-    if (!kIsWeb) {
-      // until adding the vapid key for web support.
-      String fcmToken = await FCM().init();
+    // if (!kIsWeb) {
+    //   // until adding the vapid key for web support.
+    //   // String fcmToken = await FCM().init();
 
-      if (AuthenticationRepository().authenticationService.currentUser() !=
-          null) {
-        notification_token.NotificationToken notificationToken =
-            notification_token.NotificationToken(
-          token: fcmToken,
-          userId: AuthenticationRepository()
-              .authenticationService
-              .currentUser()!
-              .id,
-          platform: platform,
-        );
+    //   if (AuthenticationRepository().authenticationService.currentUser() !=
+    //       null) {
+    //     notification_token.NotificationToken notificationToken =
+    //         notification_token.NotificationToken(
+    //       token: fcmToken,
+    //       userId: AuthenticationRepository()
+    //           .authenticationService
+    //           .currentUser()!
+    //           .id,
+    //       platform: platform,
+    //     );
 
-        await TokenManager().saveNotificationToken(notificationToken);
-      }
-    }
+    //     await TokenManager().saveNotificationToken(notificationToken);
+    //   }
+    // }
 
     add(StartupCompleted());
   }
