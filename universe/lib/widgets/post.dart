@@ -51,6 +51,37 @@ class PostWidget extends StatelessWidget {
                 showFollowButton: showFollowButton,
               ),
               Text(post.body),
+              post.images.isNotEmpty
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: SizedBox(
+                        height: 250,
+                        child: CarouselView(
+                          itemExtent: 350,
+                          itemSnapping: true,
+                          children: post.images
+                              .map(
+                                (image) => Image.network(
+                                  image,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  post.publishDate.toEnglishString(),
+                  style: TextStyles.subtitleStyle,
+                ),
+              ),
               BlocBuilder<PostBloc, PostState>(
                 builder: (context, state) => Padding(
                   padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -141,23 +172,61 @@ class PostWidget extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // SvgPicture.asset(
-                      //   'lib/assets/icons/share.svg',
-                      //   colorFilter: ColorFilter.mode(
-                      //     Theme.of(context).colorScheme.secondary,
-                      //     BlendMode.srcIn,
-                      //   ),
-                      // ),
-                      // SvgPicture.asset(
-                      //   'lib/assets/icons/save.svg',
-                      //   colorFilter: ColorFilter.mode(
-                      //     Theme.of(context).colorScheme.secondary,
-                      //     BlendMode.srcIn,
-                      //   ),
-                      // ),
-                      Text(
-                        post.publishDate.toEnglishString(),
-                        style: TextStyles.subtitleStyle,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 5, bottom: 5),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.secondary,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 0, left: 0),
+                                    child: SvgPicture.asset(
+                                      'lib/assets/icons/share.svg',
+                                      colorFilter: ColorFilter.mode(
+                                        Theme.of(context).colorScheme.primary,
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          GestureDetector(
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 5, bottom: 5),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.secondary,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 0, left: 0),
+                                    child: SvgPicture.asset(
+                                      'lib/assets/icons/save.svg',
+                                      colorFilter: ColorFilter.mode(
+                                        Theme.of(context).colorScheme.primary,
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

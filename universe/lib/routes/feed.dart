@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/blocs/feed_bloc.dart';
 import 'package:universe/repositories/posts_repository.dart';
+import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/post.dart';
 
 class Feed extends StatelessWidget {
@@ -17,7 +18,7 @@ class Feed extends StatelessWidget {
               ..add(LoadFeed()),
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Feed'),
+            title: Text('Feed', style: TextStyles.titleStyle),
           ),
           body: const FeedContent(),
         ),

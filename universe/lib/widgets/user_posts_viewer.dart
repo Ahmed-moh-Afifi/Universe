@@ -23,7 +23,7 @@ class UserPostsViewer extends StatelessWidget {
       separatorBuilder: (context, index) => const Divider(
         indent: 0,
         endIndent: 0,
-        color: Color.fromRGBO(80, 80, 80, 0.3),
+        color: Color.fromRGBO(80, 80, 80, 0),
       ),
       itemCount: postsList.length,
     );
