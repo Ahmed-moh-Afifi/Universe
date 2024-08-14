@@ -16,7 +16,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 {
     [HttpGet]
     [Route("")]
-    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPosts(string userId, [FromBody] ApiCallStart apiCallStart)
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetPosts(string userId)
     {
         logger.LogDebug("PostsController.GetPosts: Getting posts for user with id {UserId}", userId);
         // Validate route parameters.
@@ -27,7 +27,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(postsRepository.GetPosts(userId, apiCallStart.LastDate, apiCallStart.LastId));
+        return Ok(postsRepository.GetPosts(userId, null, null));
     }
 
     [HttpGet]

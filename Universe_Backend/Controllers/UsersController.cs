@@ -23,10 +23,10 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     [HttpGet]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query, [FromBody] UsersApiCallStart apiCallStart)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query/*, [FromBody] UsersApiCallStart apiCallStart*/)
     {
         logger.LogDebug("UsersController.SearchUsers: Searching for users with query: {query}", query);
-        return Ok(await usersRepository.SearchUsers(query, apiCallStart.LastDate, apiCallStart.LastId));
+        return Ok(await usersRepository.SearchUsers(query, null, null));
     }
 
     [HttpGet]

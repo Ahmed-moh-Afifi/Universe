@@ -94,5 +94,6 @@ public class User : IdentityUser
         LastOnline = dto.LastOnline;
         OnlineStatus = dto.OnlineStatus;
         AccountPrivacy = dto.AccountPrivacy;
+        Verified = dto.Verified;
     }
 }
