@@ -49,7 +49,7 @@ class StartupBloc extends Bloc<Object, Object> {
   }
 
   Future initializeApp() async {
-    Config.load();
+    await Config.load();
     // late final Future<FirebaseApp> initialization;
     // initialization =
     //     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

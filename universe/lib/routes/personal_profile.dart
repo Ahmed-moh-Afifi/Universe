@@ -71,7 +71,7 @@ class PersonalProfile extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 20, bottom: 10),
                       child: UserPostsViewer(state.user, state.posts),
                     ),
                   ],
