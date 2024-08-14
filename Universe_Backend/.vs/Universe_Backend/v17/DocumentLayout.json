@@ -11,16 +11,24 @@
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:repositories\\postsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\data\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\repositories\\usersrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:repositories\\usersrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,11 +38,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Data\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\Models\\User.cs",
+              "RelativeToolTip": "Data\\Models\\User.cs",
+              "ViewState": "AQIAAFAAAAAAAAAAAAAowFgAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T11:16:16.949Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UsersRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Repositories\\UsersRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\UsersRepository.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Repositories\\UsersRepository.cs",
+              "RelativeToolTip": "Repositories\\UsersRepository.cs",
+              "ViewState": "AQIAANIAAAAAAAAAAAAowNsAAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-13T11:16:07.345Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -52,7 +86,7 @@
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
               "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Properties\\launchSettings.json",
               "RelativeToolTip": "Properties\\launchSettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAPAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2024-08-11T15:32:41.177Z",
               "EditorCaption": ""
@@ -65,34 +99,36 @@
               "RelativeDocumentMoniker": "Repositories\\PostsRepository.cs",
               "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Repositories\\PostsRepository.cs",
               "RelativeToolTip": "Repositories\\PostsRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAABAAAA",
+              "ViewState": "AQIAABkAAAAAAAAAAAAgwCkAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-10T01:24:18.914Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "PostsController.cs",
               "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
               "RelativeDocumentMoniker": "Controllers\\PostsController.cs",
               "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
               "RelativeToolTip": "Controllers\\PostsController.cs",
-              "ViewState": "AQIAACQAAAAAAAAAAAAowCMAAAAFAAAA",
+              "ViewState": "AQIAAGEAAAAAAAAAAAAowHIAAAAyAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-10T01:23:50.439Z"
+              "WhenOpened": "2024-08-10T01:23:50.439Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
               "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Controllers\\UsersController.cs",
               "RelativeToolTip": "Controllers\\UsersController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAABEAAAA",
+              "ViewState": "AQIAABAAAAAAAAAAAAAgwBkAAAA4AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-10T00:25:17.422Z"
+              "WhenOpened": "2024-08-10T00:25:17.422Z",
+              "EditorCaption": ""
             }
           ]
         }

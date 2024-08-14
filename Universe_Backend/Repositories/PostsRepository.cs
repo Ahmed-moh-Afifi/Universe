@@ -29,7 +29,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         logger.LogDebug("PostsRepository.UpdatePost: Updating post {@Post}", post);
         try
         {
-            var existingPost = await dbContext.Posts.FindAsync(post.Id);
+            var existingPost = dbContext.Posts.Where(p => p.Id == post.Id).Include(p => p.Author).Single();
             if (existingPost == null)
             {
                 // throw new NotFoundException("Post not found");
