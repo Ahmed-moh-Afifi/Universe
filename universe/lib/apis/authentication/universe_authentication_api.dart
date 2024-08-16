@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:universe/interfaces/iauthentication_api.dart';
 import 'package:universe/models/config.dart';
 import 'package:universe/models/authentication/login_model.dart';
@@ -12,6 +13,12 @@ class UniverseAuthenticationApi implements IAuthenticationApi {
   final dioClient = Dio();
 
   UniverseAuthenticationApi._() {
+    (dioClient.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+      var client = HttpClient();
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
     dioClient.options.baseUrl = '${Config().api}/Auth';
   }
 

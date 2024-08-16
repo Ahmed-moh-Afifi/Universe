@@ -20,6 +20,9 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
           .map((e) => Widget.fromJson(e as Map<String, dynamic>))
           .toList(),
       author: User.fromJson(json['author'] as Map<String, dynamic>),
+      reactionsCount: (json['reactionsCount'] as num).toInt(),
+      repliesCount: (json['repliesCount'] as num).toInt(),
+      reactedToByCaller: json['reactedToByCaller'] as bool,
     );
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
@@ -34,4 +37,7 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'childPostId': instance.childPostId,
       'widgets': instance.widgets,
       'author': instance.author,
+      'reactionsCount': instance.reactionsCount,
+      'repliesCount': instance.repliesCount,
+      'reactedToByCaller': instance.reactedToByCaller,
     };

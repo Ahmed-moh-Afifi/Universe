@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/blocs/feed_bloc.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/posts_repository.dart';
 import 'package:universe/styles/text_styles.dart';
 import 'package:universe/widgets/post.dart';
@@ -18,7 +19,9 @@ class Feed extends StatelessWidget {
               ..add(LoadFeed()),
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Feed', style: TextStyles.titleStyle),
+            title: Text(
+                'Hello, ${AuthenticationRepository().authenticationService.currentUser()!.firstName} ${AuthenticationRepository().authenticationService.currentUser()!.lastName}',
+                style: TextStyles.titleStyle),
           ),
           body: const FeedContent(),
         ),
@@ -48,7 +51,7 @@ class FeedContent extends StatelessWidget {
             separatorBuilder: (context, index) => const Divider(
               indent: 0,
               endIndent: 0,
-              color: Color.fromRGBO(80, 80, 80, 0.3),
+              color: Color.fromRGBO(80, 80, 80, 0),
             ),
             itemCount: state is FeedLoaded ? state.posts.length : 0,
           ),

@@ -16,6 +16,9 @@ public class PostDTO
     public ICollection<Widget>? Widgets { get; set; }
     // public required string AuthorId { get; set; }
     public required UserDTO Author { get; set; }
+    public int ReactionsCount { get; set; }
+    public int RepliesCount { get; set; }
+    public bool ReactedToByCaller { get; set; }
 
     public Post ToModel()
     {
@@ -31,11 +34,13 @@ public class PostDTO
             ReplyToPost = ReplyToPost,
             ChildPostId = ChildPostId,
             AuthorId = Author.Id,
-            Widgets = Widgets
+            Widgets = Widgets,
+            ReactionsCount = ReactionsCount,
+            RepliesCount = RepliesCount
         };
     }
 
-    public static PostDTO FromPost(Post post)
+    public static PostDTO FromPost(Post post, bool reactedToByCaller)
     {
         return new PostDTO
         {
@@ -49,7 +54,10 @@ public class PostDTO
             ReplyToPost = post.ReplyToPost,
             ChildPostId = post.ChildPostId,
             Author = post.Author!.ToDTO(),
-            Widgets = post.Widgets
+            Widgets = post.Widgets,
+            ReactionsCount = post.ReactionsCount,
+            RepliesCount = post.RepliesCount,
+            ReactedToByCaller = reactedToByCaller
         };
     }
 }

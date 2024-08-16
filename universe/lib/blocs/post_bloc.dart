@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/apis/hubs/reactions_count_hub.dart';
 import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
@@ -29,7 +31,6 @@ class ReactionCountChanged {
 
 class PostBloc extends Bloc<Object, PostState> {
   final IPostsRepository postsRepository;
-  StreamSubscription<int>? streamSubscription;
   final Post post;
   PostBloc(this.postsRepository, this.post) : super(const PostState()) {
     on<LikeClicked>(
@@ -60,26 +61,30 @@ class PostBloc extends Bloc<Object, PostState> {
 
     on<ListenToReactionCountChanges>(
       (event, emit) async {
-        // streamSubscription =
-        //     postsDataProvider.getPostReactionsCountStream(post).listen(
-        //   (event) async {
-        //     // print(
-        //     //     'listening to post with id: ${post.id}. CURRENT LIKES COUNT: $event');
-        //     // if (!isClosed) {
-        //     add(
-        //       ReactionCountChanged(
-        //         reactionCount: event,
-        //         reaction: await postsDataProvider.isPostReactedToByUser(
-        //           post,
-        //           AuthenticationRepository()
-        //               .authenticationService
-        //               .currentUser()!,
-        //         ),
-        //       ),
-        //     );
-        //     // }
-        //   },
-        // );
+        log('Listening to reaction count changes for post: ${post.id}');
+        await ReactionsCountHub().connect();
+        await ReactionsCountHub()
+            .subscribeToPostReactionsCount(post.id.toString());
+        ReactionsCountHub().onReactionsCountChanged((change, userId) {
+          log('Reaction count changed: count = ${post.reactionsCount + change}, userId = $userId');
+          emit(
+            PostState(
+              reactionsCount: post.reactionsCount + change,
+              reaction: userId ==
+                      AuthenticationRepository()
+                          .authenticationService
+                          .currentUser()!
+                          .id
+                  ? PostReaction(
+                      userId: userId,
+                      reactionType: 'like',
+                      reactionDate: DateTime.now(),
+                      postId: post.id,
+                    )
+                  : null,
+            ),
+          );
+        });
       },
     );
 
@@ -101,9 +106,7 @@ class PostBloc extends Bloc<Object, PostState> {
 
   @override
   Future<void> close() async {
-    if (streamSubscription != null) {
-      await streamSubscription!.cancel();
-    }
+    log('Closing PostBloc for post: ${post.id}');
     return super.close();
   }
 }

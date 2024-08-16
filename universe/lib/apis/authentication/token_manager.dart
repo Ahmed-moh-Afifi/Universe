@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:universe/apis/api_client.dart';
 import 'package:universe/models/config.dart';
@@ -10,15 +11,22 @@ import 'package:universe/models/authentication/notification_token.dart';
 import 'package:universe/models/authentication/tokens_model.dart';
 
 class TokenManager {
-  TokenManager._privateConstructor();
+  final Dio _dio = Dio(BaseOptions(
+    baseUrl: '${Config().api}/Auth',
+  ));
+
+  TokenManager._privateConstructor() {
+    (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+      var client = HttpClient();
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+  }
   static final TokenManager _instance = TokenManager._privateConstructor();
   factory TokenManager() => _instance;
 
   TokensModel? _tokensModel;
-
-  final Dio _dio = Dio(BaseOptions(
-    baseUrl: '${Config().api}/Auth',
-  ));
 
   Future<TokensModel?> readSavedTokens() async {
     log("Reading saved tokens", name: "TokenManager");
