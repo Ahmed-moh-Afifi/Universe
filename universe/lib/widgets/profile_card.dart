@@ -49,7 +49,7 @@ class ProfileCard extends StatelessWidget {
                 user.verified
                     ? const Padding(
                         padding: EdgeInsets.only(left: 10),
-                        child: VerifiedBadge(),
+                        child: AnimatedVerifiedBadge(),
                       )
                     : const SizedBox(
                         width: 0,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:universe/blocs/post_bloc.dart';
-import 'package:universe/blocs/reactions_bloc.dart';
 import 'package:universe/extensions/date_time_extensions.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
@@ -30,6 +29,7 @@ class PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(left: 0, right: 0),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       child: BlocProvider<PostBloc>(
@@ -61,7 +61,7 @@ class PostWidget extends StatelessWidget {
                       child: SizedBox(
                         height: 250,
                         child: CarouselView(
-                          itemExtent: 350,
+                          itemExtent: MediaQuery.of(context).size.width,
                           itemSnapping: true,
                           children: post.images
                               .map(
@@ -102,7 +102,9 @@ class PostWidget extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                   left: 10, right: 10, top: 5, bottom: 5),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.secondary,
+                                color: post.reactedToByCaller
+                                    ? const Color.fromRGBO(255, 150, 150, 0.2)
+                                    : Theme.of(context).colorScheme.secondary,
                                 borderRadius: BorderRadius.circular(25),
                               ),
                               child: Row(
@@ -113,7 +115,7 @@ class PostWidget extends StatelessWidget {
                                       onTap: () {
                                         bloc.add(LikeClicked(false));
                                       },
-                                      child: state.reaction != null
+                                      child: post.reactedToByCaller
                                           ? SvgPicture.asset(
                                               'lib/assets/icons/heartFilled.svg',
                                               colorFilter:
@@ -134,7 +136,7 @@ class PostWidget extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    (state.reactionsCount ?? '').toString(),
+                                    (post.reactionsCount).toString(),
                                     style: TextStyles.subtitleStyle,
                                   ),
                                 ],

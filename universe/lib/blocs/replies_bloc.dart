@@ -76,6 +76,9 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
               replyToPost: post.id,
               childPostId: -1,
               publishDate: DateTime.now(),
+              reactionsCount: 0,
+              repliesCount: 0,
+              reactedToByCaller: false,
             ),
           );
           add(GetReplies());

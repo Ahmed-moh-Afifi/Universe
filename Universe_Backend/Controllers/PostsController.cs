@@ -27,7 +27,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(postsRepository.GetPosts(userId, null, null));
+        return Ok(postsRepository.GetPosts(userId, User.FindFirstValue("uid")!, null, null));
     }
 
     [HttpGet]
@@ -43,7 +43,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(postsRepository.GetReplies(postId, apiCallStart.LastDate, apiCallStart.LastId));
+        return Ok(postsRepository.GetReplies(postId, User.FindFirstValue("uid")!, apiCallStart.LastDate, apiCallStart.LastId));
     }
 
     [HttpPost]
@@ -263,7 +263,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     {
         logger.LogDebug("PostsController.GetFollowingPosts: Getting posts of users followed by user with id: {userId}", User.FindFirstValue("uid"));
         // Validate route parameters.
-        return Ok(postsRepository.GetFollowingPosts(User.FindFirstValue("uid")!, apiCallStart.LastDate, apiCallStart.LastId));
+        return Ok(postsRepository.GetFollowingPosts(User.FindFirstValue("uid")!, User.FindFirstValue("uid")!, apiCallStart.LastDate, apiCallStart.LastId));
     }
 
     [HttpGet]
