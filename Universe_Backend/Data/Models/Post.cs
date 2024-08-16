@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Universe_Backend.Data.DTOs;
 
 namespace Universe_Backend.Data.Models;
@@ -15,6 +16,8 @@ public class Post
     public int? ChildPostId { get; set; }
     public required string AuthorId { get; set; }
     public ICollection<Widget>? Widgets { get; set; }
+    public int ReactionsCount { get; set; }
+    public int RepliesCount { get; set; }
 
     public virtual User? Author { get; set; }
     public virtual ICollection<PostReaction> Reactions { get; set; } = [];
@@ -35,7 +38,9 @@ public class Post
             ReplyToPost = ReplyToPost,
             ChildPostId = ChildPostId,
             Widgets = Widgets,
-            Author = Author!.ToDTO()
+            Author = Author!.ToDTO(),
+            ReactionsCount = ReactionsCount,
+            RepliesCount = RepliesCount,
         };
     }
 
@@ -51,6 +56,8 @@ public class Post
         ChildPostId = post.ChildPostId;
         AuthorId = post.Author.Id;
         Widgets = post.Widgets;
+        ReactionsCount = post.ReactionsCount;
+        RepliesCount = post.RepliesCount;
         return this;
     }
 }

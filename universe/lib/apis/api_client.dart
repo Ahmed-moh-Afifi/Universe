@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/models/config.dart';
 
@@ -10,6 +12,13 @@ class ApiClient {
 
   ApiClient(String path)
       : _dio = Dio(BaseOptions(baseUrl: '${Config().api}/$path')) {
+    (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+      var client = HttpClient();
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

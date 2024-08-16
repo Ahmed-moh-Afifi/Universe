@@ -69,7 +69,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         }
     }
 
-    public IEnumerable<PostDTO> GetPosts(string userId, DateTime? lastDate, int? lastId)
+    public IEnumerable<PostDTO> GetPosts(string userId, string callerId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostsRepository.GetPosts: Getting posts for user with id {UserId}", userId);
         try
@@ -83,7 +83,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(PostDTO.FromPost)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
                     .Take(10);
             }
             else
@@ -95,7 +95,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(PostDTO.FromPost)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
                     .Take(10);
             }
 
@@ -108,7 +108,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         }
     }
 
-    public IEnumerable<PostDTO> GetReplies(int postId, DateTime? lastDate, int? lastId)
+    public IEnumerable<PostDTO> GetReplies(int postId, string callerId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostsRepository.GetReplies: Getting replies for post with id {PostId}", postId);
         try
@@ -122,7 +122,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(PostDTO.FromPost)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
                     .Take(10);
             }
             else
@@ -134,7 +134,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(PostDTO.FromPost)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
                     .Take(10);
             }
 
@@ -219,7 +219,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         }
     }
 
-    public IEnumerable<PostDTO> GetFollowingPosts(string userId, DateTime? lastDate, int? lastId)
+    public IEnumerable<PostDTO> GetFollowingPosts(string userId, string callerId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostsRepository.GetFollowingPosts: Getting posts for user with id {UserId}", userId);
         try
@@ -233,7 +233,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(PostDTO.FromPost)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
                     .Take(10);
             }
             else
@@ -245,7 +245,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(PostDTO.FromPost)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
                     .Take(10);
             }
 

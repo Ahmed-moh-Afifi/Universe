@@ -17,6 +17,9 @@ class Post {
   final int childPostId;
   final List<Widget> widgets;
   final User author;
+  int reactionsCount;
+  int repliesCount;
+  bool reactedToByCaller;
 
   Post({
     this.id = -1,
@@ -30,6 +33,9 @@ class Post {
     this.childPostId = -1,
     required this.widgets,
     required this.author,
+    required this.reactionsCount,
+    required this.repliesCount,
+    required this.reactedToByCaller,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);

@@ -10,22 +10,52 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
     public async Task<int> AddReaction(PostReactionDTO reaction)
     {
         logger.LogDebug("PostReactionsRepository.AddReaction: Adding reaction to post.");
+        using var transaction = dbContext.Database.BeginTransaction();
         try
         {
             await dbContext.PostsReactions.AddAsync(reaction.ToModel());
             await dbContext.SaveChangesAsync();
+
+            var post = await dbContext.Posts
+                .Where(p => p.Id == reaction.PostId)
+                .SingleAsync();
+            post.ReactionsCount++;
+            dbContext.Posts.Update(post);
+            await dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
             return reaction.Id;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "PostReactionsRepository.AddReaction: Error adding reaction to post.");
+            await transaction.RollbackAsync();
             throw;
         }
     }
 
     public async Task RemoveReaction(int reactionId)
     {
+        //logger.LogDebug("PostReactionsRepository.RemoveReaction: Removing reaction from post.");
+        //try
+        //{
+        //    var reaction = await dbContext.PostsReactions.FindAsync(reactionId);
+        //    if (reaction == null)
+        //    {
+        //        // throw NotFoundException().
+        //    }
+
+        //    dbContext.PostsReactions.Remove(reaction!);
+        //    await dbContext.SaveChangesAsync();
+        //}
+        //catch (Exception ex)
+        //{
+        //    logger.LogError(ex, "PostReactionsRepository.RemoveReaction: Error removing reaction from post.");
+        //    throw;
+        //}
+
         logger.LogDebug("PostReactionsRepository.RemoveReaction: Removing reaction from post.");
+        using var transaction = dbContext.Database.BeginTransaction();
         try
         {
             var reaction = await dbContext.PostsReactions.FindAsync(reactionId);
@@ -36,10 +66,20 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
 
             dbContext.PostsReactions.Remove(reaction!);
             await dbContext.SaveChangesAsync();
+
+            var post = await dbContext.Posts
+                .Where(p => p.Id == reaction!.PostId)
+                .SingleAsync();
+            post.ReactionsCount--;
+            dbContext.Posts.Update(post);
+            await dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "PostReactionsRepository.RemoveReaction: Error removing reaction from post.");
+            await transaction.RollbackAsync();
             throw;
         }
     }
@@ -85,12 +125,26 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
 
     public async Task<int> GetReactionsCount(int postId)
     {
+        //logger.LogDebug("PostReactionsRepository.GetReactionsCount: Getting reactions count for post.");
+        //try
+        //{
+        //    return await dbContext.PostsReactions
+        //        .Where(r => r.PostId == postId)
+        //        .CountAsync();
+        //}
+        //catch (Exception ex)
+        //{
+        //    logger.LogError(ex, "PostReactionsRepository.GetReactionsCount: Error getting reactions count for post.");
+        //    throw;
+        //}
+
         logger.LogDebug("PostReactionsRepository.GetReactionsCount: Getting reactions count for post.");
         try
         {
-            return await dbContext.PostsReactions
-                .Where(r => r.PostId == postId)
-                .CountAsync();
+            return await dbContext.Posts
+                .Where(p => p.Id == postId)
+                .Select(p => p.ReactionsCount)
+                .SingleAsync();
         }
         catch (Exception ex)
         {
