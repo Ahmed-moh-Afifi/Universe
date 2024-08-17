@@ -31,7 +31,10 @@ class SearchState {
 
 class SearchBloc extends Bloc<Object, SearchState> {
   final IUsersRepository usersRepository;
-  SearchBloc(this.usersRepository, super.initialState) {
+  SearchBloc(this.usersRepository)
+      : super(const SearchState(
+            previousState: SearchStates.notStarted,
+            state: SearchStates.notStarted)) {
     on<SearchEvent>(
       (event, emit) async {
         if (event.query != '') {
