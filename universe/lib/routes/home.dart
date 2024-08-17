@@ -4,7 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:universe/blocs/home_bloc.dart';
 import 'package:universe/route_generator.dart';
+import 'package:universe/routes/feed.dart';
+import 'package:universe/routes/messages.dart';
 import 'package:universe/routes/new_post.dart';
+import 'package:universe/routes/personal_profile.dart';
+import 'package:universe/routes/search.dart';
 import 'package:universe/widgets/universe_appbar.dart';
 
 class HomePage extends StatelessWidget {
@@ -22,13 +26,40 @@ class HomePage extends StatelessWidget {
           bottom: false,
           top: false,
           child: Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Navigator(
-              initialRoute: RouteGenerator.feed,
-              onGenerateRoute: RouteGenerator.generateRoute,
-              key: RouteGenerator.homeNavigatorKey,
-            ),
-          ),
+              padding: const EdgeInsets.only(top: 0),
+              child: PageView(
+                onPageChanged: (value) {
+                  switch (value) {
+                    case 0:
+                      bloc.add(const ChangeIcon(RouteGenerator.feed));
+                      break;
+                    case 1:
+                      bloc.add(const ChangeIcon(RouteGenerator.search));
+                      break;
+                    case 2:
+                      bloc.add(const ChangeIcon(RouteGenerator.messages));
+                      break;
+                    case 3:
+                      bloc.add(
+                          const ChangeIcon(RouteGenerator.personalProfile));
+                      break;
+                    default:
+                  }
+                },
+                controller: bloc.pageController,
+                children: [
+                  const Feed(),
+                  Search(),
+                  const Messages(),
+                  PersonalProfile(),
+                ],
+              )
+              // Navigator(
+              //   initialRoute: RouteGenerator.feed,
+              //   onGenerateRoute: RouteGenerator.generateRoute,
+              //   key: RouteGenerator.homeNavigatorKey,
+              // ),
+              ),
         ),
         bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) => Container(
