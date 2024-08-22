@@ -17,7 +17,7 @@ abstract class PostsApi {
   );
 
   @POST('/{userId}/Posts/{postId}/Reactions')
-  Future addReaction(
+  Future<int> addReaction(
     @Path() String userId,
     @Path() int postId,
     @Body() PostReaction reaction,
@@ -87,7 +87,7 @@ abstract class PostsApi {
     @Body() ApiCallStart apiCallStart,
   );
 
-  @GET('/{userId}/Posts/{postId}/Reactions/{reactionId}')
+  @DELETE('/{userId}/Posts/{postId}/Reactions/{reactionId}')
   Future removeReaction(
     @Path() String userId,
     @Path() int postId,

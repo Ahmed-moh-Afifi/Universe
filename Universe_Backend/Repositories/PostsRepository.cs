@@ -83,7 +83,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(10);
             }
             else
@@ -95,7 +95,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(10);
             }
 
@@ -122,7 +122,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(10);
             }
             else
@@ -134,7 +134,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(10);
             }
 
@@ -233,7 +233,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(10);
             }
             else
@@ -245,7 +245,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId)))
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(10);
             }
 

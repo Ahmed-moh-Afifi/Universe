@@ -1,3 +1,4 @@
+import 'package:universe/models/data/post_reaction.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/models/data/widget.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -20,6 +21,7 @@ class Post {
   int reactionsCount;
   int repliesCount;
   bool reactedToByCaller;
+  PostReaction? callerReaction;
 
   Post({
     this.id = -1,

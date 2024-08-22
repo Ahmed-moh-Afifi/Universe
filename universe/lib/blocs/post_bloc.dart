@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/apis/hubs/reactions_count_hub.dart';
+import 'package:signalr_netcore/hub_connection_builder.dart';
+// import 'package:universe/apis/hubs/reactions_count_hub.dart';
 import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
@@ -9,9 +10,9 @@ import 'package:universe/repositories/authentication_repository.dart';
 
 class PostState {
   final int? reactionsCount;
-  final PostReaction? reaction;
+  bool isLiked;
 
-  const PostState({this.reactionsCount = 0, this.reaction});
+  PostState({this.reactionsCount = 0, required this.isLiked});
 }
 
 class LikeClicked {
@@ -22,27 +23,55 @@ class LikeClicked {
 
 class ListenToReactionCountChanges {}
 
-class ReactionCountChanged {
-  final int reactionCount;
-  final PostReaction? reaction;
+class ReactionsCountChanged {
+  final int reactionsCount;
+  final bool isLiked;
 
-  ReactionCountChanged({required this.reactionCount, required this.reaction});
+  ReactionsCountChanged(this.reactionsCount, this.isLiked);
 }
 
 class PostBloc extends Bloc<Object, PostState> {
+  // PostReaction? reaction;
   final IPostsRepository postsRepository;
   final Post post;
-  PostBloc(this.postsRepository, this.post) : super(const PostState()) {
+  bool waitingForReactionEcho = false;
+  PostBloc(this.postsRepository, this.post)
+      : super(
+          PostState(
+            isLiked: post.reactedToByCaller,
+            reactionsCount: post.reactionsCount,
+          ),
+        ) {
+    log('PostBloc created for post: ${post.toJson()}');
     on<LikeClicked>(
-      (event, emit) {
-        if (state.reaction != null) {
-          postsRepository.removeReaction(
+      (event, emit) async {
+        log('Like clicked for post: ${post.id}');
+        waitingForReactionEcho = true;
+        if (state.isLiked) {
+          post.reactionsCount--;
+          emit(
+            PostState(
+              reactionsCount: post.reactionsCount,
+              isLiked: false,
+            ),
+          );
+          await postsRepository.removeReaction(
             post.author.id,
             post.id,
-            state.reaction!.id!,
+            post.callerReaction!.id,
           );
+          post.callerReaction = null;
+          post.reactedToByCaller = false;
+          log('Reaction removed');
         } else {
-          postsRepository.addReaction(
+          post.reactionsCount++;
+          emit(
+            PostState(
+              reactionsCount: post.reactionsCount,
+              isLiked: true,
+            ),
+          );
+          var reactionId = await postsRepository.addReaction(
             post.author.id,
             post.id,
             PostReaction(
@@ -55,47 +84,75 @@ class PostBloc extends Bloc<Object, PostState> {
               postId: post.id,
             ),
           );
+          post.callerReaction = PostReaction(
+            id: reactionId,
+            userId: AuthenticationRepository()
+                .authenticationService
+                .currentUser()!
+                .id,
+            reactionType: 'like',
+            reactionDate: DateTime.now(),
+            postId: post.id,
+          );
+          post.reactedToByCaller = true;
+          log('Reaction added: $reactionId');
         }
       },
     );
 
     on<ListenToReactionCountChanges>(
       (event, emit) async {
-        log('Listening to reaction count changes for post: ${post.id}');
-        await ReactionsCountHub().connect();
-        await ReactionsCountHub()
-            .subscribeToPostReactionsCount(post.id.toString());
-        ReactionsCountHub().onReactionsCountChanged((change, userId) {
-          log('Reaction count changed: count = ${post.reactionsCount + change}, userId = $userId');
-          emit(
-            PostState(
-              reactionsCount: post.reactionsCount + change,
-              reaction: userId ==
-                      AuthenticationRepository()
-                          .authenticationService
-                          .currentUser()!
-                          .id
-                  ? PostReaction(
-                      userId: userId,
-                      reactionType: 'like',
-                      reactionDate: DateTime.now(),
-                      postId: post.id,
-                    )
-                  : null,
-            ),
-          );
+        const serverUrl = 'http://100.107.94.17:5149/ReactionsCountHub';
+        final hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
+        await hubConnection.start();
+        log('Connection started');
+
+        log('Joining group ${post.id}');
+        await hubConnection.invoke('JoinGroup',
+            args: [hubConnection.connectionId!, post.id.toString()]);
+
+        hubConnection.on('UpdateReactionsCount', (arguments) {
+          log(arguments.toString());
+          if (arguments![1] as String ==
+                  AuthenticationRepository()
+                      .authenticationService
+                      .currentUser()!
+                      .id &&
+              waitingForReactionEcho) {
+            waitingForReactionEcho = false;
+            log(hubConnection.state.toString());
+          } else {
+            post.reactionsCount += arguments[0] as int;
+            log(isClosed.toString());
+            post.reactedToByCaller = state.isLiked;
+            if (AuthenticationRepository()
+                    .authenticationService
+                    .currentUser()!
+                    .id ==
+                arguments[1] as String) {
+              if (arguments[0] as int == 1) {
+                post.reactedToByCaller = true;
+              } else {
+                post.reactedToByCaller = false;
+              }
+              post.callerReaction = arguments[0] as int == 1
+                  ? PostReaction.fromJson(arguments[2] as Map<String, dynamic>)
+                  : null;
+            }
+            add(ReactionsCountChanged(
+                post.reactionsCount, post.reactedToByCaller));
+            log('Emitted new reactions count: ${post.reactionsCount}');
+          }
         });
       },
     );
 
-    on<ReactionCountChanged>(
-      (event, emit) {
-        // print(
-        //     'reactions count changed: count = ${event.reactionCount}, reaction = ${event.reaction}');
+    on<ReactionsCountChanged>(
+      (event, emit) async {
         emit(
           PostState(
-            reactionsCount: event.reactionCount,
-            reaction: event.reaction,
+            reactionsCount: event.reactionsCount,
+            isLiked: event.isLiked,
           ),
         );
       },
@@ -107,6 +164,8 @@ class PostBloc extends Bloc<Object, PostState> {
   @override
   Future<void> close() async {
     log('Closing PostBloc for post: ${post.id}');
+    // await ReactionsCountHub()
+    //     .unsubscribeFromPostReactionsCount(post.id.toString());
     return super.close();
   }
 }

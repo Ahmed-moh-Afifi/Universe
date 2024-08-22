@@ -49,7 +49,7 @@ class _PostsApi implements PostsApi {
   }
 
   @override
-  Future<dynamic> addReaction(
+  Future<int> addReaction(
     String userId,
     int postId,
     PostReaction reaction,
@@ -59,7 +59,7 @@ class _PostsApi implements PostsApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(reaction.toJson());
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -75,7 +75,7 @@ class _PostsApi implements PostsApi {
           _dio.options.baseUrl,
           baseUrl,
         ))));
-    final _value = _result.data;
+    final _value = _result.data!;
     return _value;
   }
 
@@ -401,7 +401,7 @@ class _PostsApi implements PostsApi {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
-      method: 'GET',
+      method: 'DELETE',
       headers: _headers,
       extra: _extra,
     )
