@@ -5,7 +5,6 @@ import 'package:universe/blocs/reactions_bloc.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/repositories/posts_repository.dart';
 import 'package:universe/route_generator.dart';
-import 'package:universe/widgets/user_presenter.dart';
 
 class Reactions extends StatelessWidget {
   final Post post;
@@ -67,8 +66,8 @@ class Reactions extends StatelessWidget {
             ),
             body: state.state == ReactionsStates.loaded
                 ? ListView.separated(
-                    itemBuilder: (context, index) =>
-                        UserPresenter(user: state.reactions![index].user!),
+                    itemBuilder: (context, index) => Container(),
+                    // UserPresenter(user: state.reactions![index].user!),
                     separatorBuilder: (context, index) =>
                         const Divider(color: Color.fromRGBO(80, 80, 80, 0.3)),
                     itemCount: state.reactions!.length)

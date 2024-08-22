@@ -102,7 +102,7 @@ class PostWidget extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                   left: 10, right: 10, top: 5, bottom: 5),
                               decoration: BoxDecoration(
-                                color: post.reactedToByCaller
+                                color: state.isLiked
                                     ? const Color.fromRGBO(255, 150, 150, 0.2)
                                     : Theme.of(context).colorScheme.secondary,
                                 borderRadius: BorderRadius.circular(25),
@@ -115,7 +115,7 @@ class PostWidget extends StatelessWidget {
                                       onTap: () {
                                         bloc.add(LikeClicked(false));
                                       },
-                                      child: post.reactedToByCaller
+                                      child: state.isLiked
                                           ? SvgPicture.asset(
                                               'lib/assets/icons/heartFilled.svg',
                                               colorFilter:
@@ -136,7 +136,7 @@ class PostWidget extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    (post.reactionsCount).toString(),
+                                    (state.reactionsCount).toString(),
                                     style: TextStyles.subtitleStyle,
                                   ),
                                 ],

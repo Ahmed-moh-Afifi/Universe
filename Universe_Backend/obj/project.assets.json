@@ -4753,11 +4753,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Universe_Backend.csproj",
+      "projectUniqueName": "D:\\Universe\\Universe_Backend\\Universe_Backend.csproj",
       "projectName": "Universe_Backend",
-      "projectPath": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Universe_Backend.csproj",
+      "projectPath": "D:\\Universe\\Universe_Backend\\Universe_Backend.csproj",
       "packagesPath": "C:\\Users\\Ahmed\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\obj\\",
+      "outputPath": "D:\\Universe\\Universe_Backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4846,7 +4846,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'package:universe/models/config.dart';
+import 'package:universe/models/responses/reactions_count_change.dart';
 
 class ReactionsCountHub {
   static String serverUrl = '${Config().api}/ReactionsCountHub';
@@ -47,11 +49,34 @@ class ReactionsCountHub {
     log('Unsubscribed from post reactions count for postId: $postId');
   }
 
-  void onReactionsCountChanged(Function(int, String) callback) {
-    hubConnection.on('ReactionCountChanged', (arguments) {
+  Stream<ReactionsCountChange> onReactionsCountChanged() async* {
+    final controller = StreamController<ReactionsCountChange>();
+
+    hubConnection.on('UpdateReactionsCount', (arguments) {
+      log('Received reactions count changes: $arguments');
       final reactionCount = arguments![0] as int;
       final userId = arguments[1] as String;
-      callback(reactionCount, userId);
+      controller
+          .add(ReactionsCountChange(change: reactionCount, userId: userId));
     });
+
+    log('Listening to reactions count changes');
+
+    // Yield each event from the controller's stream
+    yield* controller.stream;
+
+    // Clean up when the stream is done
+    await controller.close();
+    log('Stopped listening to reactions count changes');
   }
+
+  // Stream<ReactionsCountChange> onReactionsCountChanged() async* {
+  //   hubConnection.on('UpdateReactionsCount', (arguments) {
+  //     log('Received reactions count changes: $arguments');
+  //     final reactionCount = arguments![0] as int;
+  //     final userId = arguments[1] as String;
+  //     yield ReactionsCountChange(reactionCount, userId);
+  //   });
+  //   log('Listening to reactions count changes');
+  // }
 }

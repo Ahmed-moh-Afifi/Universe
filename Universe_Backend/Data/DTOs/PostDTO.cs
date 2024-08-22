@@ -19,6 +19,7 @@ public class PostDTO
     public int ReactionsCount { get; set; }
     public int RepliesCount { get; set; }
     public bool ReactedToByCaller { get; set; }
+    public PostReactionDTO? CallerReaction { get; set; }
 
     public Post ToModel()
     {
@@ -40,7 +41,7 @@ public class PostDTO
         };
     }
 
-    public static PostDTO FromPost(Post post, bool reactedToByCaller)
+    public static PostDTO FromPost(Post post, bool reactedToByCaller, PostReactionDTO? callerReaction)
     {
         return new PostDTO
         {
@@ -57,7 +58,8 @@ public class PostDTO
             Widgets = post.Widgets,
             ReactionsCount = post.ReactionsCount,
             RepliesCount = post.RepliesCount,
-            ReactedToByCaller = reactedToByCaller
+            ReactedToByCaller = reactedToByCaller,
+            CallerReaction = callerReaction
         };
     }
 }
