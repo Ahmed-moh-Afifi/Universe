@@ -13,7 +13,9 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
         using var transaction = dbContext.Database.BeginTransaction();
         try
         {
-            await dbContext.PostsReactions.AddAsync(reaction.ToModel());
+            reaction.Id = 0;
+            var reactionModel = reaction.ToModel();
+            await dbContext.PostsReactions.AddAsync(reactionModel);
             await dbContext.SaveChangesAsync();
 
             var post = await dbContext.Posts
@@ -24,7 +26,7 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
             await dbContext.SaveChangesAsync();
 
             await transaction.CommitAsync();
-            return reaction.Id;
+            return reactionModel.Id;
         }
         catch (Exception ex)
         {

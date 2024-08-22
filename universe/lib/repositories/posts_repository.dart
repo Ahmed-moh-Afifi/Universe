@@ -67,9 +67,9 @@ class PostsRepository implements IPostsRepository {
   }
 
   @override
-  Future addReaction(
+  Future<int> addReaction(
       String postAuthorId, int postId, PostReaction reaction) async {
-    await _postsApi.addReaction(postAuthorId, postId, reaction);
+    return await _postsApi.addReaction(postAuthorId, postId, reaction);
   }
 
   @override

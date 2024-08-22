@@ -23,7 +23,9 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       reactionsCount: (json['reactionsCount'] as num).toInt(),
       repliesCount: (json['repliesCount'] as num).toInt(),
       reactedToByCaller: json['reactedToByCaller'] as bool,
-    );
+    )..callerReaction = json['callerReaction'] == null
+        ? null
+        : PostReaction.fromJson(json['callerReaction'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'id': instance.id,
@@ -40,4 +42,5 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'reactionsCount': instance.reactionsCount,
       'repliesCount': instance.repliesCount,
       'reactedToByCaller': instance.reactedToByCaller,
+      'callerReaction': instance.callerReaction,
     };
