@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:universe/styles/text_styles.dart';
+import 'package:universe/ui/styles/text_styles.dart';
 
 class SettingPresenter extends StatelessWidget {
   final Widget setting;

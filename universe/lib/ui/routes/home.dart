@@ -2,14 +2,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:universe/blocs/home_bloc.dart';
+import 'package:universe/ui/blocs/home_bloc.dart';
 import 'package:universe/route_generator.dart';
-import 'package:universe/routes/feed.dart';
-import 'package:universe/routes/messages.dart';
-import 'package:universe/routes/new_post.dart';
-import 'package:universe/routes/personal_profile.dart';
-import 'package:universe/routes/search.dart';
-import 'package:universe/widgets/universe_appbar.dart';
+import 'package:universe/ui/routes/feed.dart';
+import 'package:universe/ui/routes/messages.dart';
+import 'package:universe/ui/routes/new_post.dart';
+import 'package:universe/ui/routes/personal_profile.dart';
+import 'package:universe/ui/routes/search.dart';
+import 'package:universe/ui/widgets/universe_appbar.dart';
 
 class HomePage extends StatelessWidget {
   final HomeBloc bloc;

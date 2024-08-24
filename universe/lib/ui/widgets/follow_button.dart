@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/blocs/follow_button_bloc.dart';
+import 'package:universe/ui/blocs/follow_button_bloc.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/users_repository.dart';

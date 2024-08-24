@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:universe/blocs/login_bloc.dart';
+import 'package:universe/ui/blocs/login_bloc.dart';
 import 'package:universe/route_generator.dart';
 
 class Login extends StatelessWidget {

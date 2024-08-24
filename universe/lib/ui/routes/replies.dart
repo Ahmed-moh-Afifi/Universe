@@ -3,13 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:universe/blocs/replies_bloc.dart';
+import 'package:universe/ui/blocs/replies_bloc.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/posts_repository.dart';
 import 'package:universe/route_generator.dart';
-import 'package:universe/styles/text_styles.dart';
-import 'package:universe/widgets/post.dart';
+import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/post.dart';
 
 class Replies extends StatelessWidget {
   final Post post;

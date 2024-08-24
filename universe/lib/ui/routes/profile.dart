@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/blocs/profile_bloc.dart';
+import 'package:universe/ui/blocs/profile_bloc.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/posts_repository.dart';
 import 'package:universe/repositories/users_repository.dart';
-import 'package:universe/widgets/follow_button.dart';
-import 'package:universe/widgets/profile_card.dart';
-import 'package:universe/widgets/user_posts_viewer.dart';
+import 'package:universe/ui/widgets/follow_button.dart';
+import 'package:universe/ui/widgets/profile_card.dart';
+import 'package:universe/ui/widgets/user_posts_viewer.dart';
 
 class Profile extends StatelessWidget {
   final ProfileBloc bloc;
