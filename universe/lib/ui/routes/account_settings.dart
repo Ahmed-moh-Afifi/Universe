@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:universe/styles/text_styles.dart';
-import 'package:universe/widgets/setting_presenter.dart';
-import 'package:universe/widgets/verified_badge.dart';
+import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/setting_presenter.dart';
+import 'package:universe/ui/widgets/verified_badge.dart';
 
 class AccountSettings extends StatelessWidget {
   const AccountSettings({super.key});

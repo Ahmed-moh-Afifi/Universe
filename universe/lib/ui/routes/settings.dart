@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
-import 'package:universe/styles/text_styles.dart';
-import 'package:universe/widgets/setting_presenter.dart';
+import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/setting_presenter.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});

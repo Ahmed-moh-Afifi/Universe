@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/blocs/reactions_bloc.dart';
+import 'package:universe/ui/blocs/reactions_bloc.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/repositories/posts_repository.dart';
 import 'package:universe/route_generator.dart';

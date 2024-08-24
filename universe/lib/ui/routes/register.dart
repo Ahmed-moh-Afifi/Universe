@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/blocs/register_bloc.dart';
+import 'package:universe/ui/blocs/register_bloc.dart';
 import 'package:universe/route_generator.dart';
 
 class Register extends StatelessWidget {

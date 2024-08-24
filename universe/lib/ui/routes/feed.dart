@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/blocs/feed_bloc.dart';
+import 'package:universe/ui/blocs/feed_bloc.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/posts_repository.dart';
-import 'package:universe/styles/text_styles.dart';
-import 'package:universe/widgets/post.dart';
+import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/post.dart';
 
 class Feed extends StatelessWidget {
   const Feed({super.key});
