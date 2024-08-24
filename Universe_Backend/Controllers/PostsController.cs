@@ -32,7 +32,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpGet]
     [Route("{postId}/Replies")]
-    public async Task<ActionResult<IEnumerable<PostDTO>>> GetReplies(string userId, int postId, [FromBody] ApiCallStart apiCallStart)
+    public async Task<ActionResult<IEnumerable<PostDTO>>> GetReplies(string userId, int postId, DateTime lastDate, int lastId)
     {
         logger.LogDebug("PostsController.GetReplies: Getting replies for post with id {PostId}", postId);
         // Validate route parameters.
@@ -43,7 +43,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(postsRepository.GetReplies(postId, User.FindFirstValue("uid")!, apiCallStart.LastDate, apiCallStart.LastId));
+        return Ok(postsRepository.GetReplies(postId, User.FindFirstValue("uid")!, lastDate, lastId));
     }
 
     [HttpPost]
@@ -177,7 +177,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpGet]
     [Route("{postId}/Reactions")]
-    public async Task<ActionResult<IEnumerable<PostReactionDTO>>> GetReactions(string userId, int postId, [FromBody] ApiCallStart apiCallStart)
+    public async Task<ActionResult<IEnumerable<PostReactionDTO>>> GetReactions(string userId, int postId, DateTime lastDate, int lastId)
     {
         logger.LogDebug("ReactionsController.GetReactions: Getting reactions for post with id: {postId}", postId);
         // Validate route parameters.
@@ -188,7 +188,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(await reactionsRepository.GetReactions(postId, apiCallStart.LastDate, apiCallStart.LastId));
+        return Ok(await reactionsRepository.GetReactions(postId, lastDate, lastId));
     }
 
     [HttpGet]
@@ -260,11 +260,11 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpGet]
     [Route("Following/")]
     [Authorize()]
-    public ActionResult<IEnumerable<PostDTO>>? GetFollowingPosts([FromBody] ApiCallStart apiCallStart, string userId)
+    public ActionResult<IEnumerable<PostDTO>>? GetFollowingPosts(string userId, DateTime lastDate, int lastId)
     {
         logger.LogDebug("PostsController.GetFollowingPosts: Getting posts of users followed by user with id: {userId}", User.FindFirstValue("uid"));
         // Validate route parameters.
-        return Ok(postsRepository.GetFollowingPosts(User.FindFirstValue("uid")!, User.FindFirstValue("uid")!, apiCallStart.LastDate, apiCallStart.LastId));
+        return Ok(postsRepository.GetFollowingPosts(User.FindFirstValue("uid")!, User.FindFirstValue("uid")!, lastDate, lastId));
     }
 
     [HttpGet]

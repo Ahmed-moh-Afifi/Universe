@@ -132,9 +132,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -297,9 +302,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -411,14 +421,19 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
-      },
-      {
         "Name": "userId",
         "Type": "System.String",
         "IsRequired": true
+      },
+      {
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -597,9 +612,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -711,9 +731,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -742,9 +767,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -773,9 +803,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -920,9 +955,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -951,9 +991,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -982,9 +1027,14 @@
         "IsRequired": false
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.ApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -1009,6 +1059,16 @@
     "Parameters": [
       {
         "Name": "query",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
         "Type": "System.String",
         "IsRequired": false
       }
@@ -1128,9 +1188,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.UsersApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -1185,9 +1250,14 @@
         "IsRequired": true
       },
       {
-        "Name": "apiCallStart",
-        "Type": "Universe_Backend.Data.Models.UsersApiCallStart",
-        "IsRequired": true
+        "Name": "lastDate",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "lastId",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [

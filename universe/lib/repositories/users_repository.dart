@@ -19,21 +19,21 @@ class UsersRepository implements IUsersRepository {
   Future<List<User>> searchUsers(
       String query, UsersApiCallStart start, int limit) async {
     log('Searching users with query: $query', name: 'UsersRepository');
-    return await _usersApi.searchUsers(query, start);
+    return await _usersApi.searchUsers(query, start.lastDate, start.lastId);
   }
 
   @override
   Future<List<User>> getFollowers(
       String userId, UsersApiCallStart start) async {
     log('Getting followers for user with id: $userId', name: 'UsersRepository');
-    return await _usersApi.getFollowers(userId, start);
+    return await _usersApi.getFollowers(userId, start.lastDate, start.lastId);
   }
 
   @override
   Future<List<User>> getFollowing(
       String userId, UsersApiCallStart start) async {
     log('Getting following for user with id: $userId', name: 'UsersRepository');
-    return await _usersApi.getFollowing(userId, start);
+    return await _usersApi.getFollowing(userId, start.lastDate, start.lastId);
   }
 
   @override
