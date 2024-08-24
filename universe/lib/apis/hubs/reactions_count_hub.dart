@@ -3,11 +3,12 @@ import 'dart:developer';
 import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'package:universe/models/config.dart';
-import 'package:universe/models/responses/reactions_count_change.dart';
+import 'package:universe/models/data/post_reaction.dart';
 
 class ReactionsCountHub {
   static String serverUrl = '${Config().api}/ReactionsCountHub';
   late HubConnection hubConnection;
+  late Future<void>? connection;
 
   ReactionsCountHub._privateConstructor() {
     hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
@@ -18,65 +19,63 @@ class ReactionsCountHub {
 
   factory ReactionsCountHub() => _instance;
 
-  Future<void> connect() async {
+  Future<void>? connect() async {
     if (hubConnection.state == HubConnectionState.Connected) {
-      log('Already connected with connectionId: ${hubConnection.connectionId}');
+      log('Already connected with connectionId: ${hubConnection.connectionId}',
+          name: 'ReactionsCountHub');
       return;
     }
 
-    log('Connecting to $serverUrl');
-    await hubConnection.start();
-    log('Connection started with connectionId: ${hubConnection.connectionId}');
+    if (hubConnection.state == HubConnectionState.Connecting) {
+      log('Already connecting...', name: 'ReactionsCountHub');
+      await connection;
+      return;
+    }
+
+    log('Connecting to $serverUrl', name: 'ReactionsCountHub');
+    connection = hubConnection.start();
+    await connection;
+    log('Connection started with connectionId: ${hubConnection.connectionId}',
+        name: 'ReactionsCountHub');
   }
 
   Future<void> disconnect() async {
-    log('Disconnecting from connectionId: ${hubConnection.connectionId}');
+    log('Disconnecting from connectionId: ${hubConnection.connectionId}',
+        name: 'ReactionsCountHub');
     await hubConnection.stop();
-    log('Disconnected from connectionId: ${hubConnection.connectionId}');
+    log('Disconnected from connectionId: ${hubConnection.connectionId}',
+        name: 'ReactionsCountHub');
   }
 
   Future<void> subscribeToPostReactionsCount(String postId) async {
-    log('Subscribing to post reactions count for postId: $postId');
+    log('Subscribing to post reactions count for postId: $postId',
+        name: 'ReactionsCountHub');
     await hubConnection
         .invoke('JoinGroup', args: [hubConnection.connectionId!, postId]);
-    log('Subscribed to post reactions count for postId: $postId');
+    log('Subscribed to post reactions count for postId: $postId',
+        name: 'ReactionsCountHub');
   }
 
   Future<void> unsubscribeFromPostReactionsCount(String postId) async {
-    log('Unsubscribing from post reactions count for postId: $postId');
+    log('Unsubscribing from post reactions count for postId: $postId',
+        name: 'ReactionsCountHub');
     await hubConnection
         .invoke('LeaveGroup', args: [hubConnection.connectionId!, postId]);
-    log('Unsubscribed from post reactions count for postId: $postId');
+    log('Unsubscribed from post reactions count for postId: $postId',
+        name: 'ReactionsCountHub');
   }
 
-  Stream<ReactionsCountChange> onReactionsCountChanged() async* {
-    final controller = StreamController<ReactionsCountChange>();
-
+  void onReactionsCountChanged(Function(int, String, PostReaction) callback) {
     hubConnection.on('UpdateReactionsCount', (arguments) {
-      log('Received reactions count changes: $arguments');
+      log('Received reactions count changes: $arguments',
+          name: 'ReactionsCountHub');
       final reactionCount = arguments![0] as int;
       final userId = arguments[1] as String;
-      controller
-          .add(ReactionsCountChange(change: reactionCount, userId: userId));
+      final reaction =
+          PostReaction.fromJson(arguments[2] as Map<String, dynamic>);
+
+      callback(reactionCount, userId, reaction);
     });
-
-    log('Listening to reactions count changes');
-
-    // Yield each event from the controller's stream
-    yield* controller.stream;
-
-    // Clean up when the stream is done
-    await controller.close();
-    log('Stopped listening to reactions count changes');
+    log('Listening to reactions count changes', name: 'ReactionsCountHub');
   }
-
-  // Stream<ReactionsCountChange> onReactionsCountChanged() async* {
-  //   hubConnection.on('UpdateReactionsCount', (arguments) {
-  //     log('Received reactions count changes: $arguments');
-  //     final reactionCount = arguments![0] as int;
-  //     final userId = arguments[1] as String;
-  //     yield ReactionsCountChange(reactionCount, userId);
-  //   });
-  //   log('Listening to reactions count changes');
-  // }
 }
