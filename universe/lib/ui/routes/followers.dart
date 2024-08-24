@@ -1,29 +1,29 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/blocs/following_bloc.dart';
+import 'package:universe/ui/blocs/followers_bloc.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/users_repository.dart';
 import 'package:universe/route_generator.dart';
-import 'package:universe/widgets/user_presenter.dart';
+import 'package:universe/ui/widgets/user_presenter.dart';
 
-class FollowingPage extends StatelessWidget {
+class FollowersPage extends StatelessWidget {
   final User user;
-  final FollowingBloc bloc;
-  FollowingPage(this.user, {super.key})
-      : bloc = FollowingBloc(UsersRepository(), user);
+  final FollowersBloc bloc;
+  FollowersPage(this.user, {super.key})
+      : bloc = FollowersBloc(UsersRepository(), user);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Following'),
+        title: const Text('Followers'),
       ),
-      body: BlocProvider<FollowingBloc>(
+      body: BlocProvider<FollowersBloc>(
         create: (context) => bloc,
-        child: BlocListener<FollowingBloc, FollowingState>(
+        child: BlocListener<FollowersBloc, FollowersState>(
           listener: (context, state) {
-            if (state.state == FollowingStates.loading) {
+            if (state.state == FollowersStates.loading) {
               showDialog(
                 barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
                 barrierDismissible: false,
@@ -40,13 +40,13 @@ class FollowingPage extends StatelessWidget {
               );
             }
 
-            if ((state.state == FollowingStates.success ||
-                    state.state == FollowingStates.failed) &&
-                state.previousState == FollowingStates.loading) {
+            if ((state.state == FollowersStates.success ||
+                    state.state == FollowersStates.failed) &&
+                state.previousState == FollowersStates.loading) {
               RouteGenerator.mainNavigatorkey.currentState?.pop();
             }
 
-            if (state.state == FollowingStates.failed) {
+            if (state.state == FollowersStates.failed) {
               showDialog(
                 barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
                 context: context,
@@ -60,17 +60,17 @@ class FollowingPage extends StatelessWidget {
               );
             }
           },
-          child: BlocBuilder<FollowingBloc, FollowingState>(
+          child: BlocBuilder<FollowersBloc, FollowersState>(
             builder: (context, state) => Padding(
               padding: const EdgeInsets.only(left: 0, right: 0, top: 20),
               child: ListView.separated(
                 itemBuilder: (context, index) {
-                  return UserPresenter(user: state.following[index]);
+                  return UserPresenter(user: state.followers[index]);
                 },
                 separatorBuilder: (context, index) => const Divider(
                   color: Color.fromRGBO(80, 80, 80, 0.3),
                 ),
-                itemCount: state.following.length,
+                itemCount: state.followers.length,
               ),
             ),
           ),

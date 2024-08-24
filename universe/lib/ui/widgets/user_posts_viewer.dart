@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
-import 'package:universe/widgets/post.dart';
+import 'package:universe/ui/widgets/post.dart';
 
 class UserPostsViewer extends StatelessWidget {
   final User user;

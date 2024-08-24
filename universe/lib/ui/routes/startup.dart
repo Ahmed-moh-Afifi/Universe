@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universe/blocs/startup_bloc.dart';
+import 'package:universe/ui/blocs/startup_bloc.dart';
 
 class Startup extends StatelessWidget {
   const Startup({super.key});

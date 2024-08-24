@@ -54,8 +54,7 @@
               "RelativeToolTip": "Data\\Models\\Post.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAqwCkAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-22T09:34:48.324Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-22T09:34:48.324Z"
             },
             {
               "$type": "Document",
@@ -67,8 +66,7 @@
               "RelativeToolTip": "Services\\IsFollowerHandler.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-22T01:05:45.269Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-22T01:05:45.269Z"
             },
             {
               "$type": "Document",
@@ -80,8 +78,7 @@
               "RelativeToolTip": "Data\\Models\\PostReaction.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T23:47:43.792Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-21T23:47:43.792Z"
             },
             {
               "$type": "Document",
@@ -93,8 +90,7 @@
               "RelativeToolTip": "Data\\DTOs\\PostDTO.cs",
               "ViewState": "AgIAABsAAAAAAAAAAAAAACsAAABWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T23:36:26.708Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-21T23:36:26.708Z"
             },
             {
               "$type": "Document",
@@ -106,8 +102,7 @@
               "RelativeToolTip": "Repositories\\PostsRepository.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAQwCgAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T21:18:19.665Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-21T21:18:19.665Z"
             },
             {
               "$type": "Document",
@@ -119,8 +114,7 @@
               "RelativeToolTip": "Repositories\\PostReactionsRepository.cs",
               "ViewState": "AgIAADAAAAAAAAAAAAAowEIAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-21T21:18:11.95Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-21T21:18:11.95Z"
             },
             {
               "$type": "Document",
@@ -130,7 +124,7 @@
               "RelativeDocumentMoniker": "Controllers\\PostsController.cs",
               "ToolTip": "D:\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
               "RelativeToolTip": "Controllers\\PostsController.cs",
-              "ViewState": "AgIAANIAAAAAAAAAAAAAAOYAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAM8AAAAAAAAAAAAAANwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-21T20:47:50.706Z",
               "EditorCaption": ""
@@ -145,8 +139,7 @@
               "RelativeToolTip": "Hubs\\ReactionsCountHub.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-15T11:27:52.148Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-15T11:27:52.148Z"
             }
           ]
         }

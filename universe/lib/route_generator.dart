@@ -1,28 +1,28 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:universe/blocs/new_post_bloc.dart';
-import 'package:universe/blocs/personal_profile_bloc.dart';
-import 'package:universe/blocs/search_bloc.dart';
+import 'package:universe/ui/blocs/new_post_bloc.dart';
+import 'package:universe/ui/blocs/personal_profile_bloc.dart';
+import 'package:universe/ui/blocs/search_bloc.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
-import 'package:universe/routes/account_settings.dart';
-import 'package:universe/routes/complete_account.dart';
-import 'package:universe/routes/feed.dart';
-import 'package:universe/routes/followers.dart';
-import 'package:universe/routes/following.dart';
-import 'package:universe/routes/home.dart';
-import 'package:universe/routes/login.dart';
-import 'package:universe/routes/messages.dart';
-import 'package:universe/routes/new_post.dart';
-import 'package:universe/routes/personal_profile.dart';
-import 'package:universe/routes/profile.dart';
-import 'package:universe/routes/reactions.dart';
-import 'package:universe/routes/register.dart';
-import 'package:universe/routes/replies.dart';
-import 'package:universe/routes/search.dart';
-import 'package:universe/routes/settings.dart';
-import 'package:universe/routes/startup.dart';
+import 'package:universe/ui/routes/account_settings.dart';
+import 'package:universe/ui/routes/complete_account.dart';
+import 'package:universe/ui/routes/feed.dart';
+import 'package:universe/ui/routes/followers.dart';
+import 'package:universe/ui/routes/following.dart';
+import 'package:universe/ui/routes/home.dart';
+import 'package:universe/ui/routes/login.dart';
+import 'package:universe/ui/routes/messages.dart';
+import 'package:universe/ui/routes/new_post.dart';
+import 'package:universe/ui/routes/personal_profile.dart';
+import 'package:universe/ui/routes/profile.dart';
+import 'package:universe/ui/routes/reactions.dart';
+import 'package:universe/ui/routes/register.dart';
+import 'package:universe/ui/routes/replies.dart';
+import 'package:universe/ui/routes/search.dart';
+import 'package:universe/ui/routes/settings.dart';
+import 'package:universe/ui/routes/startup.dart';
 
 class RouteGenerator {
   RouteGenerator._();
