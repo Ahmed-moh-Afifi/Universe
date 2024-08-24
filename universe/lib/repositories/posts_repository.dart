@@ -14,7 +14,7 @@ class PostsRepository implements IPostsRepository {
   Future<List<Post>> getUserPosts(
       String authorId, ApiCallStart start, int limit) async {
     log('Getting user posts for authorId: $authorId', name: 'PostsRepository');
-    return await _postsApi.getUserPosts(authorId, start);
+    return await _postsApi.getUserPosts(authorId, start.lastDate, start.lastId);
   }
 
   @override
@@ -31,7 +31,8 @@ class PostsRepository implements IPostsRepository {
     return await _postsApi.getPostReplies(
       authorId,
       postId,
-      start,
+      start.lastDate,
+      start.lastId,
     );
   }
 
@@ -76,7 +77,8 @@ class PostsRepository implements IPostsRepository {
   Future<List<PostReaction>> getPostReactions(
       String authorId, int postId, ApiCallStart start, int limit) async {
     log('Getting post reactions for postId: $postId', name: 'PostsRepository');
-    return await _postsApi.getPostReactions(authorId, postId, start);
+    return await _postsApi.getPostReactions(
+        authorId, postId, start.lastDate, start.lastId);
   }
 
   @override
@@ -111,6 +113,7 @@ class PostsRepository implements IPostsRepository {
   Future<List<Post>> getFollowingPosts(
       String userId, ApiCallStart start, int limit) async {
     log('Getting following posts for userId: $userId', name: 'PostsRepository');
-    return await _postsApi.getFollowingPosts(userId, start);
+    return await _postsApi.getFollowingPosts(
+        userId, start.lastDate, start.lastId);
   }
 }

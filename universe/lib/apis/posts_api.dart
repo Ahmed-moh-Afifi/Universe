@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
-import 'package:universe/models/requests/api_call_start.dart';
 
 part 'posts_api.g.dart';
 
@@ -60,20 +59,23 @@ abstract class PostsApi {
   Future<List<PostReaction>> getPostReactions(
     @Path() String userId,
     @Path() int postId,
-    @Body() ApiCallStart apiCallStart,
+    @Query('lastDate') DateTime? lastDate,
+    @Query('lastId') String? lastId,
   );
 
   @GET('/{userId}/Posts/{postId}/Replies')
   Future<List<Post>> getPostReplies(
     @Path() String userId,
     @Path() int postId,
-    @Body() ApiCallStart apiCallStart,
+    @Query('lastDate') DateTime? lastDate,
+    @Query('lastId') String? lastId,
   );
 
   @GET('/{userId}/Posts')
   Future<List<Post>> getUserPosts(
     @Path() String userId,
-    @Body() ApiCallStart apiCallStart,
+    @Query('lastDate') DateTime? lastDate,
+    @Query('lastId') String? lastId,
   );
 
   @GET('/{userId}/Posts/Count')
@@ -84,7 +86,8 @@ abstract class PostsApi {
   @GET('/{userId}/Posts/Following')
   Future<List<Post>> getFollowingPosts(
     @Path() String userId,
-    @Body() ApiCallStart apiCallStart,
+    @Query('lastDate') DateTime? lastDate,
+    @Query('lastId') String? lastId,
   );
 
   @DELETE('/{userId}/Posts/{postId}/Reactions/{reactionId}')
