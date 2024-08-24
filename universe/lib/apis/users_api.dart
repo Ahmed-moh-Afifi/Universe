@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:universe/models/data/user.dart';
-import 'package:universe/models/requests/users_api_call_start.dart';
 
 part 'users_api.g.dart';
 
@@ -17,19 +16,22 @@ abstract class UsersApi {
   @GET('/')
   Future<List<User>> searchUsers(
     @Query('query') String query,
-    @Body() UsersApiCallStart start,
+    @Query('lastDate') DateTime? lastDate,
+    @Query('lastId') String? lastId,
   );
 
   @GET('/{userId}/Followers')
   Future<List<User>> getFollowers(
     @Path() String userId,
-    @Body() UsersApiCallStart start,
+    @Query('lastDate') DateTime? lastDate,
+    @Query('lastId') String? lastId,
   );
 
   @GET('/{userId}/Following')
   Future<List<User>> getFollowing(
     @Path() String userId,
-    @Body() UsersApiCallStart start,
+    @Query('lastDate') DateTime? lastDate,
+    @Query('lastId') String? lastId,
   );
 
   @POST('/{followedId}/Followers/{followerId}')

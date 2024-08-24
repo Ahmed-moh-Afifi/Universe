@@ -234,13 +234,17 @@ class _PostsApi implements PostsApi {
   Future<List<PostReaction>> getPostReactions(
     String userId,
     int postId,
-    ApiCallStart apiCallStart,
+    DateTime? lastDate,
+    String? lastId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'lastDate': lastDate?.toIso8601String(),
+      r'lastId': lastId,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(apiCallStart.toJson());
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<List<PostReaction>>(Options(
       method: 'GET',
@@ -268,13 +272,17 @@ class _PostsApi implements PostsApi {
   Future<List<Post>> getPostReplies(
     String userId,
     int postId,
-    ApiCallStart apiCallStart,
+    DateTime? lastDate,
+    String? lastId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'lastDate': lastDate?.toIso8601String(),
+      r'lastId': lastId,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(apiCallStart.toJson());
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<Post>>(Options(
       method: 'GET',
@@ -301,13 +309,17 @@ class _PostsApi implements PostsApi {
   @override
   Future<List<Post>> getUserPosts(
     String userId,
-    ApiCallStart apiCallStart,
+    DateTime? lastDate,
+    String? lastId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'lastDate': lastDate?.toIso8601String(),
+      r'lastId': lastId,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(apiCallStart.toJson());
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<Post>>(Options(
       method: 'GET',
@@ -360,13 +372,17 @@ class _PostsApi implements PostsApi {
   @override
   Future<List<Post>> getFollowingPosts(
     String userId,
-    ApiCallStart apiCallStart,
+    DateTime? lastDate,
+    String? lastId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'lastDate': lastDate?.toIso8601String(),
+      r'lastId': lastId,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(apiCallStart.toJson());
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<Post>>(Options(
       method: 'GET',

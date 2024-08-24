@@ -48,13 +48,18 @@ class _UsersApi implements UsersApi {
   @override
   Future<List<User>> searchUsers(
     String query,
-    UsersApiCallStart start,
+    DateTime? lastDate,
+    String? lastId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'query': query};
+    final queryParameters = <String, dynamic>{
+      r'query': query,
+      r'lastDate': lastDate?.toIso8601String(),
+      r'lastId': lastId,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(start.toJson());
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
       method: 'GET',
@@ -81,13 +86,17 @@ class _UsersApi implements UsersApi {
   @override
   Future<List<User>> getFollowers(
     String userId,
-    UsersApiCallStart start,
+    DateTime? lastDate,
+    String? lastId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'lastDate': lastDate?.toIso8601String(),
+      r'lastId': lastId,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(start.toJson());
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
       method: 'GET',
@@ -114,13 +123,17 @@ class _UsersApi implements UsersApi {
   @override
   Future<List<User>> getFollowing(
     String userId,
-    UsersApiCallStart start,
+    DateTime? lastDate,
+    String? lastId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'lastDate': lastDate?.toIso8601String(),
+      r'lastId': lastId,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(start.toJson());
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
       method: 'GET',
