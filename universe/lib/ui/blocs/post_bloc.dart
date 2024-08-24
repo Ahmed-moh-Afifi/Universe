@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
-// import 'package:universe/apis/hubs/reactions_count_hub.dart';
 import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
@@ -42,7 +41,7 @@ class PostBloc extends Bloc<Object, PostState> {
             reactionsCount: post.reactionsCount,
           ),
         ) {
-    log('PostBloc created for post: ${post.toJson()}');
+    log('PostBloc created for post: ${post.toJson()}', name: 'PostBloc');
     on<LikeClicked>(
       (event, emit) async {
         log('Like clicked for post: ${post.id}');
@@ -62,7 +61,7 @@ class PostBloc extends Bloc<Object, PostState> {
           );
           post.callerReaction = null;
           post.reactedToByCaller = false;
-          log('Reaction removed');
+          log('Reaction removed', name: 'PostBloc');
         } else {
           post.reactionsCount++;
           emit(
@@ -95,7 +94,7 @@ class PostBloc extends Bloc<Object, PostState> {
             postId: post.id,
           );
           post.reactedToByCaller = true;
-          log('Reaction added: $reactionId');
+          log('Reaction added: $reactionId', name: 'PostBloc');
         }
       },
     );
@@ -105,14 +104,14 @@ class PostBloc extends Bloc<Object, PostState> {
         const serverUrl = 'http://100.107.94.17:5149/ReactionsCountHub';
         final hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
         await hubConnection.start();
-        log('Connection started');
+        log('Connection started', name: 'PostBloc');
 
-        log('Joining group ${post.id}');
+        log('Joining group ${post.id}', name: 'PostBloc');
         await hubConnection.invoke('JoinGroup',
             args: [hubConnection.connectionId!, post.id.toString()]);
 
         hubConnection.on('UpdateReactionsCount', (arguments) {
-          log(arguments.toString());
+          log(arguments.toString(), name: 'PostBloc');
           if (arguments![1] as String ==
                   AuthenticationRepository()
                       .authenticationService
@@ -120,10 +119,10 @@ class PostBloc extends Bloc<Object, PostState> {
                       .id &&
               waitingForReactionEcho) {
             waitingForReactionEcho = false;
-            log(hubConnection.state.toString());
+            log(hubConnection.state.toString(), name: 'PostBloc');
           } else {
             post.reactionsCount += arguments[0] as int;
-            log(isClosed.toString());
+            log(isClosed.toString(), name: 'PostBloc');
             post.reactedToByCaller = state.isLiked;
             if (AuthenticationRepository()
                     .authenticationService
@@ -141,7 +140,8 @@ class PostBloc extends Bloc<Object, PostState> {
             }
             add(ReactionsCountChanged(
                 post.reactionsCount, post.reactedToByCaller));
-            log('Emitted new reactions count: ${post.reactionsCount}');
+            log('Emitted new reactions count: ${post.reactionsCount}',
+                name: 'PostBloc');
           }
         });
       },
@@ -163,7 +163,7 @@ class PostBloc extends Bloc<Object, PostState> {
 
   @override
   Future<void> close() async {
-    log('Closing PostBloc for post: ${post.id}');
+    log('Closing PostBloc for post: ${post.id}', name: 'PostBloc');
     // await ReactionsCountHub()
     //     .unsubscribeFromPostReactionsCount(post.id.toString());
     return super.close();
