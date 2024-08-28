@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:universe/models/data/post.dart';
+import 'package:universe/models/data/post_full_reaction.dart';
 import 'package:universe/models/data/post_reaction.dart';
 
 part 'posts_api.g.dart';
@@ -56,7 +57,7 @@ abstract class PostsApi {
   );
 
   @GET('/{userId}/Posts/{postId}/Reactions')
-  Future<List<PostReaction>> getPostReactions(
+  Future<List<PostFullReaction>> getPostReactions(
     @Path() String userId,
     @Path() int postId,
     @Query('lastDate') DateTime? lastDate,
