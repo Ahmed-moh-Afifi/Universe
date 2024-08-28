@@ -1,4 +1,5 @@
 import 'package:universe/models/data/post.dart';
+import 'package:universe/models/data/post_full_reaction.dart';
 import 'package:universe/models/data/post_reaction.dart';
 import 'package:universe/models/requests/api_call_start.dart';
 
@@ -23,7 +24,7 @@ abstract class IPostsRepository {
 
   Future<int> getUserPostsCount(String userId);
 
-  Future<List<PostReaction>> getPostReactions(
+  Future<List<PostFullReaction>> getPostReactions(
       String authorId, int postId, ApiCallStart start, int limit);
 
   Future addReaction(String postAuthorId, int postId, PostReaction reaction);

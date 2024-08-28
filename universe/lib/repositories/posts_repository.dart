@@ -4,6 +4,7 @@ import 'package:universe/apis/api_client.dart';
 import 'package:universe/apis/posts_api.dart';
 import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
+import 'package:universe/models/data/post_full_reaction.dart';
 import 'package:universe/models/data/post_reaction.dart';
 import 'package:universe/models/requests/api_call_start.dart';
 
@@ -74,7 +75,7 @@ class PostsRepository implements IPostsRepository {
   }
 
   @override
-  Future<List<PostReaction>> getPostReactions(
+  Future<List<PostFullReaction>> getPostReactions(
       String authorId, int postId, ApiCallStart start, int limit) async {
     log('Getting post reactions for postId: $postId', name: 'PostsRepository');
     return await _postsApi.getPostReactions(

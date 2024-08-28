@@ -86,12 +86,12 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
         }
     }
 
-    public async Task<IEnumerable<PostReactionDTO>> GetReactions(int postId, DateTime? lastDate, int? lastId)
+    public async Task<IEnumerable<PostFullReactionDTO>> GetReactions(int postId, DateTime? lastDate, int? lastId)
     {
         logger.LogDebug("PostReactionsRepository.GetReactions: Getting reactions for post.");
         try
         {
-            List<PostReactionDTO> reactions;
+            List<PostFullReactionDTO> reactions;
             if (lastDate == null && lastId == null)
             {
                 logger.LogDebug("PostReactionsRepository.GetReactions: Getting first 10 reactions for post.");
@@ -99,7 +99,8 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
                     .Where(r => r.PostId == postId)
                     .OrderBy(r => r.ReactionDate)
                     .ThenBy(r => r.Id)
-                    .Select(r => r.ToDTO())
+                    .Include(r => r.User)
+                    .Select(r => PostFullReactionDTO.FromModel(r))
                     .Take(10)
                     .ToListAsync();
             }
@@ -111,7 +112,8 @@ class PostReactionsRepository(ApplicationDbContext dbContext, ILogger<PostReacti
                     .OrderBy(r => r.ReactionDate)
                     .ThenBy(r => r.Id)
                     .Where(r => r.ReactionDate > lastDate || (r.ReactionDate == lastDate && r.Id > lastId))
-                    .Select(r => r.ToDTO())
+                    .Include(r => r.User)
+                    .Select(r => PostFullReactionDTO.FromModel(r))
                     .Take(10)
                     .ToListAsync();
             }

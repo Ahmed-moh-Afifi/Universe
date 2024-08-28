@@ -177,7 +177,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
     [HttpGet]
     [Route("{postId}/Reactions")]
-    public async Task<ActionResult<IEnumerable<PostReactionDTO>>> GetReactions(string userId, int postId, DateTime lastDate, int lastId)
+    public async Task<ActionResult<IEnumerable<PostFullReactionDTO>>> GetReactions(string userId, int postId, DateTime lastDate, int lastId)
     {
         logger.LogDebug("ReactionsController.GetReactions: Getting reactions for post with id: {postId}", postId);
         // Validate route parameters.
