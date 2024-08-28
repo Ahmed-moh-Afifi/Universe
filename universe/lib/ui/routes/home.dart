@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
                   const Feed(),
                   Search(),
                   const Messages(),
-                  PersonalProfile(),
+                  const PersonalProfile(),
                 ],
               )
               // Navigator(

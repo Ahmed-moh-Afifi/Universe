@@ -231,7 +231,7 @@ class _PostsApi implements PostsApi {
   }
 
   @override
-  Future<List<PostReaction>> getPostReactions(
+  Future<List<PostFullReaction>> getPostReactions(
     String userId,
     int postId,
     DateTime? lastDate,
@@ -246,7 +246,7 @@ class _PostsApi implements PostsApi {
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<PostReaction>>(Options(
+        .fetch<List<dynamic>>(_setStreamType<List<PostFullReaction>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -263,7 +263,8 @@ class _PostsApi implements PostsApi {
               baseUrl,
             ))));
     var _value = _result.data!
-        .map((dynamic i) => PostReaction.fromJson(i as Map<String, dynamic>))
+        .map(
+            (dynamic i) => PostFullReaction.fromJson(i as Map<String, dynamic>))
         .toList();
     return _value;
   }

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/models/data/post.dart';
-import 'package:universe/models/data/post_reaction.dart';
+import 'package:universe/models/data/post_full_reaction.dart';
 import 'package:universe/models/requests/api_call_start.dart';
 
 enum ReactionsStates {
@@ -13,7 +13,7 @@ enum ReactionsStates {
 class ReactionsState {
   final ReactionsStates state;
   final ReactionsStates previousState;
-  final List<PostReaction>? reactions;
+  final List<PostFullReaction>? reactions;
   final String? error;
 
   const ReactionsState(

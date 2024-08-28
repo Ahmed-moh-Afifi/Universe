@@ -23,7 +23,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     [HttpGet]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query, DateTime lastDate, string lastId)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query, DateTime lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.SearchUsers: Searching for users with query: {query}", query);
         return Ok(await usersRepository.SearchUsers(query, lastDate, lastId));
@@ -32,7 +32,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     [HttpGet]
     [Route("{userId}/Followers")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId, DateTime lastDate, string lastId)
+    public async Task<ActionResult<IEnumerable<UserDTO>?>> GetFollowers(string userId, DateTime lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.GetFollowers: Getting followers of user with id: {id}", userId);
         return Ok(await usersRepository.GetFollowers(userId, lastDate, lastId));
@@ -41,7 +41,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
     [HttpGet]
     [Route("{userId}/Following")]
     [Authorize()]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId, DateTime lastDate, string lastId)
+    public async Task<ActionResult<IEnumerable<UserDTO>>> GetFollowing(string userId, DateTime lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.GetFollowing: Getting users followed by user with id: {id}", userId);
         return Ok(await usersRepository.GetFollowing(userId, lastDate, lastId));

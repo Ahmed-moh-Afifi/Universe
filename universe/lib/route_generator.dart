@@ -98,7 +98,8 @@ class RouteGenerator {
         );
       case personalProfile:
         return PageRouteBuilder(
-          pageBuilder: (_, animation, secondaryAnimation) => PersonalProfile(),
+          pageBuilder: (_, animation, secondaryAnimation) =>
+              const PersonalProfile(),
           transitionDuration: Duration.zero,
         );
       case followersPage:
