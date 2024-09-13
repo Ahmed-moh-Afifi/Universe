@@ -304,6 +304,10 @@ namespace Universe_Backend.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Videos")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

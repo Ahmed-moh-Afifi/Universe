@@ -7,6 +7,7 @@ using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Hubs;
 using Universe_Backend.Repositories;
+using Universe_Backend.Services;
 
 namespace Universe_Backend.Controllers;
 
@@ -49,7 +50,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddPost([FromBody] PostDTO post, string userId)
+    public async Task<ActionResult<int>> AddPost([FromBody] CreatePostModel post, string userId, [FromServices] IFilesService filesService)
     {
         logger.LogDebug("PostsController.AddPost: Adding post {@Post}", post);
         // Validate route parameters.
@@ -71,9 +72,12 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             RecipientType = RecipientType.Topic
         };
         logger.LogDebug("PostsController.AddPost: Sending notification {@Notification}", notification);
+
+        var postId = await postsRepository.AddPost(post);
+
         await notificationService.SendNotificationAsync(notification);
 
-        return Ok(await postsRepository.AddPost(post));
+        return Ok(postId);
     }
 
     [HttpPost]

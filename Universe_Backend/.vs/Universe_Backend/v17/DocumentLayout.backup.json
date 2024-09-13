@@ -1,26 +1,42 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Universe\\Universe_Backend\\",
+  "WorkspaceRootPath": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\services\\filesservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:services\\filesservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\controllers\\filescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\filescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\services\\ifilesservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:services\\ifilesservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\repositories\\postreactionsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:repositories\\postreactionsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\repositories\\ipostreactionsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:repositories\\ipostreactionsrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\data\\dtos\\postviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\dtos\\postviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\data\\dtos\\createpostmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\dtos\\createpostmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\data\\dtos\\postdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\dtos\\postdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|c:\\users\\ahmed\\projects\\universe\\universe_backend\\data\\models\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\models\\post.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,69 +46,117 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
-              "ToolTip": "D:\\Universe\\Universe_Backend\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "Controllers\\UsersController.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAgwCAAAAAhAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "IFilesService.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Services\\IFilesService.cs",
+              "RelativeDocumentMoniker": "Services\\IFilesService.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Services\\IFilesService.cs",
+              "RelativeToolTip": "Services\\IFilesService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-28T15:54:44.71Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PostsController.cs",
-              "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PostsController.cs",
-              "ToolTip": "D:\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
-              "RelativeToolTip": "Controllers\\PostsController.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAQwCAAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-28T14:26:59.155Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-11T18:17:24.459Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "IPostReactionsRepository.cs",
-              "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Repositories\\IPostReactionsRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\IPostReactionsRepository.cs",
-              "ToolTip": "D:\\Universe\\Universe_Backend\\Repositories\\IPostReactionsRepository.cs",
-              "RelativeToolTip": "Repositories\\IPostReactionsRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-28T14:24:49.497Z"
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-11T18:08:15.058Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "PostReactionsRepository.cs",
-              "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Repositories\\PostReactionsRepository.cs",
-              "RelativeDocumentMoniker": "Repositories\\PostReactionsRepository.cs",
-              "ToolTip": "D:\\Universe\\Universe_Backend\\Repositories\\PostReactionsRepository.cs",
-              "RelativeToolTip": "Repositories\\PostReactionsRepository.cs",
-              "ViewState": "AgIAAFcAAAAAAAAAAAAowGgAAAAjAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "FilesController.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Controllers\\FilesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\FilesController.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Controllers\\FilesController.cs",
+              "RelativeToolTip": "Controllers\\FilesController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-28T14:10:29.55Z"
+              "WhenOpened": "2024-09-11T16:33:37.282Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PostViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\DTOs\\PostViewModel.cs",
+              "RelativeDocumentMoniker": "Data\\DTOs\\PostViewModel.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\DTOs\\PostViewModel.cs",
+              "RelativeToolTip": "Data\\DTOs\\PostViewModel.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAuwBoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T16:20:33.638Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CreatePostModel.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\DTOs\\CreatePostModel.cs",
+              "RelativeDocumentMoniker": "Data\\DTOs\\CreatePostModel.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\DTOs\\CreatePostModel.cs",
+              "RelativeToolTip": "Data\\DTOs\\CreatePostModel.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAywB0AAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T16:19:30.709Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PostDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\DTOs\\PostDTO.cs",
+              "RelativeDocumentMoniker": "Data\\DTOs\\PostDTO.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\DTOs\\PostDTO.cs",
+              "RelativeToolTip": "Data\\DTOs\\PostDTO.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAA9wBIAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T16:14:51.198Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Post.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\Models\\Post.cs",
+              "RelativeDocumentMoniker": "Data\\Models\\Post.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Data\\Models\\Post.cs",
+              "RelativeToolTip": "Data\\Models\\Post.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAiwCIAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-11T16:12:23.629Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
-              "ToolTip": "D:\\Universe\\Universe_Backend\\Properties\\launchSettings.json",
-              "RelativeToolTip": "Properties\\launchSettings.json",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABgAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-08-28T12:22:43.92Z",
+              "Title": "FilesService.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Services\\FilesService.cs",
+              "RelativeDocumentMoniker": "Services\\FilesService.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Services\\FilesService.cs",
+              "RelativeToolTip": "Services\\FilesService.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAgwBYAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-05T16:28:10.068Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PostsController.cs",
+              "DocumentMoniker": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PostsController.cs",
+              "ToolTip": "C:\\Users\\Ahmed\\projects\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
+              "RelativeToolTip": "Controllers\\PostsController.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAowD8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-05T14:04:27.81Z"
             }
           ]
         }

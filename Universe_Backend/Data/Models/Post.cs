@@ -6,6 +6,7 @@ namespace Universe_Backend.Data.Models;
 public class Post
 {
     public required int Id { get; set; }
+    public required string Uid { get; set; }
     public required string? Title { get; set; }
     public required string Body { get; set; }
     public List<string> Images { get; set; } = [];
@@ -29,6 +30,7 @@ public class Post
         return new PostDTO
         {
             Id = Id,
+            Uid = Uid,
             Title = Title,
             Body = Body,
             Images = Images,

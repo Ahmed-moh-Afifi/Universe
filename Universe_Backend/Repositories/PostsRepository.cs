@@ -7,7 +7,7 @@ namespace Universe_Backend.Repositories;
 
 public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsRepository> logger) : IPostsRepository
 {
-    public async Task<int> AddPost(PostDTO post)
+    public async Task<int> AddPost(CreatePostModel post)
     {
         logger.LogDebug("PostsRepository.AddPost: Adding post {@Post}", post);
         try
