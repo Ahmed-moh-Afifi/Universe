@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Universe_Backend.Data;
 
@@ -11,9 +12,11 @@ using Universe_Backend.Data;
 namespace Universe_Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241007143551_Messaging")]
+    partial class Messaging
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,7 +288,7 @@ namespace Universe_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ChatId")
+                    b.Property<int?>("ChatId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ChildPostId")
@@ -317,7 +320,7 @@ namespace Universe_Backend.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("Universe_Backend.Data.Models.NotificationToken", b =>
@@ -817,11 +820,9 @@ namespace Universe_Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Universe_Backend.Data.Models.Chat", "Chat")
+                    b.HasOne("Universe_Backend.Data.Models.Chat", null)
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChatId");
 
                     b.OwnsMany("Universe_Backend.Data.Models.Widget", "Widgets", b1 =>
                         {
@@ -851,15 +852,13 @@ namespace Universe_Backend.Migrations
 
                             b1.HasKey("MessageId", "Id");
 
-                            b1.ToTable("Messages_Widgets");
+                            b1.ToTable("Message_Widgets");
 
                             b1.WithOwner()
                                 .HasForeignKey("MessageId");
                         });
 
                     b.Navigation("Author");
-
-                    b.Navigation("Chat");
 
                     b.Navigation("Widgets");
                 });

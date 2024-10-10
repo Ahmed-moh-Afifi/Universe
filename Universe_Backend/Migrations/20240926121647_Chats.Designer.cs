@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Universe_Backend.Data;
 
@@ -11,9 +12,11 @@ using Universe_Backend.Data;
 namespace Universe_Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240926121647_Chats")]
+    partial class Chats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,61 +268,6 @@ namespace Universe_Backend.Migrations
                     b.ToTable("Chats", (string)null);
                 });
 
-            modelBuilder.Entity("Universe_Backend.Data.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Audios")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ChatId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ChildPostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Images")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MessageRepliedTo")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PublishDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ReactionsCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RepliesCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Videos")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("Messages", (string)null);
-                });
-
             modelBuilder.Entity("Universe_Backend.Data.Models.NotificationToken", b =>
                 {
                     b.Property<int>("Id")
@@ -410,9 +358,6 @@ namespace Universe_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("MessageId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
@@ -428,8 +373,6 @@ namespace Universe_Backend.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MessageId");
 
                     b.HasIndex("PostId");
 
@@ -614,9 +557,6 @@ namespace Universe_Backend.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("MessageId")
-                        .HasColumnType("int");
-
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -654,8 +594,6 @@ namespace Universe_Backend.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MessageId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -809,61 +747,6 @@ namespace Universe_Backend.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Universe_Backend.Data.Models.Message", b =>
-                {
-                    b.HasOne("Universe_Backend.Data.Models.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Universe_Backend.Data.Models.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsMany("Universe_Backend.Data.Models.Widget", "Widgets", b1 =>
-                        {
-                            b1.Property<int>("MessageId")
-                                .HasColumnType("int");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
-                            b1.Property<string>("Body")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Data")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Title")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<int>("Type")
-                                .HasColumnType("int");
-
-                            b1.HasKey("MessageId", "Id");
-
-                            b1.ToTable("Messages_Widgets");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MessageId");
-                        });
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("Widgets");
-                });
-
             modelBuilder.Entity("Universe_Backend.Data.Models.NotificationToken", b =>
                 {
                     b.HasOne("Universe_Backend.Data.Models.User", "User")
@@ -924,10 +807,6 @@ namespace Universe_Backend.Migrations
 
             modelBuilder.Entity("Universe_Backend.Data.Models.PostReaction", b =>
                 {
-                    b.HasOne("Universe_Backend.Data.Models.Message", null)
-                        .WithMany("Reactions")
-                        .HasForeignKey("MessageId");
-
                     b.HasOne("Universe_Backend.Data.Models.Post", "Post")
                         .WithMany("Reactions")
                         .HasForeignKey("PostId")
@@ -1021,25 +900,6 @@ namespace Universe_Backend.Migrations
                     b.Navigation("Story");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Universe_Backend.Data.Models.User", b =>
-                {
-                    b.HasOne("Universe_Backend.Data.Models.Message", null)
-                        .WithMany("Mentions")
-                        .HasForeignKey("MessageId");
-                });
-
-            modelBuilder.Entity("Universe_Backend.Data.Models.Chat", b =>
-                {
-                    b.Navigation("Messages");
-                });
-
-            modelBuilder.Entity("Universe_Backend.Data.Models.Message", b =>
-                {
-                    b.Navigation("Mentions");
-
-                    b.Navigation("Reactions");
                 });
 
             modelBuilder.Entity("Universe_Backend.Data.Models.Post", b =>

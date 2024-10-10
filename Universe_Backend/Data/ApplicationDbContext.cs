@@ -12,6 +12,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<StoryReaction> StoriesReactions { get; set; }
     public DbSet<Story> Stories { get; set; }
     public DbSet<Tag> Tags { get; set; }
+    public DbSet<Chat> Chats { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,5 +36,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<PostReaction>().ToTable("PostReactions").HasOne(pr => pr.User).WithMany(u => u.PostReactions).HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<StoryReaction>().ToTable("StoryReactions").HasOne(sr => sr.User).WithMany(u => u.StoryReactions).HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<NotificationToken>().ToTable("NotificationTokens").HasOne(nt => nt.User).WithMany(u => u.NotificationTokens).HasForeignKey("UserId").OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<Chat>().ToTable("Chats").HasMany(c => c.Users).WithMany(u => u.Chats);
+        modelBuilder.Entity<Message>().ToTable("Messages").HasOne(m => m.Chat).WithMany(c => c.Messages);
     }
 }

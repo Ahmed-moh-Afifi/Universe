@@ -46,6 +46,7 @@ public class User : IdentityUser
     public virtual ICollection<Story> StoriesMentionedIn { get; set; } = [];
     public virtual ICollection<PostReaction> PostReactions { get; set; } = [];
     public virtual ICollection<StoryReaction> StoryReactions { get; set; } = [];
+    public virtual ICollection<Chat> Chats { get; set; } = [];
 
     public static User FromRegisterModel(RegisterModel model)
     {

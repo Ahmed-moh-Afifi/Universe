@@ -106,4 +106,14 @@ class TokenManager {
     ApiClient apiClient = ApiClient("/Auth");
     await apiClient.post('/NotificationToken', token.toJson(), {});
   }
+
+  Future<TokensModel> getValidTokens() async {
+    if (await hasValidToken()) {
+      return await Future.value(_tokensModel);
+    }
+
+    await refreshTokens();
+
+    return _tokensModel!;
+  }
 }
