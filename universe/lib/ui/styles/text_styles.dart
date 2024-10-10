@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TextStyles {
+  static TextStyle hugeStyle =
+      const TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
   static TextStyle titleStyle =
       const TextStyle(fontSize: 26, fontWeight: FontWeight.bold);
   static TextStyle subtitleStyle =
