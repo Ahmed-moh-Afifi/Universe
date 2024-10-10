@@ -14,11 +14,11 @@
         public ICollection<Widget>? Widgets { get; set; }
         public int ReactionsCount { get; set; }
         public int RepliesCount { get; set; }
-        public int ChatId { get; set; }
+        public required int ChatId { get; set; }
 
         public virtual User? Author { get; set; }
         public virtual Chat? Chat { get; set; }
-        public virtual ICollection<PostReaction> Reactions { get; set; } = [];
+        public virtual ICollection<MessageReaction> Reactions { get; set; } = [];
         public virtual ICollection<User> Mentions { get; set; } = [];
     }
 }
