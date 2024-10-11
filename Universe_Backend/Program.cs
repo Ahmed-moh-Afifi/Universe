@@ -116,6 +116,8 @@ builder.Services.AddScoped<ITagsRepository, TagsRepository>();
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<IAuthorizationHandler, IsFollowerHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, OwnerHandler>();
+builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
+builder.Services.AddScoped<IChatsRepository, ChatsRepository>();
 
 builder.Services.AddSignalR();
 
