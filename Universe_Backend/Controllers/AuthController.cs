@@ -104,7 +104,11 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
             .FirstOrDefaultAsync(rt => rt.Token == model.RefreshToken && rt.UserId == userId!.Value);
 
         if (savedRefreshToken == null || savedRefreshToken.ExpiryDate < DateTime.UtcNow || savedRefreshToken.IsRevoked)
+        {
+            logger.LogDebug("Invalid refresh token. Returning unathorized...");
+            logger.LogDebug((savedRefreshToken == null).ToString());
             return Unauthorized();
+        }
 
         logger.LogDebug("AuthController -> refresh: generating new access token and refresh token");
         var newAccessToken = tokenService.GenerateAccessToken(claims);

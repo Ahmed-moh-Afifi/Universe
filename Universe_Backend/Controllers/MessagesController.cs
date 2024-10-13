@@ -5,11 +5,11 @@ using Universe_Backend.Repositories;
 namespace Universe_Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("{userId}/Chats/{chatId}/[controller]")]
     public class MessagesController(IMessagesRepository messagesRepository, ILogger<MessagesController> logger) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreateMessageAsync([FromBody] Message message)
+        public async Task<ActionResult<Message>> CreateMessageAsync(string userId, int chatId, [FromBody] Message message)
         {
             try
             {
@@ -23,8 +23,8 @@ namespace Universe_Backend.Controllers
             }
         }
 
-        [HttpGet("Messages/{chatId}")]
-        public async Task<IActionResult> GetChatMessagesAsync(int chatId)
+        [HttpGet("")]
+        public async Task<ActionResult<List<Message>>> GetChatMessagesAsync(string userId, int chatId)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace Universe_Backend.Controllers
         }
 
         [HttpGet("{messageId}")]
-        public async Task<IActionResult> GetMessageAsync(int messageId)
+        public async Task<ActionResult<Message>> GetMessageAsync(string userId, int chatId, int messageId)
         {
             try
             {
@@ -53,8 +53,8 @@ namespace Universe_Backend.Controllers
             }
         }
 
-        [HttpGet("Replies/{messageId}")]
-        public async Task<IActionResult> GetRepliesAsync(int messageId)
+        [HttpGet("{messageId}/Replies")]
+        public async Task<ActionResult<List<Message>>> GetRepliesAsync(string userId, int chatId, int messageId)
         {
             try
             {
@@ -68,8 +68,8 @@ namespace Universe_Backend.Controllers
             }
         }
 
-        [HttpPost("Reactions")]
-        public async Task<IActionResult> AddReactionAsync([FromBody] MessageReaction reaction)
+        [HttpPost("{messageId}/Reactions")]
+        public async Task<ActionResult> AddReactionAsync(string userId, int chatId, int messageId, [FromBody] MessageReaction reaction)
         {
             try
             {
@@ -83,8 +83,8 @@ namespace Universe_Backend.Controllers
             }
         }
 
-        [HttpDelete("Reactions/{reactionId}")]
-        public async Task<IActionResult> RemoveReactionAsync(int reactionId)
+        [HttpDelete("{messageId}/Reactions/{reactionId}")]
+        public async Task<ActionResult> RemoveReactionAsync(string userId, int chatId, int messageId, int reactionId)
         {
             try
             {
@@ -98,8 +98,8 @@ namespace Universe_Backend.Controllers
             }
         }
 
-        [HttpDelete("{messageId}")]
-        public async Task<IActionResult> DeleteMessageAsync(int messageId)
+        [HttpDelete("{messageId}/Delete")]
+        public async Task<ActionResult> DeleteMessageAsync(string userId, int chatId, int messageId)
         {
             try
             {

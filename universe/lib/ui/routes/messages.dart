@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:universe/ui/styles/text_styles.dart';
@@ -11,12 +12,13 @@ class Messages extends StatelessWidget {
       bottom: false,
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 108,
+          toolbarHeight: 115,
           elevation: 0,
           flexibleSpace: Padding(
             padding: const EdgeInsets.only(top: 0.0, left: 16.0, right: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -134,7 +136,7 @@ class ChatTile extends StatelessWidget {
       leading: Stack(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage(image),
+            backgroundImage: CachedNetworkImageProvider(image),
             radius: 25,
           ),
           if (isOnline)

@@ -5,16 +5,18 @@ import 'package:universe/models/config.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
 
-enum StartupStates {
-  loading,
-  loaded,
-  error,
+enum StartupEvent { initial, loggedIn, sessionExpired }
+
+class StartupState {
+  final StartupEvent event;
+
+  StartupState(this.event);
 }
 
 class StartupCompleted {}
 
-class StartupBloc extends Bloc<Object, Object> {
-  StartupBloc() : super(0) {
+class StartupBloc extends Bloc<Object, StartupState> {
+  StartupBloc() : super(StartupState(StartupEvent.initial)) {
     on<StartupCompleted>(
       (event, emit) async {
         if (AuthenticationRepository().authenticationService.currentUser() ==
@@ -27,10 +29,12 @@ class StartupBloc extends Bloc<Object, Object> {
               .isUserValid(AuthenticationRepository()
                   .authenticationService
                   .currentUser()!)) {
+            emit(StartupState(StartupEvent.loggedIn));
             RouteGenerator.mainNavigatorkey.currentState!
                 .pushReplacementNamed(RouteGenerator.homePage);
           } else {
             AuthenticationRepository().authenticationService.signOut();
+            emit(StartupState(StartupEvent.sessionExpired));
             RouteGenerator.mainNavigatorkey.currentState!
                 .pushReplacementNamed(RouteGenerator.loginPage);
           }
