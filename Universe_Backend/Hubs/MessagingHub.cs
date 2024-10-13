@@ -18,7 +18,7 @@ namespace Universe_Backend.Hubs
             //await dbContext.Messages.AddAsync(message);
             //await dbContext.SaveChangesAsync();
 
-            await Clients.User(userId).SendAsync("MessageReceived");
+            await Clients.User(userId).SendAsync("MessageReceived", messageBody);
             await Clients.User(sender).SendAsync("MessageSent");
         }
     }

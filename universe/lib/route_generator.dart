@@ -1,12 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:universe/models/data/chat.dart';
 import 'package:universe/ui/blocs/new_post_bloc.dart';
 import 'package:universe/ui/blocs/personal_profile_bloc.dart';
 import 'package:universe/ui/blocs/search_bloc.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/ui/routes/account_settings.dart';
+import 'package:universe/ui/routes/chat.dart';
 import 'package:universe/ui/routes/complete_account.dart';
 import 'package:universe/ui/routes/feed.dart';
 import 'package:universe/ui/routes/followers.dart';
@@ -46,7 +48,8 @@ class RouteGenerator {
   static const reactionsPage = "reactions";
   static const repliesPage = "replies";
   static const settingsPage = "settings";
-  static const accountSettingsPage = 'accountSettings';
+  static const accountSettingsPage = "accountSettings";
+  static const chat = "chat";
 
   static SearchState searchState = const SearchState(
     previousState: SearchStates.notStarted,
@@ -125,6 +128,12 @@ class RouteGenerator {
         return slidingRoute(const Settings());
       case accountSettingsPage:
         return slidingRoute(const AccountSettings());
+      case chat:
+        return MaterialPageRoute(
+          builder: (_) => ChatScreen(
+            settings.arguments as Chat,
+          ),
+        );
 
       default:
         throw const FormatException("Route not found");

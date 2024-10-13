@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -83,8 +84,8 @@ class PostContent extends StatelessWidget {
                         itemSnapping: true,
                         children: post.images
                             .map(
-                              (image) => Image.network(
-                                image,
+                              (image) => CachedNetworkImage(
+                                imageUrl: image,
                                 fit: BoxFit.cover,
                               ),
                             )
