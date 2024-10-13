@@ -75,5 +75,33 @@ namespace Universe_Backend.Repositories
             dbContext.Chats.Remove(chat);
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task<Chat> GetChatByParticipantsAsync(string conversationInitiatorId, string targetedGuyId)
+        {
+            var chat = await dbContext.Chats.
+                FirstOrDefaultAsync(c => c.Users.Count() == 2 &&
+                c.Users.Any(u => u.Id == conversationInitiatorId) &&
+                c.Users.Any(u => u.Id == targetedGuyId));
+
+            if (chat == null)
+            {
+                var targetedGuy = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == targetedGuyId)
+                    ?? throw new ArgumentException("Targeted guy not found. Make sure you're a good stalker.");
+
+                var conversationInitiator = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == conversationInitiatorId)
+                    ?? throw new ArgumentException("Conversation initiator not found. Make sure you're a good hacker.");
+
+
+                chat = new Chat() { Name = targetedGuy.UserName! };
+
+                chat.Users.Add(conversationInitiator);
+                chat.Users.Add(targetedGuy);
+
+                await dbContext.Chats.AddAsync(chat);
+                await dbContext.SaveChangesAsync();
+            }
+
+            return chat;
+        }
     }
 }

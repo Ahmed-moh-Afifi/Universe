@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 
 namespace Universe_Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("{userId}/[controller]")]
     public class ChatsController(IChatsRepository chatsRepository, ILogger<ChatsRepository> logger) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> CreateChatAsync(string name, IEnumerable<string> userIds)
+        [Route("{name}")]
+        public async Task<ActionResult<Chat>> CreateChatAsync(string userId, string name, [FromBody] StringListWrapper userIds)
         {
             try
             {
-                var chat = await chatsRepository.CreateChatAsync(name, userIds);
+                var chat = await chatsRepository.CreateChatAsync(name, userIds.Strings);
                 return Ok(chat);
             }
             catch (Exception e)
@@ -22,8 +24,8 @@ namespace Universe_Backend.Controllers
             }
         }
 
-        [HttpGet("Chats/{userId}")]
-        public async Task<IActionResult> GetUserChatsAsync(string userId)
+        [HttpGet("")]
+        public async Task<ActionResult<List<Chat>>> GetUserChatsAsync(string userId)
         {
             try
             {
@@ -38,7 +40,7 @@ namespace Universe_Backend.Controllers
         }
 
         [HttpGet("{chatId}")]
-        public async Task<IActionResult> GetChatAsync(int chatId)
+        public async Task<ActionResult<Chat>> GetChatAsync(string userId, int chatId)
         {
             try
             {
@@ -52,12 +54,12 @@ namespace Universe_Backend.Controllers
             }
         }
 
-        [HttpPost("{chatId}/addUser")]
-        public async Task<IActionResult> AddUserToChatAsync(int chatId, string userId)
+        [HttpPost("{chatId}/Users/{addedUserId}/Add")]
+        public async Task<ActionResult> AddUserToChatAsync(string userId, int chatId, string addedUserId)
         {
             try
             {
-                await chatsRepository.AddUserToChatAsync(chatId, userId);
+                await chatsRepository.AddUserToChatAsync(chatId, addedUserId);
                 return Ok();
             }
             catch (Exception e)
@@ -67,12 +69,12 @@ namespace Universe_Backend.Controllers
             }
         }
 
-        [HttpPost("{chatId}/removeUser")]
-        public async Task<IActionResult> RemoveUserFromChatAsync(int chatId, string userId)
+        [HttpPost("{chatId}/Users/{removedUserId}/Remove")]
+        public async Task<ActionResult> RemoveUserFromChatAsync(string userId, int chatId, string removedUserId)
         {
             try
             {
-                await chatsRepository.RemoveUserFromChatAsync(chatId, userId);
+                await chatsRepository.RemoveUserFromChatAsync(chatId, removedUserId);
                 return Ok();
             }
             catch (Exception e)
@@ -83,7 +85,7 @@ namespace Universe_Backend.Controllers
         }
 
         [HttpDelete("{chatId}")]
-        public async Task<IActionResult> DeleteChatAsync(int chatId)
+        public async Task<ActionResult> DeleteChatAsync(string userId, int chatId)
         {
             try
             {
@@ -93,6 +95,20 @@ namespace Universe_Backend.Controllers
             catch (Exception e)
             {
                 logger.LogError(e, "Failed to delete chat");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("{initiator}/And/{targeted}")]
+        public async Task<ActionResult<Chat>> GetChatByParticipants(string userId, string initiator, string targeted)
+        {
+            try
+            {
+                return Ok(await chatsRepository.GetChatByParticipantsAsync(initiator, targeted));
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, $"Failed to get chat. initiator: {initiator}, targeted: {targeted}");
                 return StatusCode(500);
             }
         }

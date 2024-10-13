@@ -13,6 +13,9 @@ import 'package:universe/models/authentication/tokens_model.dart';
 class TokenManager {
   final Dio _dio = Dio(BaseOptions(
     baseUrl: '${Config().api}/Auth',
+    validateStatus: (status) {
+      return status! < 500;
+    },
   ));
 
   TokenManager._privateConstructor() {
@@ -83,6 +86,7 @@ class TokenManager {
 
   Future<TokensModel?> refreshTokens() async {
     log("Refreshing tokens", name: "TokenManager");
+    log(jsonEncode(_tokensModel), name: "TokenManager");
     var response = await _dio.post<Map<String, dynamic>>(
       '/Refresh',
       data: _tokensModel!.toJson(),
@@ -92,6 +96,7 @@ class TokenManager {
       _tokensModel = TokensModel.fromJson(response.data!);
       await saveTokens(_tokensModel!);
     } else if (response.statusCode == HttpStatus.unauthorized) {
+      log('Session expired, Deleting tokens.', name: "TokenManager");
       await deleteTokens();
       _tokensModel = null;
     }

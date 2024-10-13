@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/ichats_repository.dart';
 import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/interfaces/iusers_repository.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/models/requests/api_call_start.dart';
 import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/route_generator.dart';
 
 enum ProfileStates {
   notStarted,
@@ -14,6 +16,7 @@ enum ProfileStates {
 }
 
 class ProfileState {
+  ProfileStates state;
   final User user;
   final Iterable<Post> posts;
   final int? postCount;
@@ -21,6 +24,7 @@ class ProfileState {
   final int? followingCount;
 
   ProfileState({
+    this.state = ProfileStates.success,
     required this.user,
     required this.posts,
     this.postCount,
@@ -41,11 +45,17 @@ class GotUserEvent {
   const GotUserEvent({required this.state});
 }
 
+class ChatEvent {
+  const ChatEvent();
+}
+
 class ProfileBloc extends Bloc<Object, ProfileState> {
   final IUsersRepository usersRepository;
   final IPostsRepository postsRepository;
+  final IChatsRepository chatsRepository;
 
-  ProfileBloc(this.usersRepository, this.postsRepository, User user)
+  ProfileBloc(this.usersRepository, this.postsRepository, this.chatsRepository,
+      User user)
       : super(ProfileState(user: user, posts: [])) {
     on<GetUserEvent>(
       (event, emit) async {
@@ -61,6 +71,23 @@ class ProfileBloc extends Bloc<Object, ProfileState> {
 
     on<GotUserEvent>(
       (event, emit) => emit(event.state),
+    );
+
+    on<ChatEvent>(
+      (event, emit) async {
+        emit(state..state = ProfileStates.loading);
+        final chat = await chatsRepository.getChatByParticipants(
+          AuthenticationRepository().authenticationService.currentUser()!.id,
+          user.id,
+        );
+
+        // RouteGenerator.mainNavigatorkey.currentState!.pop();
+
+        RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
+          RouteGenerator.chat,
+          arguments: chat,
+        );
+      },
     );
 
     add(GetUserEvent(
