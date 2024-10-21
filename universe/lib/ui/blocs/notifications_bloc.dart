@@ -17,9 +17,9 @@ class NotificationsState {
 }
 
 class NotificationReceived {
-  final String notification;
+  final String message;
 
-  NotificationReceived({required this.notification});
+  NotificationReceived({required this.message});
 }
 
 class SendMessage {
@@ -37,7 +37,7 @@ class NotificationsBloc extends Bloc<Object, NotificationsState> {
       : super(NotificationsState(state: NotificationsStates.initial)) {
     on<NotificationReceived>((event, emit) {
       emit(NotificationsState(
-          state: NotificationsStates.loaded, notification: event.notification));
+          state: NotificationsStates.loaded, notification: event.message));
     });
 
     on<InitializeNotifications>((event, emit) async {
@@ -78,7 +78,12 @@ class NotificationsBloc extends Bloc<Object, NotificationsState> {
     hubConnection!.on('MessageReceived', (message) {
       log('MessageReceived: ${message![0]}', name: 'NotificationsBloc');
 
-      add(NotificationReceived(notification: message[0] as String));
+      var msg = message[0] as Map<String, dynamic>;
+      log('Message body: ${msg['body']}', name: 'NotificationsBloc');
+
+      add(NotificationReceived(
+        message: msg['body'],
+      ));
     });
   }
 }
