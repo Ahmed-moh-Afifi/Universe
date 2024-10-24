@@ -27,10 +27,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -67,15 +64,30 @@ class DefaultFirebaseOptions {
     messagingSenderId: '554525188818',
     projectId: 'universe-abb43',
     storageBucket: 'universe-abb43.appspot.com',
+    androidClientId: '554525188818-lu5cg0rit9t1i3rpu2li383rcojc3ns6.apps.googleusercontent.com',
+    iosClientId: '554525188818-lsj9c3f6nfouknj69gjn7jcllh6e8qu9.apps.googleusercontent.com',
     iosBundleId: 'com.example.universe',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCOkwTdycQy6DUWmhq6J57UA9MG4_sBTLw',
-    appId: '1:554525188818:ios:a7f3cee5a9a7e92d8c430b',
+    appId: '1:554525188818:ios:1cf7330bceed98ce8c430b',
     messagingSenderId: '554525188818',
     projectId: 'universe-abb43',
     storageBucket: 'universe-abb43.appspot.com',
-    iosBundleId: 'com.example.universe.RunnerTests',
+    androidClientId: '554525188818-lu5cg0rit9t1i3rpu2li383rcojc3ns6.apps.googleusercontent.com',
+    iosClientId: '554525188818-lsj9c3f6nfouknj69gjn7jcllh6e8qu9.apps.googleusercontent.com',
+    iosBundleId: 'com.example.universe',
   );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAz5OskpPrvdHD5-mG1UdBo_rRtFpPCUMQ',
+    appId: '1:554525188818:web:6a28b40aebb14fca8c430b',
+    messagingSenderId: '554525188818',
+    projectId: 'universe-abb43',
+    authDomain: 'universe-abb43.firebaseapp.com',
+    storageBucket: 'universe-abb43.appspot.com',
+    measurementId: 'G-MNC70R2CCB',
+  );
+
 }
