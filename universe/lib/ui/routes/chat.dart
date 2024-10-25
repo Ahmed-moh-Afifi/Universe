@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/models/data/chat.dart';
+import 'package:universe/models/data/user.dart';
 import 'package:universe/ui/blocs/notifications_bloc.dart';
 
 class ChatScreen extends StatelessWidget {
   final Chat chat;
+  final User user;
 
-  const ChatScreen(this.chat, {super.key});
+  const ChatScreen(this.user, this.chat, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => NotificationsBloc(),
-      child: ChatContent(chat),
+      child: ChatContent(user, chat),
     );
   }
 }
 
 class ChatContent extends StatelessWidget {
   final Chat chat;
+  final User user;
 
-  const ChatContent(this.chat, {super.key});
+  const ChatContent(this.user, this.chat, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +68,7 @@ class ChatContent extends StatelessWidget {
                     ),
                     onSubmitted: (text) {
                       BlocProvider.of<NotificationsBloc>(context)
-                          .add(SendMessage(text));
+                          .add(SendMessage(text, user.id));
                     },
                   ),
                 ),

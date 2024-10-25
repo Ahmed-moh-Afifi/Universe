@@ -46,7 +46,7 @@ class Feed extends StatelessWidget {
                                 AuthenticationRepository()
                                     .authenticationService
                                     .currentUser()!
-                                    .photoUrl!),
+                                    .photoUrl  ?? 'https://via.placeholder.com/150'),
                           ),
                           onPressed: () {},
                         ),
