@@ -131,7 +131,8 @@ class RouteGenerator {
       case chat:
         return MaterialPageRoute(
           builder: (_) => ChatScreen(
-            settings.arguments as Chat,
+            (settings.arguments as List)[0] as User,
+            (settings.arguments as List)[1] as Chat,
           ),
         );
 
