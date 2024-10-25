@@ -85,7 +85,7 @@ class ProfileBloc extends Bloc<Object, ProfileState> {
 
         RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
           RouteGenerator.chat,
-          arguments: chat,
+          arguments: [user, chat],
         );
       },
     );
