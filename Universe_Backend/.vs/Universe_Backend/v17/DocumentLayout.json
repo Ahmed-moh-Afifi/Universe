@@ -3,9 +3,16 @@
   "WorkspaceRootPath": "D:\\Universe\\Universe_Backend\\",
   "Documents": [
     {
+<<<<<<< Updated upstream
 <<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\hubs\\messaginghub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:hubs\\messaginghub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -88,15 +95,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
+<<<<<<< Updated upstream
 <<<<<<< HEAD
           "SelectedChildIndex": 12,
 =======
           "SelectedChildIndex": 1,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+          "SelectedChildIndex": 13,
+>>>>>>> Stashed changes
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 =======
               "Title": "PostsRepository.cs",
@@ -105,6 +117,14 @@
               "ToolTip": "D:\\Universe\\Universe_Backend\\Repositories\\PostsRepository.cs",
               "RelativeToolTip": "Repositories\\PostsRepository.cs",
               "ViewState": "AgIAAPwAAAAAAAAAAAAIwAQBAAA4AAAAAAAAAA==",
+=======
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Universe\\Universe_Backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAowEwAAABKAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-20T12:07:29.635Z",
               "EditorCaption": ""
@@ -124,8 +144,7 @@
               "ViewState": "AgIAALEAAAAAAAAAAAAuwMQAAAAFAAAAAAAAAA==",
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-18T16:23:48.74Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-18T16:23:48.74Z"
             },
             {
               "$type": "Document",
@@ -285,21 +304,29 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 0,
 =======
               "DocumentIndex": 2,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "DocumentIndex": 0,
+>>>>>>> Stashed changes
               "Title": "MessagingHub.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Hubs\\MessagingHub.cs",
               "RelativeDocumentMoniker": "Hubs\\MessagingHub.cs",
               "ToolTip": "D:\\Universe\\Universe_Backend\\Hubs\\MessagingHub.cs",
               "RelativeToolTip": "Hubs\\MessagingHub.cs",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "ViewState": "AgIAAA0AAAAAAAAAAAA1wBwAAAAqAAAAAAAAAA==",
 =======
               "ViewState": "AgIAAAsAAAAAAAAAAAAxwCEAAAA3AAAAAAAAAA==",
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "ViewState": "AgIAABQAAAAAAAAAAAAgwCgAAAA7AAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-24T17:40:10.271Z",
               "EditorCaption": ""

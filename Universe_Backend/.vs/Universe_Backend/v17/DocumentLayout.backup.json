@@ -3,10 +3,17 @@
   "WorkspaceRootPath": "D:\\Universe\\Universe_Backend\\",
   "Documents": [
     {
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> Stashed changes
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\hubs\\messaginghub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:hubs\\messaginghub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,6 +30,7 @@
     {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\chatscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\chatscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+<<<<<<< Updated upstream
     },
     {
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
@@ -45,6 +53,12 @@
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+>>>>>>> Stashed changes
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -78,6 +92,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
+<<<<<<< Updated upstream
 <<<<<<< HEAD
           "SelectedChildIndex": 6,
           "Children": [
@@ -86,23 +101,49 @@
               "DocumentIndex": 2,
 =======
           "SelectedChildIndex": 12,
+=======
+          "SelectedChildIndex": 13,
+>>>>>>> Stashed changes
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
+<<<<<<< Updated upstream
+=======
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Universe\\Universe_Backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAowEwAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-24T10:35:31.453Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+>>>>>>> Stashed changes
               "Title": "PostsController.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
               "RelativeDocumentMoniker": "Controllers\\PostsController.cs",
               "ToolTip": "D:\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
               "RelativeToolTip": "Controllers\\PostsController.cs",
+<<<<<<< Updated upstream
               "ViewState": "AgIAAC8AAAAAAAAAAAAgwEQAAAAkAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAACMAAAAAAAAAAAAgwEQAAAAkAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-18T16:23:48.74Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-18T16:23:48.74Z"
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 3,
+=======
+              "DocumentIndex": 4,
+>>>>>>> Stashed changes
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
@@ -110,13 +151,16 @@
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-18T16:18:03.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-18T16:18:03.222Z"
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 6,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "DocumentIndex": 7,
+>>>>>>> Stashed changes
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -128,11 +172,15 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 6,
 =======
               "DocumentIndex": 9,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "DocumentIndex": 10,
+>>>>>>> Stashed changes
               "Title": "IChatsRepository.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Repositories\\IChatsRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\IChatsRepository.cs",
@@ -144,7 +192,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "StringListWrapper.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Data\\Models\\StringListWrapper.cs",
               "RelativeDocumentMoniker": "Data\\Models\\StringListWrapper.cs",
@@ -156,11 +204,15 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 5,
 =======
               "DocumentIndex": 8,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "DocumentIndex": 9,
+>>>>>>> Stashed changes
               "Title": "ChatsRepository.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Repositories\\ChatsRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\ChatsRepository.cs",
@@ -172,7 +224,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Message.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Data\\Models\\Message.cs",
               "RelativeDocumentMoniker": "Data\\Models\\Message.cs",
@@ -184,11 +236,15 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 7,
 =======
               "DocumentIndex": 10,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "DocumentIndex": 11,
+>>>>>>> Stashed changes
               "Title": "Chat.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Data\\Models\\Chat.cs",
               "RelativeDocumentMoniker": "Data\\Models\\Chat.cs",
@@ -200,11 +256,15 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 0,
 =======
               "DocumentIndex": 5,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "DocumentIndex": 6,
+>>>>>>> Stashed changes
               "Title": "launchSettings.json",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -216,12 +276,15 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAvAAAAAAAAAA==",
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-10-11T04:46:45.297Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-11T04:46:45.297Z"
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 2,
+=======
+              "DocumentIndex": 3,
+>>>>>>> Stashed changes
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -229,16 +292,19 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAGUAAAAAAAAAAAAmwIsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-06T10:15:47.912Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-06T10:15:47.912Z"
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 3,
 =======
               "DocumentIndex": 7,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "DocumentIndex": 8,
+>>>>>>> Stashed changes
               "Title": "MessagesController.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Controllers\\MessagesController.cs",
               "RelativeDocumentMoniker": "Controllers\\MessagesController.cs",
@@ -250,7 +316,11 @@
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
               "DocumentIndex": 4,
+=======
+              "DocumentIndex": 5,
+>>>>>>> Stashed changes
               "Title": "ChatsController.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Controllers\\ChatsController.cs",
               "RelativeDocumentMoniker": "Controllers\\ChatsController.cs",
@@ -258,22 +328,29 @@
               "RelativeToolTip": "Controllers\\ChatsController.cs",
               "ViewState": "AgIAAGUAAAAAAAAAAAAqwGUAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-10T20:06:55.924Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-10T20:06:55.924Z"
             },
             {
               "$type": "Document",
+<<<<<<< Updated upstream
 <<<<<<< HEAD
               "DocumentIndex": 1,
 =======
               "DocumentIndex": 0,
 >>>>>>> 6f60cc8f8331ac3cbf7f542e7d6f54dfd2104029
+=======
+              "DocumentIndex": 0,
+>>>>>>> Stashed changes
               "Title": "MessagingHub.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Hubs\\MessagingHub.cs",
               "RelativeDocumentMoniker": "Hubs\\MessagingHub.cs",
               "ToolTip": "D:\\Universe\\Universe_Backend\\Hubs\\MessagingHub.cs",
               "RelativeToolTip": "Hubs\\MessagingHub.cs",
+<<<<<<< Updated upstream
               "ViewState": "AgIAAA0AAAAAAAAAAAA1wBwAAAAqAAAAAAAAAA==",
+=======
+              "ViewState": "AgIAABQAAAAAAAAAAAAgwCYAAAANAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-24T17:40:10.271Z",
               "EditorCaption": ""
