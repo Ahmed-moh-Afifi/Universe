@@ -24,8 +24,9 @@ class NotificationReceived {
 
 class SendMessage {
   final String message;
+  final String userId;
 
-  SendMessage(this.message);
+  SendMessage(this.message, this.userId);
 }
 
 class InitializeNotifications {}
@@ -48,8 +49,8 @@ class NotificationsBloc extends Bloc<Object, NotificationsState> {
     on<SendMessage>(
       (event, emit) {
         log('Sending message: ${event.message}', name: 'NotificationsBloc');
-        hubConnection!.invoke('SendToUserAsync',
-            args: ['ba44ca1e-6bcd-4eaa-93fc-40714a83a23d', event.message]);
+        hubConnection!
+            .invoke('SendToUserAsync', args: [event.userId, event.message]);
       },
     );
 
