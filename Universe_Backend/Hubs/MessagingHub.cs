@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NotificationService.Models;
 using System.Security.Claims;
 using Universe_Backend.Data;
 using Universe_Backend.Data.Models;
+using Universe_Backend.Repositories;
 
 namespace Universe_Backend.Hubs
 {
     [Authorize]
-    public class MessagingHub(ILogger<MessagingHub> logger, ApplicationDbContext dbContext, NotificationService.NotificationService notificationService) : Hub
+    public class MessagingHub(ILogger<MessagingHub> logger, ApplicationDbContext dbContext, NotificationService.NotificationService notificationService, IUsersRepository usersRepository) : Hub
     {
         public async Task SendToUserAsync(string userId, string messageBody)
         {
@@ -20,18 +22,17 @@ namespace Universe_Backend.Hubs
             //await dbContext.Messages.AddAsync(message);
             //await dbContext.SaveChangesAsync();
 
-            var notificationToken = await dbContext.NotificationTokens.FirstOrDefaultAsync(nt => nt.UserId == userId);
-            if (notificationToken != null)
+            var notificationTokens = await usersRepository.GetNotificationTokens(userId);
+            if (!notificationTokens.IsNullOrEmpty())
             {
                 // Send push notification
-                SingleUserNotification notification = new()
+                var notification = new MultipleUserNotification()
                 {
+                    Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
+                    Sender = sender,
                     Title = "New message",
                     Body = messageBody,
-                    Sender = sender,
-                    Platform = Platform.Android,
-                    RecipientType = RecipientType.User,
-                    Recipient = notificationToken.Token,
+                    Platform = Platform.Android
                 };
 
                 await notificationService.SendNotificationAsync(notification);
