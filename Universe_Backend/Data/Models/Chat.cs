@@ -10,6 +10,7 @@
     {
         public int Id { get; set; }
         public required string Name { get; set; }
+        public required DateTime LastEdited { get; set; }
 
         public virtual ICollection<User> Users { get; set; } = [];
         public virtual ICollection<Message> Messages { get; set; } = [];

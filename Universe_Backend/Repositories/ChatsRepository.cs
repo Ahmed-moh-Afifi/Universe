@@ -8,7 +8,7 @@ namespace Universe_Backend.Repositories
     {
         public async Task<Chat> CreateChatAsync(string name, IEnumerable<string> userIds)
         {
-            var chat = new Chat() { Name = name };
+            var chat = new Chat() { Name = name, LastEdited = DateTime.UtcNow };
             await dbContext.Chats.AddAsync(chat);
             await dbContext.SaveChangesAsync();
 
@@ -92,7 +92,7 @@ namespace Universe_Backend.Repositories
                     ?? throw new ArgumentException("Conversation initiator not found. Make sure you're a good hacker.");
 
 
-                chat = new Chat() { Name = targetedGuy.UserName! };
+                chat = new Chat() { Name = targetedGuy.UserName!, LastEdited = DateTime.UtcNow };
 
                 chat.Users.Add(conversationInitiator);
                 chat.Users.Add(targetedGuy);
