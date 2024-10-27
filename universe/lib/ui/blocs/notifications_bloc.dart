@@ -7,13 +7,63 @@ import 'package:signalr_netcore/hub_connection_builder.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/models/config.dart';
 
-enum NotificationsStates { initial, loading, loaded, error }
+enum NotificationsStates {
+  initial,
+  connecting,
+  connected,
+  disconnected,
+  notificationReceived,
+  error
+}
 
 class NotificationsState {
   final NotificationsStates state;
   final String notification;
+  final String error;
 
-  NotificationsState({required this.state, this.notification = ''});
+  NotificationsState({
+    required this.state,
+    this.notification = '',
+    this.error = '',
+  });
+
+  factory NotificationsState.initial() {
+    return NotificationsState(
+      state: NotificationsStates.initial,
+    );
+  }
+
+  factory NotificationsState.connecting() {
+    return NotificationsState(
+      state: NotificationsStates.connecting,
+    );
+  }
+
+  factory NotificationsState.connected() {
+    return NotificationsState(
+      state: NotificationsStates.connected,
+    );
+  }
+
+  factory NotificationsState.disconnected() {
+    return NotificationsState(
+      state: NotificationsStates.disconnected,
+    );
+  }
+
+  factory NotificationsState.notificationReceived(String notification) {
+    return NotificationsState(
+      state: NotificationsStates.notificationReceived,
+      notification: notification,
+    );
+  }
+
+  factory NotificationsState.error(String error) {
+    return NotificationsState(
+      state: NotificationsStates.error,
+      error: error,
+    );
+  }
 }
 
 class NotificationReceived {
@@ -32,18 +82,25 @@ class SendMessage {
 class InitializeNotifications {}
 
 class NotificationsBloc extends Bloc<Object, NotificationsState> {
+  static final NotificationsBloc _singleton = NotificationsBloc._internal();
+
+  factory NotificationsBloc() {
+    return _singleton;
+  }
+
   HubConnection? hubConnection;
 
-  NotificationsBloc()
-      : super(NotificationsState(state: NotificationsStates.initial)) {
+  NotificationsBloc._internal() : super(NotificationsState.initial()) {
     on<NotificationReceived>((event, emit) {
-      emit(NotificationsState(
-          state: NotificationsStates.loaded, notification: event.message));
+      emit(NotificationsState.notificationReceived(event.message));
     });
 
     on<InitializeNotifications>((event, emit) async {
-      emit(NotificationsState(state: NotificationsStates.loading));
-      await initializeNotifications();
+      emit(NotificationsState.connecting());
+      await initializeNotifications().onError((error, stackTrace) {
+        emit(NotificationsState.error(error.toString()));
+      });
+      emit(NotificationsState.connected());
     });
 
     on<SendMessage>(

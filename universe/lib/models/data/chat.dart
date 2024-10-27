@@ -6,8 +6,9 @@ part 'chat.g.dart';
 class Chat {
   int id;
   String name;
+  DateTime lastEdited;
 
-  Chat({required this.id, required this.name});
+  Chat({required this.id, required this.name, required this.lastEdited});
 
   factory Chat.fromJson(Map<String, dynamic> json) => _$ChatFromJson(json);
 

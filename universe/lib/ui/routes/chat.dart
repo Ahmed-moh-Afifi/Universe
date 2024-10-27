@@ -36,7 +36,8 @@ class ChatContent extends StatelessWidget {
           Expanded(
             child: BlocBuilder<NotificationsBloc, NotificationsState>(
               builder: (context, state) {
-                if (state.state == NotificationsStates.loading) {
+                if (state.state == NotificationsStates.initial ||
+                    state.state == NotificationsStates.connecting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state.state == NotificationsStates.loaded) {
                   // return ListView.builder(
