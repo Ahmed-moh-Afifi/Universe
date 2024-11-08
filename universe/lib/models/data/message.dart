@@ -16,12 +16,12 @@ class Message {
   int? childPostId;
   int? messageRepliedTo;
   final String authorId;
-  final List<Widget> widgets;
+  List<Widget>? widgets;
   int reactionsCount;
   int repliesCount;
   final int chatId;
-  final Chat chat;
-  final User author;
+  Chat? chat;
+  User? author;
 
   Message({
     required this.id,
@@ -33,12 +33,12 @@ class Message {
     this.childPostId,
     this.messageRepliedTo,
     required this.authorId,
-    required this.widgets,
+    this.widgets,
     required this.reactionsCount,
     required this.repliesCount,
     required this.chatId,
-    required this.chat,
-    required this.author,
+    this.chat,
+    this.author,
   });
 
   factory Message.fromJson(Map<String, dynamic> json) =>

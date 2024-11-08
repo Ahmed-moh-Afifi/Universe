@@ -34,8 +34,9 @@ public class User : IdentityUser
     public string? Bio { get; set; }
     public AccountState AccountState { get; set; } = AccountState.Active;
     public DateTime? LastOnline { get; set; }
-    public required OnlineStatus OnlineStatus { get; set; } = OnlineStatus.Online;
-    public AccountPrivacy AccountPrivacy { get; set; } = AccountPrivacy.Public;
+    //public required OnlineStatus OnlineStatus { get; set; } = OnlineStatus.Offline;
+    public int OnlineSessions { get; set; }
+    public AccountPrivacy AccountPrivacy { get; set; } = AccountPrivacy.Public; 
 
     public ICollection<NotificationToken> NotificationTokens { get; set; } = [];
     public virtual ICollection<User> Followers { get; set; } = [];
@@ -59,7 +60,7 @@ public class User : IdentityUser
             Gender = model.Gender,
             Email = model.Email,
             UserName = model.Username,
-            OnlineStatus = OnlineStatus.Online,
+            OnlineSessions = 0,
         };
     }
 
@@ -79,7 +80,7 @@ public class User : IdentityUser
             Bio = Bio,
             AccountState = AccountState,
             LastOnline = LastOnline,
-            OnlineStatus = OnlineStatus,
+            OnlineSesions = OnlineSessions,
             AccountPrivacy = AccountPrivacy
         };
     }
@@ -95,7 +96,7 @@ public class User : IdentityUser
         Bio = dto.Bio;
         AccountState = dto.AccountState;
         LastOnline = dto.LastOnline;
-        OnlineStatus = dto.OnlineStatus;
+        OnlineSessions = dto.OnlineSesions;
         AccountPrivacy = dto.AccountPrivacy;
         Verified = dto.Verified;
     }
