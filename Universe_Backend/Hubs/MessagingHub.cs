@@ -13,17 +13,17 @@ namespace Universe_Backend.Hubs
     [Authorize]
     public class MessagingHub(ILogger<MessagingHub> logger, ApplicationDbContext dbContext, NotificationService.NotificationService notificationService, IUsersRepository usersRepository) : Hub
     {
-        public async Task SendToUserAsync(string userId, string messageBody)
+        public async Task SendToUserAsync(string userId, Message message)
         {
             string sender = Context.User!.FindFirstValue("uid")!;
             logger.LogDebug($"User {sender} sending to user {userId}");
 
-            var message = new Message() { AuthorId = sender, Body = messageBody, Id = 0, ChatId = 0 };
+            //var message = new Message() { AuthorId = sender, Body = messageBody, Id = 0, ChatId = 0 };
             //await dbContext.Messages.AddAsync(message);
             //await dbContext.SaveChangesAsync();
 
-            var onlineStatus = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.OnlineStatus).FirstOrDefaultAsync();
-            if (onlineStatus == OnlineStatus.Online)
+            var onlineSessions = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.OnlineSessions).FirstOrDefaultAsync();
+            if (onlineSessions > 0)
             {
                 await Clients.User(userId).SendAsync("MessageReceived", message);
             }
@@ -37,7 +37,7 @@ namespace Universe_Backend.Hubs
                         Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
                         Sender = sender,
                         Title = "New message",
-                        Body = messageBody,
+                        Body = message.Body,
                         Platform = Platform.Android
                     };
 
@@ -49,7 +49,7 @@ namespace Universe_Backend.Hubs
         public async Task NotifyUserAsync(string userId, InAppNotification notification)
         {
             var user = await dbContext.Users.FindAsync(userId);
-            if (user != null && user.OnlineStatus == OnlineStatus.Online)
+            if (user != null && user.OnlineSessions > 0)
             {
                 await Clients.User(userId).SendAsync("NotificationReceived", notification);
             }
@@ -69,8 +69,8 @@ namespace Universe_Backend.Hubs
         public async Task NotifyUsersAsync(List<string> userIds, InAppNotification notification)
         {
             var users = await dbContext.Users.Where(u => userIds.Contains(u.Id)).ToListAsync();
-            var onlineUsers = users.Where(u => u.OnlineStatus == OnlineStatus.Online).ToList();
-            var offlineUsers = users.Where(u => u.OnlineStatus == OnlineStatus.Offline).ToList();
+            var onlineUsers = users.Where(u => u.OnlineSessions > 0).ToList();
+            var offlineUsers = users.Where(u => u.OnlineSessions > 0).ToList();
 
             if (!onlineUsers.IsNullOrEmpty())
             {
@@ -104,7 +104,7 @@ namespace Universe_Backend.Hubs
             var user = await dbContext.Users.FindAsync(sender);
             if (user != null)
             {
-                user.OnlineStatus = OnlineStatus.Online;
+                user.OnlineSessions++;
                 await dbContext.SaveChangesAsync();
             }
 
@@ -120,7 +120,7 @@ namespace Universe_Backend.Hubs
             if (user != null)
             {
                 user.LastOnline = DateTime.UtcNow;
-                user.OnlineStatus = OnlineStatus.Offline;
+                user.OnlineSessions--;
                 await dbContext.SaveChangesAsync();
             }
 

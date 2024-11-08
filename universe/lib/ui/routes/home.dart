@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
       create: (context) => NotificationsBloc(),
       child: BlocListener<NotificationsBloc, NotificationsState>(
         listener: (context, state) {
-          if (state.state == NotificationsStates.loaded) {
+          if (state.state == NotificationsStates.notificationReceived) {
             log('Notification received: ${state.notification}',
                 name: 'HomePage');
             toastification.show(
