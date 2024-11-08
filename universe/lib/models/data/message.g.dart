@@ -19,14 +19,18 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       childPostId: (json['childPostId'] as num?)?.toInt(),
       messageRepliedTo: (json['messageRepliedTo'] as num?)?.toInt(),
       authorId: json['authorId'] as String,
-      widgets: (json['widgets'] as List<dynamic>)
-          .map((e) => Widget.fromJson(e as Map<String, dynamic>))
+      widgets: (json['widgets'] as List<dynamic>?)
+          ?.map((e) => Widget.fromJson(e as Map<String, dynamic>))
           .toList(),
       reactionsCount: (json['reactionsCount'] as num).toInt(),
       repliesCount: (json['repliesCount'] as num).toInt(),
       chatId: (json['chatId'] as num).toInt(),
-      chat: Chat.fromJson(json['chat'] as Map<String, dynamic>),
-      author: User.fromJson(json['author'] as Map<String, dynamic>),
+      chat: json['chat'] == null
+          ? null
+          : Chat.fromJson(json['chat'] as Map<String, dynamic>),
+      author: json['author'] == null
+          ? null
+          : User.fromJson(json['author'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{

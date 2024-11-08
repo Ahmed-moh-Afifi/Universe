@@ -1,11 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:signalr_netcore/http_connection_options.dart';
-import 'package:signalr_netcore/hub_connection.dart';
-import 'package:signalr_netcore/hub_connection_builder.dart';
-import 'package:universe/apis/authentication/token_manager.dart';
-import 'package:universe/models/config.dart';
+import 'package:universe/apis/hubs/messaging_hub.dart';
 
 enum NotificationsStates {
   initial,
@@ -72,25 +68,10 @@ class NotificationReceived {
   NotificationReceived({required this.message});
 }
 
-class SendMessage {
-  final String message;
-  final String userId;
-
-  SendMessage(this.message, this.userId);
-}
-
 class InitializeNotifications {}
 
 class NotificationsBloc extends Bloc<Object, NotificationsState> {
-  static final NotificationsBloc _singleton = NotificationsBloc._internal();
-
-  factory NotificationsBloc() {
-    return _singleton;
-  }
-
-  HubConnection? hubConnection;
-
-  NotificationsBloc._internal() : super(NotificationsState.initial()) {
+  NotificationsBloc() : super(NotificationsState.initial()) {
     on<NotificationReceived>((event, emit) {
       emit(NotificationsState.notificationReceived(event.message));
     });
@@ -103,37 +84,16 @@ class NotificationsBloc extends Bloc<Object, NotificationsState> {
       emit(NotificationsState.connected());
     });
 
-    on<SendMessage>(
-      (event, emit) {
-        log('Sending message: ${event.message}', name: 'NotificationsBloc');
-        hubConnection!
-            .invoke('SendToUserAsync', args: [event.userId, event.message]);
-      },
-    );
-
     add(InitializeNotifications());
   }
 
   Future<void> initializeNotifications() async {
     log('Initializing notifications', name: 'NotificationsBloc');
-    var serverUrl = '${Config().api}/MessagingHub';
-    log('Server URL: $serverUrl', name: 'NotificationsBloc');
-
-    hubConnection = HubConnectionBuilder()
-        .withUrl(serverUrl,
-            options: HttpConnectionOptions(
-              accessTokenFactory: () => Future.microtask(
-                () async {
-                  return (await TokenManager().getValidTokens()).accessToken;
-                },
-              ),
-            ))
-        .build();
-
-    await hubConnection!.start();
+    MessagingHub messagingHub = MessagingHub();
+    await messagingHub.start();
     log('Connection started', name: 'NotificationsBloc');
 
-    hubConnection!.on('MessageReceived', (message) {
+    messagingHub.on('MessageReceived', (message) {
       log('MessageReceived: ${message![0]}', name: 'NotificationsBloc');
 
       var msg = message[0] as Map<String, dynamic>;
