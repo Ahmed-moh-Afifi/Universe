@@ -6,7 +6,7 @@ import 'package:universe/models/data/message.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/ui/blocs/chat_bloc.dart';
-import 'package:universe/ui/blocs/notifications_bloc.dart';
+import 'package:universe/ui/widgets/message.dart';
 
 class ChatScreen extends StatelessWidget {
   final Chat chat;
@@ -54,40 +54,53 @@ class ChatContent extends StatelessWidget {
                 } else if (state.state == ChatStates.loaded ||
                     state.state == ChatStates.newMessage) {
                   return ListView.builder(
+                    reverse: true,
                     itemCount: state.messages?.length,
                     itemBuilder: (context, index) {
                       final message = state.messages?[index];
-                      return ListTile(
-                        title: Text(user.userName),
-                        subtitle: Text(message?.body ?? ''),
-                        leading: CircleAvatar(
-                          backgroundImage: CachedNetworkImageProvider(
-                              user.photoUrl ??
-                                  'https://via.placeholder.com/150'),
-                        ),
-                      );
+                      return MessageWidget(message!);
                     },
                   );
-
-                  // return const Center(child: Text('Messages go here'));
                 } else {
                   return const Center(child: Text('Something went wrong!'));
                 }
               },
             ),
           ),
+          // Text('ahmedafifi took a screenshot.',
+          //     style: TextStyles.subtitleStyle),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your message',
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.transparent,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(1),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
                     ),
-                    onSubmitted: (text) {
-                      BlocProvider.of<ChatBloc>(context).add(SendMessage(
-                          Message(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: 'Message',
+                        hintStyle: TextStyle(color: Colors.grey),
+                      ),
+                      onSubmitted: (text) {
+                        BlocProvider.of<ChatBloc>(context).add(SendMessage(
+                            Message(
                               id: 0,
                               body: text,
                               images: [],
@@ -100,9 +113,14 @@ class ChatContent extends StatelessWidget {
                                   .id,
                               reactionsCount: 0,
                               repliesCount: 0,
-                              chatId: chat.id),
-                          user.id));
-                    },
+                              chatId: chat.id,
+                              author: AuthenticationRepository()
+                                  .authenticationService
+                                  .currentUser()!,
+                            ),
+                            user.id));
+                      },
+                    ),
                   ),
                 ),
                 IconButton(
