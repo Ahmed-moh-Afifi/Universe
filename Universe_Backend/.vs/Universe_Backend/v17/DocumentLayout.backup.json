@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "D:\\Universe\\Universe_Backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\data\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\hubs\\messaginghub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:hubs\\messaginghub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -19,24 +31,12 @@
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\data\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:controllers\\postscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3EBA6E8A-EAFD-4DAA-96E3-CBAC44CED849}|Universe_Backend.csproj|d:\\universe\\universe_backend\\controllers\\chatscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -70,23 +70,23 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 14,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "UserDTO.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Data\\DTOs\\UserDTO.cs",
               "RelativeDocumentMoniker": "Data\\DTOs\\UserDTO.cs",
               "ToolTip": "D:\\Universe\\Universe_Backend\\Data\\DTOs\\UserDTO.cs",
               "RelativeToolTip": "Data\\DTOs\\UserDTO.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAUwCUAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAywCIAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-29T12:52:30.535Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Data\\Models\\User.cs",
               "RelativeDocumentMoniker": "Data\\Models\\User.cs",
@@ -94,12 +94,11 @@
               "RelativeToolTip": "Data\\Models\\User.cs",
               "ViewState": "AgIAACIAAAAAAAAAAIAwwCkAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-28T14:45:36.782Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-28T14:45:36.782Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "PostsController.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Controllers\\PostsController.cs",
               "RelativeDocumentMoniker": "Controllers\\PostsController.cs",
@@ -111,7 +110,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
@@ -159,7 +158,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "ChatsRepository.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Repositories\\ChatsRepository.cs",
               "RelativeDocumentMoniker": "Repositories\\ChatsRepository.cs",
@@ -167,8 +166,7 @@
               "RelativeToolTip": "Repositories\\ChatsRepository.cs",
               "ViewState": "AgIAAFMAAAAAAAAAAAAAAFUAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T14:46:21.103Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-11T14:46:21.103Z"
             },
             {
               "$type": "Document",
@@ -184,7 +182,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "Chat.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Data\\Models\\Chat.cs",
               "RelativeDocumentMoniker": "Data\\Models\\Chat.cs",
@@ -192,32 +190,32 @@
               "RelativeToolTip": "Data\\Models\\Chat.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T14:23:30.056Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-11T14:23:30.056Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "launchSettings.json",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
               "ToolTip": "D:\\Universe\\Universe_Backend\\Properties\\launchSettings.json",
               "RelativeToolTip": "Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2024-10-11T04:46:45.297Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Universe\\Universe_Backend\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAGUAAAAAAAAAAAAmwIsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIoAAAAAAAAAAAAuwJcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-06T10:15:47.912Z"
+              "WhenOpened": "2024-10-06T10:15:47.912Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -245,16 +243,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "MessagingHub.cs",
               "DocumentMoniker": "D:\\Universe\\Universe_Backend\\Hubs\\MessagingHub.cs",
               "RelativeDocumentMoniker": "Hubs\\MessagingHub.cs",
               "ToolTip": "D:\\Universe\\Universe_Backend\\Hubs\\MessagingHub.cs",
               "RelativeToolTip": "Hubs\\MessagingHub.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAQwCkAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-24T17:40:10.271Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-09-24T17:40:10.271Z"
             }
           ]
         }

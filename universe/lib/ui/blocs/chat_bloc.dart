@@ -130,8 +130,8 @@ class ChatBloc extends Bloc<Object, ChatState> {
         emit(
           ChatState.newMessage(
             [
-              ...?state.messages,
               event.message,
+              ...?state.messages,
             ],
             state.isTyping ?? false,
             state.isOnline ?? false,
@@ -158,6 +158,7 @@ class ChatBloc extends Bloc<Object, ChatState> {
       (event, emit) {
         log('Sending message: ${event.message}', name: 'NotificationsBloc');
         MessagingHub().invoke('SendToUserAsync', [event.userId, event.message]);
+        add(NewMessageEvent(event.message));
       },
     );
 

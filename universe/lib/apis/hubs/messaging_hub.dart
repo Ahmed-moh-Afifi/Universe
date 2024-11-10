@@ -41,8 +41,8 @@ class MessagingHub {
     _hubConnection.off(methodName, method: handler);
   }
 
-  void invoke(String methodName, List<Object>? arguments) {
-    _hubConnection.invoke(methodName, args: arguments);
+  Future invoke(String methodName, List<Object>? arguments) async {
+    await _hubConnection.invoke(methodName, args: arguments);
   }
 
   void isRunning() {
