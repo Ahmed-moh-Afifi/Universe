@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +8,7 @@ import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/expandable_image.dart';
 import 'package:universe/ui/widgets/user_presenter.dart';
 
 class PostWidget extends StatelessWidget {
@@ -78,18 +78,23 @@ class PostContent extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: SizedBox(
-                      height: 250,
-                      child: CarouselView(
-                        itemExtent: MediaQuery.of(context).size.width,
-                        itemSnapping: true,
-                        children: post.images
-                            .map(
-                              (image) => CachedNetworkImage(
-                                imageUrl: image,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                            .toList(),
+                      height: 200,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: post.images.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.only(right: 10),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: ExpandableImage(
+                              post.images[index],
+                              post.id.toString() + index.toString(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   )
