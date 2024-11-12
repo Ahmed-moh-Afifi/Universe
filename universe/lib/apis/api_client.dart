@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/models/config.dart';
 
@@ -19,6 +20,16 @@ class ApiClient {
       return client;
     };
 
+    _dio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: true,
+        error: true,
+        compact: true,
+      ),
+    );
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
