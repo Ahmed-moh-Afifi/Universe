@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -33,8 +32,6 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          log('Raw Request: ${options.method} ${options.uri} ${options.data}',
-              name: 'ApiClient');
           try {
             var tokens = await _tokenManager.readSavedTokens();
             if (tokens != null) {
@@ -68,8 +65,6 @@ class ApiClient {
           }
         },
         onResponse: (response, handler) {
-          log('Raw Response: ${response.statusCode} ${response.requestOptions.uri}',
-              name: 'ApiClient');
           return handler.next(response);
         },
       ),
