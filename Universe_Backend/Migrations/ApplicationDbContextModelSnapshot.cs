@@ -22,6 +22,21 @@ namespace Universe_Backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ChatUser", b =>
+                {
+                    b.Property<int>("ChatsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ChatsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ChatUser");
+                });
+
             modelBuilder.Entity("Follows", b =>
                 {
                     b.Property<string>("FollowedId")
@@ -38,6 +53,21 @@ namespace Universe_Backend.Migrations
                     b.HasIndex("FollowerId");
 
                     b.ToTable("Follows");
+                });
+
+            modelBuilder.Entity("MessageUser", b =>
+                {
+                    b.Property<string>("MentionsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("MessagesMentionedInId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MentionsId", "MessagesMentionedInId");
+
+                    b.HasIndex("MessagesMentionedInId");
+
+                    b.ToTable("MessageUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -231,6 +261,112 @@ namespace Universe_Backend.Migrations
                     b.HasIndex("StoriesMentionedInId");
 
                     b.ToTable("StoryUser");
+                });
+
+            modelBuilder.Entity("Universe_Backend.Data.Models.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("LastEdited")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Chats", (string)null);
+                });
+
+            modelBuilder.Entity("Universe_Backend.Data.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Audios")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ChildPostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MessageRepliedTo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PublishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReactionsCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RepliesCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Videos")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages", (string)null);
+                });
+
+            modelBuilder.Entity("Universe_Backend.Data.Models.MessageReaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReactionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MessagesReactions");
                 });
 
             modelBuilder.Entity("Universe_Backend.Data.Models.NotificationToken", b =>
@@ -530,7 +666,7 @@ namespace Universe_Backend.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("OnlineStatus")
+                    b.Property<int>("OnlineSessions")
                         .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
@@ -571,6 +707,21 @@ namespace Universe_Backend.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("ChatUser", b =>
+                {
+                    b.HasOne("Universe_Backend.Data.Models.Chat", null)
+                        .WithMany()
+                        .HasForeignKey("ChatsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Universe_Backend.Data.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Follows", b =>
                 {
                     b.HasOne("Universe_Backend.Data.Models.User", null)
@@ -583,6 +734,21 @@ namespace Universe_Backend.Migrations
                         .WithMany()
                         .HasForeignKey("FollowerId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MessageUser", b =>
+                {
+                    b.HasOne("Universe_Backend.Data.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("MentionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Universe_Backend.Data.Models.Message", null)
+                        .WithMany()
+                        .HasForeignKey("MessagesMentionedInId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -695,6 +861,80 @@ namespace Universe_Backend.Migrations
                         .HasForeignKey("StoriesMentionedInId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Universe_Backend.Data.Models.Message", b =>
+                {
+                    b.HasOne("Universe_Backend.Data.Models.User", "Author")
+                        .WithMany("Messages")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Universe_Backend.Data.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.OwnsMany("Universe_Backend.Data.Models.Widget", "Widgets", b1 =>
+                        {
+                            b1.Property<int>("MessageId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Body")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Data")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int>("Type")
+                                .HasColumnType("int");
+
+                            b1.HasKey("MessageId", "Id");
+
+                            b1.ToTable("Messages_Widgets");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MessageId");
+                        });
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Widgets");
+                });
+
+            modelBuilder.Entity("Universe_Backend.Data.Models.MessageReaction", b =>
+                {
+                    b.HasOne("Universe_Backend.Data.Models.Message", "Message")
+                        .WithMany("Reactions")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Universe_Backend.Data.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Message");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Universe_Backend.Data.Models.NotificationToken", b =>
@@ -852,6 +1092,16 @@ namespace Universe_Backend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Universe_Backend.Data.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("Universe_Backend.Data.Models.Message", b =>
+                {
+                    b.Navigation("Reactions");
+                });
+
             modelBuilder.Entity("Universe_Backend.Data.Models.Post", b =>
                 {
                     b.Navigation("Reactions");
@@ -864,6 +1114,8 @@ namespace Universe_Backend.Migrations
 
             modelBuilder.Entity("Universe_Backend.Data.Models.User", b =>
                 {
+                    b.Navigation("Messages");
+
                     b.Navigation("NotificationTokens");
 
                     b.Navigation("PostReactions");

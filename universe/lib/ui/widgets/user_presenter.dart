@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/route_generator.dart';
@@ -74,8 +75,8 @@ class UserPresenter extends StatelessWidget {
                 Radius.circular(27.5),
               ),
             ),
-            child: Image.network(
-                user.photoUrl ?? 'https://via.placeholder.com/150'),
+            child: CachedNetworkImage(
+                imageUrl: user.photoUrl ?? 'https://via.placeholder.com/150'),
           ),
           trailing: showFollowButton
               ? SizedBox(width: 110, child: FollowButton(user))

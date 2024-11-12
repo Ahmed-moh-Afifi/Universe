@@ -1,0 +1,186 @@
+import 'dart:developer';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/apis/hubs/messaging_hub.dart';
+import 'package:universe/models/data/message.dart';
+
+enum ChatStates {
+  initial,
+  loading,
+  loaded,
+  newMessage,
+  error,
+}
+
+class ChatState {
+  final ChatStates state;
+  final List<Message>? messages;
+  final bool? isTyping;
+  final bool? isOnline;
+  final DateTime? lastOnline;
+  final String? error;
+
+  ChatState({
+    required this.state,
+    this.messages,
+    this.isTyping,
+    this.isOnline,
+    this.lastOnline,
+    this.error,
+  });
+
+  factory ChatState.initial() {
+    return ChatState(
+      state: ChatStates.initial,
+      messages: [],
+      isTyping: false,
+      isOnline: false,
+      lastOnline: DateTime.now(),
+      error: '',
+    );
+  }
+
+  factory ChatState.loading(ChatState oldState) {
+    return ChatState(
+      state: ChatStates.loading,
+      messages: oldState.messages,
+      isTyping: oldState.isTyping,
+      isOnline: oldState.isOnline,
+      lastOnline: oldState.lastOnline,
+      error: '',
+    );
+  }
+
+  factory ChatState.loaded(
+    List<Message> messages,
+    bool isTyping,
+    bool isOnline,
+    DateTime lastOnline,
+  ) {
+    return ChatState(
+      state: ChatStates.loaded,
+      messages: messages,
+      isTyping: isTyping,
+      isOnline: isOnline,
+      lastOnline: lastOnline,
+      error: '',
+    );
+  }
+
+  factory ChatState.newMessage(
+    List<Message> messages,
+    bool isTyping,
+    bool isOnline,
+    DateTime lastOnline,
+  ) {
+    return ChatState(
+      state: ChatStates.newMessage,
+      messages: messages,
+      isTyping: isTyping,
+      isOnline: isOnline,
+      lastOnline: lastOnline,
+      error: '',
+    );
+  }
+
+  factory ChatState.error(String error, ChatState oldState) {
+    return ChatState(
+      state: ChatStates.error,
+      messages: oldState.messages,
+      isTyping: oldState.isTyping,
+      isOnline: oldState.isOnline,
+      lastOnline: oldState.lastOnline,
+      error: error,
+    );
+  }
+}
+
+class NewMessageEvent {
+  final Message message;
+
+  const NewMessageEvent(this.message);
+}
+
+class StatusUpdatedEvent {
+  final bool isTyping;
+  final bool isOnline;
+  final DateTime lastOnline;
+
+  const StatusUpdatedEvent({
+    required this.isTyping,
+    required this.isOnline,
+    required this.lastOnline,
+  });
+}
+
+class SendMessage {
+  final Message message;
+  final String userId;
+
+  SendMessage(this.message, this.userId);
+}
+
+class ChatBloc extends Bloc<Object, ChatState> {
+  late void Function(List<Object?>?) onHubReceive;
+  ChatBloc() : super(ChatState.initial()) {
+    on<NewMessageEvent>(
+      (event, emit) {
+        log("New message received: ${event.message.toJson()}",
+            name: "ChatBloc");
+        emit(
+          ChatState.newMessage(
+            [
+              event.message,
+              ...?state.messages,
+            ],
+            state.isTyping ?? false,
+            state.isOnline ?? false,
+            state.lastOnline ?? DateTime.now(),
+          ),
+        );
+      },
+    );
+
+    on<StatusUpdatedEvent>(
+      (event, emit) {
+        emit(
+          ChatState.loaded(
+            state.messages ?? [],
+            event.isTyping,
+            event.isOnline,
+            event.lastOnline,
+          ),
+        );
+      },
+    );
+
+    on<SendMessage>(
+      (event, emit) {
+        log('Sending message: ${event.message}', name: 'NotificationsBloc');
+        MessagingHub().invoke('SendToUserAsync', [event.userId, event.message]);
+        add(NewMessageEvent(event.message));
+      },
+    );
+
+    initialize();
+  }
+
+  void initialize() {
+    log("ChatBloc initialized", name: "ChatBloc");
+    onHubReceive = (arguments) {
+      log("Message received from hub: ${arguments?[0]}", name: "ChatBloc");
+      add(
+        NewMessageEvent(
+          Message.fromJson(arguments?[0] as Map<String, dynamic>),
+        ),
+      );
+    };
+    MessagingHub().on("MessageReceived", onHubReceive);
+  }
+
+  @override
+  Future<void> close() async {
+    MessagingHub().off("MessageReceived", onHubReceive);
+    await super.close();
+  }
+}

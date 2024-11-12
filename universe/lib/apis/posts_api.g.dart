@@ -6,17 +6,20 @@ part of 'posts_api.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
 class _PostsApi implements PostsApi {
   _PostsApi(
     this._dio, {
     this.baseUrl,
+    this.errorLogger,
   });
 
   final Dio _dio;
 
   String? baseUrl;
+
+  final ParseErrorLogger? errorLogger;
 
   @override
   Future<dynamic> addPost(
@@ -28,7 +31,7 @@ class _PostsApi implements PostsApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(post.toJson());
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _options = _setStreamType<dynamic>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -43,7 +46,8 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
+        )));
+    final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
   }
@@ -59,7 +63,7 @@ class _PostsApi implements PostsApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(reaction.toJson());
-    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
+    final _options = _setStreamType<int>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -74,8 +78,15 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
-    final _value = _result.data!;
+        )));
+    final _result = await _dio.fetch<int>(_options);
+    late int _value;
+    try {
+      _value = _result.data!;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
@@ -90,7 +101,7 @@ class _PostsApi implements PostsApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(reply.toJson());
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _options = _setStreamType<dynamic>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -105,7 +116,8 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
+        )));
+    final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
   }
@@ -119,7 +131,7 @@ class _PostsApi implements PostsApi {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _options = _setStreamType<dynamic>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
@@ -134,7 +146,8 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
+        )));
+    final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
   }
@@ -149,7 +162,7 @@ class _PostsApi implements PostsApi {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _options = _setStreamType<dynamic>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
@@ -164,7 +177,8 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
+        )));
+    final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
   }
@@ -179,25 +193,31 @@ class _PostsApi implements PostsApi {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>?>(_setStreamType<PostReaction>(Options(
+    final _options = _setStreamType<PostReaction>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/${userId}/Posts/${postId}/Reactions/${reactionAuthorId}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final _value =
-        _result.data == null ? null : PostReaction.fromJson(_result.data!);
+        .compose(
+          _dio.options,
+          '/${userId}/Posts/${postId}/Reactions/${reactionAuthorId}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>?>(_options);
+    late PostReaction? _value;
+    try {
+      _value =
+          _result.data == null ? null : PostReaction.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
@@ -210,7 +230,7 @@ class _PostsApi implements PostsApi {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
+    final _options = _setStreamType<int>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -225,8 +245,15 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
-    final _value = _result.data!;
+        )));
+    final _result = await _dio.fetch<int>(_options);
+    late int _value;
+    try {
+      _value = _result.data!;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
@@ -245,27 +272,33 @@ class _PostsApi implements PostsApi {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<PostFullReaction>>(Options(
+    final _options = _setStreamType<List<PostFullReaction>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/${userId}/Posts/${postId}/Reactions',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var _value = _result.data!
-        .map(
-            (dynamic i) => PostFullReaction.fromJson(i as Map<String, dynamic>))
-        .toList();
+        .compose(
+          _dio.options,
+          '/${userId}/Posts/${postId}/Reactions',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<PostFullReaction> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) =>
+              PostFullReaction.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
@@ -284,26 +317,32 @@ class _PostsApi implements PostsApi {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Post>>(Options(
+    final _options = _setStreamType<List<Post>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/${userId}/Posts/${postId}/Replies',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var _value = _result.data!
-        .map((dynamic i) => Post.fromJson(i as Map<String, dynamic>))
-        .toList();
+        .compose(
+          _dio.options,
+          '/${userId}/Posts/${postId}/Replies',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<Post> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => Post.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
@@ -321,26 +360,32 @@ class _PostsApi implements PostsApi {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Post>>(Options(
+    final _options = _setStreamType<List<Post>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/${userId}/Posts',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var _value = _result.data!
-        .map((dynamic i) => Post.fromJson(i as Map<String, dynamic>))
-        .toList();
+        .compose(
+          _dio.options,
+          '/${userId}/Posts',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<Post> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => Post.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
@@ -350,7 +395,7 @@ class _PostsApi implements PostsApi {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
+    final _options = _setStreamType<int>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -365,8 +410,15 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
-    final _value = _result.data!;
+        )));
+    final _result = await _dio.fetch<int>(_options);
+    late int _value;
+    try {
+      _value = _result.data!;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
@@ -384,26 +436,32 @@ class _PostsApi implements PostsApi {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Post>>(Options(
+    final _options = _setStreamType<List<Post>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/${userId}/Posts/Following',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    var _value = _result.data!
-        .map((dynamic i) => Post.fromJson(i as Map<String, dynamic>))
-        .toList();
+        .compose(
+          _dio.options,
+          '/${userId}/Posts/Following',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<Post> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => Post.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 
@@ -417,7 +475,7 @@ class _PostsApi implements PostsApi {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _options = _setStreamType<dynamic>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
@@ -432,7 +490,8 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
+        )));
+    final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
   }
@@ -448,7 +507,7 @@ class _PostsApi implements PostsApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(post.toJson());
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _options = _setStreamType<dynamic>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -463,7 +522,8 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
+        )));
+    final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
   }
@@ -478,7 +538,7 @@ class _PostsApi implements PostsApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(post.toJson());
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _options = _setStreamType<dynamic>(Options(
       method: 'PUT',
       headers: _headers,
       extra: _extra,
@@ -493,7 +553,8 @@ class _PostsApi implements PostsApi {
             baseUrl: _combineBaseUrls(
           _dio.options.baseUrl,
           baseUrl,
-        ))));
+        )));
+    final _result = await _dio.fetch(_options);
     final _value = _result.data;
     return _value;
   }

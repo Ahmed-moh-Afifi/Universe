@@ -1,0 +1,116 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Universe_Backend.Data.Models;
+using Universe_Backend.Repositories;
+
+namespace Universe_Backend.Controllers
+{
+    [ApiController]
+    [Route("{userId}/[controller]")]
+    public class ChatsController(IChatsRepository chatsRepository, ILogger<ChatsRepository> logger) : ControllerBase
+    {
+        [HttpPost]
+        [Route("{name}")]
+        public async Task<ActionResult<Chat>> CreateChatAsync(string userId, string name, [FromBody] StringListWrapper userIds)
+        {
+            try
+            {
+                var chat = await chatsRepository.CreateChatAsync(name, userIds.Strings);
+                return Ok(chat);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to create chat");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("")]
+        public async Task<ActionResult<List<Chat>>> GetUserChatsAsync(string userId)
+        {
+            try
+            {
+                var chats = await chatsRepository.GetUserChatsAsync(userId);
+                return Ok(chats);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to get user chats");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("{chatId}")]
+        public async Task<ActionResult<Chat>> GetChatAsync(string userId, int chatId)
+        {
+            try
+            {
+                var chat = await chatsRepository.GetChatAsync(chatId);
+                return Ok(chat);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to get chat");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("{chatId}/Users/{addedUserId}/Add")]
+        public async Task<ActionResult> AddUserToChatAsync(string userId, int chatId, string addedUserId)
+        {
+            try
+            {
+                await chatsRepository.AddUserToChatAsync(chatId, addedUserId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to add user to chat");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("{chatId}/Users/{removedUserId}/Remove")]
+        public async Task<ActionResult> RemoveUserFromChatAsync(string userId, int chatId, string removedUserId)
+        {
+            try
+            {
+                await chatsRepository.RemoveUserFromChatAsync(chatId, removedUserId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to remove user from chat");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete("{chatId}")]
+        public async Task<ActionResult> DeleteChatAsync(string userId, int chatId)
+        {
+            try
+            {
+                await chatsRepository.DeleteChatAsync(chatId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Failed to delete chat");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet("{initiator}/And/{targeted}")]
+        public async Task<ActionResult<Chat>> GetChatByParticipants(string userId, string initiator, string targeted)
+        {
+            try
+            {
+                return Ok(await chatsRepository.GetChatByParticipantsAsync(initiator, targeted));
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, $"Failed to get chat. initiator: {initiator}, targeted: {targeted}");
+                return StatusCode(500);
+            }
+        }
+    }
+}

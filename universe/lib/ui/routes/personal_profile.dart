@@ -45,57 +45,80 @@ class PersonalProfileContent extends StatelessWidget {
         onRefresh: () {
           return BlocProvider.of<PersonalProfileBloc>(context).getUserData();
         },
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Profile',
-              style: TextStyles.titleStyle,
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: SvgPicture.asset(
-                  'lib/assets/icons/bell.svg',
-                  colorFilter: ColorFilter.mode(
-                      Theme.of(context).colorScheme.primary, BlendMode.srcIn),
-                ),
-              ),
-              IconButton(
-                onPressed: () =>
-                    RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
-                  RouteGenerator.settingsPage,
-                ),
-                icon: SvgPicture.asset(
-                  'lib/assets/icons/settings.svg',
-                  colorFilter: ColorFilter.mode(
-                      Theme.of(context).colorScheme.primary, BlendMode.srcIn),
-                ),
-              ),
-            ],
-          ),
-          body: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: ProfileCard(
-                      AuthenticationRepository()
-                          .authenticationService
-                          .currentUser()!,
-                      state.postCount,
-                      state.followersCount,
-                      state.followingCount,
+        child: SafeArea(
+          bottom: false,
+          child: Scaffold(
+            appBar: AppBar(
+              toolbarHeight: 115,
+              elevation: 0,
+              flexibleSpace: Padding(
+                padding:
+                    const EdgeInsets.only(top: 0.0, left: 16.0, right: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: SvgPicture.asset(
+                            'lib/assets/icons/save.svg',
+                            colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => RouteGenerator
+                              .mainNavigatorkey.currentState!
+                              .pushNamed(
+                            RouteGenerator.settingsPage,
+                          ),
+                          icon: SvgPicture.asset(
+                            'lib/assets/icons/settings.svg',
+                            colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.primary,
+                                BlendMode.srcIn),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: UserPostsViewer(state.user, state.posts),
-                  ),
-                ],
+                    const SizedBox(height: 10.0),
+                    Text(
+                      'Profile',
+                      style: TextStyles.hugeStyle,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            body: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0),
+                      child: ProfileCard(
+                        AuthenticationRepository()
+                            .authenticationService
+                            .currentUser()!,
+                        state.postCount,
+                        state.followersCount,
+                        state.followingCount,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 10),
+                      child: UserPostsViewer(state.user, state.posts),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
