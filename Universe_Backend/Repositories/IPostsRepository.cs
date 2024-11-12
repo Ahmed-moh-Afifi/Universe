@@ -14,4 +14,5 @@ public interface IPostsRepository
     public Task<int> SharePost(PostDTO post, int sharedPostId);
     public Task<int> GetPostsCount(string userId);
     public IEnumerable<PostDTO> GetFollowingPosts(string userId, string callerId, DateTime? lastDate, int? lastId);
+    public Task<UserDTO> GetPostAuthor(int postId);
 }

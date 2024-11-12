@@ -257,4 +257,24 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
             throw;
         }
     }
+
+    public async Task<UserDTO> GetPostAuthor(int postId)
+    {
+        logger.LogDebug("PostsRepository.GetPostAuthor: Getting author of post with id {postId}", postId);
+        try
+        {
+            var author = await dbContext.Posts.Where(p => p.Id == postId)
+                .Select(p => p.Author)
+                .Select(u => u!.ToDTO())
+                .FirstOrDefaultAsync() ??
+                throw new ArgumentException("Author for this post not found. This probably means that the post is not found.");
+
+            return author;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "PostsRepository.GetPostAuthor: Error getting author of post with id {postId}", postId);
+            throw;
+        }
+    }
 }

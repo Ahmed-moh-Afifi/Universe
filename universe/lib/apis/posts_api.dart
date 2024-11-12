@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_full_reaction.dart';
 import 'package:universe/models/data/post_reaction.dart';

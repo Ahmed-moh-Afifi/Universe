@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -84,9 +85,28 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            // If the request is for our hub...
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/MessagingHub")))
+            {
+                // Read the token out of the query string
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 builder.Services.AddSingleton(notificationService);
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();
 builder.Services.AddScoped<IPostReactionsRepository, PostReactionsRepository>();
@@ -96,6 +116,8 @@ builder.Services.AddScoped<ITagsRepository, TagsRepository>();
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<IAuthorizationHandler, IsFollowerHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, OwnerHandler>();
+builder.Services.AddScoped<IMessagesRepository, MessagesRepository>();
+builder.Services.AddScoped<IChatsRepository, ChatsRepository>();
 
 builder.Services.AddSignalR();
 
@@ -113,10 +135,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapHub<ReactionsCountHub>("/ReactionsCountHub");
+
 app.UseCors();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
+
 app.MapControllers();
+
+app.MapHub<ReactionsCountHub>("/ReactionsCountHub");
+
+app.MapHub<MessagingHub>("/MessagingHub");
 
 app.Run();

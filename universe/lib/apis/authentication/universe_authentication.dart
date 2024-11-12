@@ -66,8 +66,13 @@ class UniverseAuthentication implements IAuthentication {
     log('Loading user...', name: 'UniverseAuthentication');
     var savedTokens = await _tokenManager.readSavedTokens();
     if (savedTokens == null) {
+      log('No saved tokens found.', name: 'UniverseAuthentication');
       return null;
     } else if (savedTokens.isAccessTokenExpired()) {
+      log('Access token expired. Refreshing tokens...',
+          name: 'UniverseAuthentication');
+      log('Refreshing tokens using: ${savedTokens.refreshToken}',
+          name: 'UniverseAuthentication');
       var newTokens = await _tokenManager.refreshTokens();
       if (newTokens == null) {
         return null;

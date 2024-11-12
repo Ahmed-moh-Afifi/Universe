@@ -13,19 +13,51 @@ class Search extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Search',
-          style: TextStyles.titleStyle,
+    return SafeArea(
+      bottom: false,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 115,
+          elevation: 0,
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.only(top: 0.0, left: 16.0, right: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     IconButton(
+                //       icon: SvgPicture.asset(
+                //         'lib/assets/icons/settings.svg',
+                //         colorFilter: ColorFilter.mode(
+                //             Theme.of(context).colorScheme.primary,
+                //             BlendMode.srcIn),
+                //       ),
+                //       onPressed: () {},
+                //     ),
+                //   ],
+                // ),
+                const SizedBox(height: 10.0),
+                Text(
+                  'Search',
+                  style: TextStyles.hugeStyle,
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
-      body: RepositoryProvider(
-        create: (context) => UsersRepository(),
-        child: BlocProvider(
-          create: (context) =>
-              SearchBloc(RepositoryProvider.of<UsersRepository>(context)),
-          child: const SearchContent(),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+          child: RepositoryProvider(
+            create: (context) => UsersRepository(),
+            child: BlocProvider(
+              create: (context) =>
+                  SearchBloc(RepositoryProvider.of<UsersRepository>(context)),
+              child: const SearchContent(),
+            ),
+          ),
         ),
       ),
     );
@@ -40,7 +72,7 @@ class SearchContent extends StatelessWidget {
     final TextEditingController searchController = TextEditingController();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(left: 10, right: 10),
+      padding: const EdgeInsets.only(left: 0, right: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -53,15 +85,14 @@ class SearchContent extends StatelessWidget {
                 .add(SearchEvent(searchController.text)),
             controller: searchController,
             decoration: InputDecoration(
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
+              prefixIcon: const Icon(Icons.search),
+              hintText: 'Search',
+              filled: true,
+              fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(50.0),
                 borderSide: BorderSide.none,
               ),
-              filled: true,
-              fillColor: Theme.of(context).colorScheme.secondary,
-              hintText: 'Search',
             ),
           ),
           BlocListener<SearchBloc, SearchState>(

@@ -61,6 +61,8 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
         var author = await usersRepository.GetUser(post.Author.Id);
 
+        var addedPost = await postsRepository.AddPost(post);
+
         var notification = new SingleUserNotification()
         {
             Title = "New Post",
@@ -73,7 +75,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
         logger.LogDebug("PostsController.AddPost: Sending notification {@Notification}", notification);
         await notificationService.SendNotificationAsync(notification);
 
-        return Ok(await postsRepository.AddPost(post));
+        return Ok(addedPost);
     }
 
     [HttpPost]
@@ -96,7 +98,34 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(await postsRepository.AddReply(reply, postId));
+        var addedReply = await postsRepository.AddReply(reply, postId);
+
+        var postAuthor = await postsRepository.GetPostAuthor(postId);
+
+        var postAuthorNotificationToken = await usersRepository.GetNotificationTokens(postAuthor.Id);
+
+        var authorNotification = new MultipleUserNotification()
+        {
+            Title = "New Reply",
+            Body = $"{reply.Author.UserName} replied to your post.",
+            Platform = Platform.Android,
+            Recipients = postAuthorNotificationToken.Select(nt => nt.Token).ToList(),
+            Sender = reply.Author.Id,
+        };
+        await notificationService.SendNotificationAsync(authorNotification);
+
+        var audienceNotification = new SingleUserNotification()
+        {
+            Title = "New Reply",
+            Body = $"{reply.Author.UserName} replied to {postAuthor.UserName}'s post.",
+            Platform= Platform.Android,
+            RecipientType = RecipientType.Topic,
+            Recipient = reply.ReplyToPost.ToString()!,
+            Sender = reply.Author.Id,
+        };
+        await notificationService.SendNotificationAsync(audienceNotification);
+
+        return Ok(addedReply);
     }
 
     [HttpPut]
@@ -162,7 +191,9 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             return Unauthorized();
         }
 
-        return Ok(await postsRepository.SharePost(post, sharedPostId));
+        var newPostId = await postsRepository.SharePost(post, sharedPostId);
+
+        return Ok(newPostId);
     }
 
     [HttpGet]
