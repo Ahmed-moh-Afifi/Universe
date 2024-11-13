@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
                 name: 'HomePage');
             toastification.show(
               title: const Text('Notification'),
-              description: Text(state.notification),
+              description: Text(state.notification!.body),
               autoCloseDuration: const Duration(seconds: 3),
               alignment: Alignment.topCenter,
               style: ToastificationStyle.flatColored,

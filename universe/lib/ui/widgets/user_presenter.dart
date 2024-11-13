@@ -15,7 +15,7 @@ class UserPresenter extends StatelessWidget {
     required this.user,
     this.contentPadding,
     this.margin,
-    this.showFollowButton = true,
+    this.showFollowButton = false,
     super.key,
   });
 

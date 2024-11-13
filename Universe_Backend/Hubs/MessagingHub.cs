@@ -18,30 +18,34 @@ namespace Universe_Backend.Hubs
             string sender = Context.User!.FindFirstValue("uid")!;
             logger.LogDebug($"User {sender} sending to user {userId}");
 
-            //var message = new Message() { AuthorId = sender, Body = messageBody, Id = 0, ChatId = 0 };
-            //await dbContext.Messages.AddAsync(message);
-            //await dbContext.SaveChangesAsync();
+            message.Id = 0;
+            await dbContext.Messages.AddAsync(message);
+            await dbContext.SaveChangesAsync();
 
-            var onlineSessions = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.OnlineSessions).FirstOrDefaultAsync();
-            if (onlineSessions > 0)
+            if (sender != userId)
             {
-                await Clients.User(userId).SendAsync("MessageReceived", message);
-            }
-            else
-            {
-                var notificationTokens = await usersRepository.GetNotificationTokens(userId);
-                if (!notificationTokens.IsNullOrEmpty())
+
+                var onlineSessions = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.OnlineSessions).FirstOrDefaultAsync();
+                if (onlineSessions > 0)
                 {
-                    var notification = new MultipleUserNotification()
+                    await Clients.User(userId).SendAsync("MessageReceived", message);
+                }
+                else
+                {
+                    var notificationTokens = await usersRepository.GetNotificationTokens(userId);
+                    if (!notificationTokens.IsNullOrEmpty())
                     {
-                        Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
-                        Sender = sender,
-                        Title = "New message",
-                        Body = message.Body,
-                        Platform = Platform.Android
-                    };
+                        var notification = new MultipleUserNotification()
+                        {
+                            Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
+                            Sender = sender,
+                            Title = "New message",
+                            Body = message.Body,
+                            Platform = Platform.Android
+                        };
 
-                    await notificationService.SendNotificationAsync(notification);
+                        await notificationService.SendNotificationAsync(notification);
+                    }
                 }
             }
         }

@@ -5,6 +5,7 @@ import 'package:universe/models/data/chat.dart';
 import 'package:universe/models/data/message.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/repositories/chats_repository.dart';
 import 'package:universe/ui/blocs/chat_bloc.dart';
 import 'package:universe/ui/widgets/message.dart';
 
@@ -17,7 +18,7 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChatBloc(),
+      create: (context) => ChatBloc(chat, ChatsRepository()),
       child: ChatContent(user, chat),
     );
   }
@@ -58,7 +59,8 @@ class ChatContent extends StatelessWidget {
                     itemCount: state.messages?.length,
                     itemBuilder: (context, index) {
                       final message = state.messages?[index];
-                      return MessageWidget(message!);
+                      message!.author = user;
+                      return MessageWidget(message);
                     },
                   );
                 } else {
@@ -114,9 +116,6 @@ class ChatContent extends StatelessWidget {
                               reactionsCount: 0,
                               repliesCount: 0,
                               chatId: chat.id,
-                              author: AuthenticationRepository()
-                                  .authenticationService
-                                  .currentUser()!,
                             ),
                             user.id));
                       },
