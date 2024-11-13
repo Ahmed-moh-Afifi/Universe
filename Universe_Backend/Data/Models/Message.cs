@@ -1,4 +1,6 @@
-﻿namespace Universe_Backend.Data.Models
+﻿using Universe_Backend.Data.DTOs;
+
+namespace Universe_Backend.Data.Models
 {
     public class Message
     {
@@ -20,5 +22,25 @@
         public virtual Chat? Chat { get; set; }
         public virtual ICollection<MessageReaction> Reactions { get; set; } = [];
         public virtual ICollection<User> Mentions { get; set; } = [];
+
+        public MessageDTO ToDTO()
+        {
+            return new MessageDTO
+            {
+                Id = Id,
+                Body = Body,
+                Images = Images,
+                Videos = Videos,
+                Audios = Audios,
+                PublishDate = PublishDate,
+                ChildPostId = ChildPostId,
+                MessageRepliedTo = MessageRepliedTo,
+                AuthorId = AuthorId,
+                Widgets = Widgets,
+                ReactionsCount = ReactionsCount,
+                RepliesCount = RepliesCount,
+                ChatId = ChatId,
+            };
+        }
     }
 }
