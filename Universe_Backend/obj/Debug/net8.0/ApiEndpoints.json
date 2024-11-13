@@ -46,7 +46,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "Universe_Backend.Data.Models.Chat",
+        "Type": "Universe_Backend.Data.DTOs.ChatDTO",
         "MediaTypes": [
           "text/plain",
           "application/json",

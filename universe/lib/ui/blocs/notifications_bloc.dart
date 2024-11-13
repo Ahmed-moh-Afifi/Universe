@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/hubs/messaging_hub.dart';
+import 'package:universe/models/data/message.dart';
+import 'package:universe/route_generator.dart';
 
 enum NotificationsStates {
   initial,
@@ -14,12 +16,12 @@ enum NotificationsStates {
 
 class NotificationsState {
   final NotificationsStates state;
-  final String notification;
+  final Message? notification;
   final String error;
 
   NotificationsState({
     required this.state,
-    this.notification = '',
+    this.notification,
     this.error = '',
   });
 
@@ -47,7 +49,7 @@ class NotificationsState {
     );
   }
 
-  factory NotificationsState.notificationReceived(String notification) {
+  factory NotificationsState.notificationReceived(Message notification) {
     return NotificationsState(
       state: NotificationsStates.notificationReceived,
       notification: notification,
@@ -63,7 +65,7 @@ class NotificationsState {
 }
 
 class NotificationReceived {
-  final String message;
+  final Message message;
 
   NotificationReceived({required this.message});
 }
@@ -73,7 +75,10 @@ class InitializeNotifications {}
 class NotificationsBloc extends Bloc<Object, NotificationsState> {
   NotificationsBloc() : super(NotificationsState.initial()) {
     on<NotificationReceived>((event, emit) {
-      emit(NotificationsState.notificationReceived(event.message));
+      if (RouteGenerator.openedChat == null ||
+          RouteGenerator.openedChat!.id != event.message.chatId) {
+        emit(NotificationsState.notificationReceived(event.message));
+      }
     });
 
     on<InitializeNotifications>((event, emit) async {
@@ -98,9 +103,10 @@ class NotificationsBloc extends Bloc<Object, NotificationsState> {
 
       var msg = message[0] as Map<String, dynamic>;
       log('Message body: ${msg['body']}', name: 'NotificationsBloc');
+      var msgObj = Message.fromJson(msg);
 
       add(NotificationReceived(
-        message: msg['body'],
+        message: msgObj,
       ));
     });
   }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Universe_Backend.Data;
+using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;
 
 namespace Universe_Backend.Repositories
@@ -27,17 +28,19 @@ namespace Universe_Backend.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Chat> GetChatAsync(int chatId)
+        public async Task<ChatDTO> GetChatAsync(int chatId)
         {
             return await dbContext.Chats
+                .Where(c => c.Id == chatId)
                 .Include(chat => chat.Users)
                 .Include(chat => chat.Messages)
-                .FirstOrDefaultAsync(chat => chat.Id == chatId) ?? throw new ArgumentException("Chat not found.");
+                .Select(c => c.ToDTO())
+                .FirstOrDefaultAsync() ?? throw new ArgumentException("Chat not found.");
         }
 
         public async Task AddUserToChatAsync(int chatId, string userId)
         {
-            var chat = await GetChatAsync(chatId);
+            var chat = await dbContext.Chats.FindAsync(chatId);
             var user = await dbContext.Users.FindAsync(userId);
 
             if (chat == null || user == null)
@@ -51,7 +54,7 @@ namespace Universe_Backend.Repositories
 
         public async Task RemoveUserFromChatAsync(int chatId, string userId)
         {
-            var chat = await GetChatAsync(chatId);
+            var chat = await dbContext.Chats.FindAsync(chatId);
             var user = await dbContext.Users.FindAsync(userId);
 
             if (chat == null || user == null)
@@ -65,7 +68,7 @@ namespace Universe_Backend.Repositories
 
         public async Task DeleteChatAsync(int chatId)
         {
-            var chat = await GetChatAsync(chatId);
+            var chat = await dbContext.Chats.FindAsync(chatId);
 
             if (chat == null)
             {

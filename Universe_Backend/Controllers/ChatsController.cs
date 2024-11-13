@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Repositories;
 
@@ -40,7 +41,7 @@ namespace Universe_Backend.Controllers
         }
 
         [HttpGet("{chatId}")]
-        public async Task<ActionResult<Chat>> GetChatAsync(string userId, int chatId)
+        public async Task<ActionResult<ChatDTO>> GetChatAsync(string userId, int chatId)
         {
             try
             {

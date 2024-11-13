@@ -19,7 +19,7 @@ class PostWidget extends StatelessWidget {
   const PostWidget({
     required this.post,
     required this.user,
-    this.showFollowButton = true,
+    this.showFollowButton = false,
     super.key,
   });
 
@@ -43,7 +43,7 @@ class PostContent extends StatelessWidget {
   const PostContent({
     required this.post,
     required this.user,
-    this.showFollowButton = true,
+    this.showFollowButton = false,
     super.key,
   });
 
