@@ -64,6 +64,8 @@ class RouteGenerator {
   );
   static PersonalProfileState? personalProfileState;
 
+  static Chat? openedChat;
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homePage:

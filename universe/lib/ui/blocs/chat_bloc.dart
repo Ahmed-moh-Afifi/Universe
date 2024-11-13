@@ -2,7 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/hubs/messaging_hub.dart';
+import 'package:universe/interfaces/ichats_repository.dart';
+import 'package:universe/models/data/chat.dart';
 import 'package:universe/models/data/message.dart';
+import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/route_generator.dart';
 
 enum ChatStates {
   initial,
@@ -95,6 +99,8 @@ class ChatState {
   }
 }
 
+class InitChatEvent {}
+
 class NewMessageEvent {
   final Message message;
 
@@ -121,8 +127,19 @@ class SendMessage {
 }
 
 class ChatBloc extends Bloc<Object, ChatState> {
+  final Chat chat;
+  final IChatsRepository _chatsRepository;
   late void Function(List<Object?>?) onHubReceive;
-  ChatBloc() : super(ChatState.initial()) {
+  ChatBloc(this.chat, this._chatsRepository) : super(ChatState.initial()) {
+    RouteGenerator.openedChat = chat;
+
+    on<InitChatEvent>(
+      (event, emit) async {
+        emit(ChatState.loading(state));
+        emit(await initialize());
+      },
+    );
+
     on<NewMessageEvent>(
       (event, emit) {
         log("New message received: ${event.message.toJson()}",
@@ -162,11 +179,15 @@ class ChatBloc extends Bloc<Object, ChatState> {
       },
     );
 
-    initialize();
+    add(InitChatEvent());
   }
 
-  void initialize() {
-    log("ChatBloc initialized", name: "ChatBloc");
+  Future<ChatState> initialize() async {
+    log("Initializing ChatBloc", name: "ChatBloc");
+    var cht = await _chatsRepository.getChat(
+        AuthenticationRepository().authenticationService.currentUser()!.id,
+        chat.id);
+
     onHubReceive = (arguments) {
       log("Message received from hub: ${arguments?[0]}", name: "ChatBloc");
       add(
@@ -176,11 +197,20 @@ class ChatBloc extends Bloc<Object, ChatState> {
       );
     };
     MessagingHub().on("MessageReceived", onHubReceive);
+    log("ChatBloc initialized", name: "ChatBloc");
+
+    return ChatState.loaded(
+      cht.messages.reversed.toList(),
+      false,
+      false,
+      DateTime.now(),
+    );
   }
 
   @override
   Future<void> close() async {
     MessagingHub().off("MessageReceived", onHubReceive);
+    RouteGenerator.openedChat = null;
     await super.close();
   }
 }

@@ -43,8 +43,8 @@ class MessageWidget extends StatelessWidget {
                             .authenticationService
                             .currentUser()!
                             .id
-                    ? CrossAxisAlignment.start
-                    : CrossAxisAlignment.end,
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 children: [
                   Container(
                     constraints: BoxConstraints(
@@ -70,7 +70,7 @@ class MessageWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${(message.publishDate.hour > 12 ? message.publishDate.hour - 12 : message.publishDate.hour)}:${message.publishDate.minute < 10 ? 0 : ''}${message.publishDate.minute} ${message.publishDate.hour > 12 ? 'PM' : 'AM'}',
+                    '${(message.publishDate.hour > 12 && message.publishDate.hour != 0 ? message.publishDate.hour - 12 : message.publishDate.hour == 0 ? 12 : message.publishDate.hour)}:${message.publishDate.minute < 10 ? 0 : ''}${message.publishDate.minute} ${message.publishDate.hour >= 12 ? 'PM' : 'AM'}',
                     style: TextStyles.subtitleStyle,
                   ),
                 ],

@@ -1,4 +1,5 @@
-﻿using Universe_Backend.Data.Models;
+﻿using Universe_Backend.Data.DTOs;
+using Universe_Backend.Data.Models;
 
 namespace Universe_Backend.Repositories
 {
@@ -6,7 +7,7 @@ namespace Universe_Backend.Repositories
     {
         public Task<Chat> CreateChatAsync(string name, IEnumerable<string> userIds);
         public Task<List<Chat>> GetUserChatsAsync(string userId);
-        public Task<Chat> GetChatAsync(int chatId);
+        public Task<ChatDTO> GetChatAsync(int chatId);
         public Task AddUserToChatAsync(int chatId, string userId);
         public Task RemoveUserFromChatAsync(int chatId, string userId);
         public Task DeleteChatAsync(int chatId);
