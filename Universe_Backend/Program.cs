@@ -59,7 +59,7 @@ builder.Services.AddCors(
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>(cfg =>
-    cfg.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+    cfg.UseSqlServer(builder.Configuration["UniverseConnectionString"]));
 
 var fcmService = new NotificationService.Services.FcmService();
 var notificationService = new NotificationService.NotificationService(fcmService, fcmService, fcmService);
