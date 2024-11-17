@@ -35,7 +35,7 @@ class RouteGenerator {
   static const homePage = "home";
   static const loginPage = "login";
   static const registerPage = "register";
-  static const completeAccount = "completeAccount";
+  static const editProfile = "completeAccount";
   static const startup = "startup";
   static const feed = "feed";
   static const search = "search";
@@ -74,7 +74,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Login());
       case registerPage:
         return MaterialPageRoute(builder: (_) => Register());
-      case completeAccount:
+      case editProfile:
         return MaterialPageRoute(builder: (_) => const CompleteAccount());
       case startup:
         return MaterialPageRoute(builder: (_) => const Startup());

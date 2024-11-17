@@ -65,7 +65,7 @@ class Register extends StatelessWidget {
               RouteGenerator.mainNavigatorkey.currentState!.pop();
               RouteGenerator.mainNavigatorkey.currentState!.pop();
               RouteGenerator.mainNavigatorkey.currentState!
-                  .pushNamed(RouteGenerator.completeAccount);
+                  .pushNamed(RouteGenerator.editProfile);
               showBottomSheet(
                 context: context,
                 builder: (context) => BottomSheet(
