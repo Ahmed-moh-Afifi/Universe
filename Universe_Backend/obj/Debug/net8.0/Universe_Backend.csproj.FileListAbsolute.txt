@@ -618,3 +618,4 @@ D:\Universe\Universe_Backend\obj\Debug\net8.0\refint\Universe_Backend.dll
 D:\Universe\Universe_Backend\obj\Debug\net8.0\Universe_Backend.pdb
 D:\Universe\Universe_Backend\obj\Debug\net8.0\Universe_Backend.genruntimeconfig.cache
 D:\Universe\Universe_Backend\obj\Debug\net8.0\ref\Universe_Backend.dll
+D:\Universe\Universe_Backend\bin\Debug\net8.0\CloudinaryDotNet.dll

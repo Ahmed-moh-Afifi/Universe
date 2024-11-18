@@ -5,6 +5,7 @@ namespace Universe_Backend.Data.DTOs;
 public class PostDTO
 {
     public required int Id { get; set; }
+    public required string Uid { get; set; }
     public required string? Title { get; set; }
     public required string Body { get; set; }
     public List<string> Images { get; set; } = [];
@@ -14,7 +15,6 @@ public class PostDTO
     public int? ReplyToPost { get; set; }
     public int? ChildPostId { get; set; }
     public ICollection<Widget>? Widgets { get; set; }
-    // public required string AuthorId { get; set; }
     public required UserDTO Author { get; set; }
     public int ReactionsCount { get; set; }
     public int RepliesCount { get; set; }
@@ -26,6 +26,7 @@ public class PostDTO
         return new Post
         {
             Id = Id,
+            Uid = Uid,
             Title = Title,
             Body = Body,
             Images = Images,
@@ -46,6 +47,7 @@ public class PostDTO
         return new PostDTO
         {
             Id = post.Id,
+            Uid = post.Uid,
             Title = post.Title,
             Body = post.Body,
             Images = post.Images,

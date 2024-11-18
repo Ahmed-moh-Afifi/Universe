@@ -2,12 +2,14 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:universe/repositories/posts_files_repository.dart';
 import 'package:universe/ui/blocs/new_post_bloc.dart';
 import 'package:universe/repositories/posts_repository.dart';
 
 class NewPost extends StatefulWidget {
   final NewPostBloc bloc;
-  NewPost({super.key}) : bloc = NewPostBloc(PostsRepository());
+  NewPost({super.key})
+      : bloc = NewPostBloc(PostsRepository(), PostsFilesRepository());
 
   @override
   State<NewPost> createState() => _NewPostState();
