@@ -52,5 +52,5 @@ universe/lib/firebase_options.dart
 universe/firebase.json
 
 # Build results
-bin/
-obj/
+Universe_Backend/bin/
+Universe_Backend/obj/
