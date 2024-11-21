@@ -54,3 +54,4 @@ universe/firebase.json
 # Build results
 Universe_Backend/bin/
 Universe_Backend/obj/
+Universe_Backend/.vs/
