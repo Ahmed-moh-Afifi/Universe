@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/expandable_image.dart';
 import 'package:universe/ui/widgets/verified_badge.dart';
 
 class ProfileCard extends StatelessWidget {
@@ -35,8 +36,8 @@ class ProfileCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(60),
             ),
             clipBehavior: Clip.antiAlias,
-            child: CachedNetworkImage(
-                imageUrl: user.photoUrl ?? 'https://via.placeholder.com/150'),
+            child: ExpandableImage(
+                user.photoUrl ?? 'https://via.placeholder.com/150', 'pf'),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10),

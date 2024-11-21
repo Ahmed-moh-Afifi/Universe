@@ -1,4 +1,4 @@
-﻿using Universe_Backend.Data.Models;
+using Universe_Backend.Data.Models;
 
 namespace Universe_Backend.Data.DTOs;
 

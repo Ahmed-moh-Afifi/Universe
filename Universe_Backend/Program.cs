@@ -59,7 +59,7 @@ builder.Services.AddCors(
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>(cfg =>
-    cfg.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+    cfg.UseSqlServer(builder.Configuration["UniverseConnectionString"]));
 
 var fcmService = new NotificationService.Services.FcmService();
 var notificationService = new NotificationService.NotificationService(fcmService, fcmService, fcmService);
@@ -113,6 +113,8 @@ builder.Services.AddScoped<IPostReactionsRepository, PostReactionsRepository>();
 builder.Services.AddScoped<IStoriesRepository, StoriesRepository>();
 builder.Services.AddScoped<IStoryReactionsRepository, StoryReactionsRepository>();
 builder.Services.AddScoped<ITagsRepository, TagsRepository>();
+builder.Services.AddScoped<IFilesService, FilesService>();
+builder.Services.AddScoped<IFilesRepository, FilesRepository>();
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<IAuthorizationHandler, IsFollowerHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, OwnerHandler>();

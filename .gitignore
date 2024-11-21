@@ -45,6 +45,17 @@ universe/android/app/debug
 universe/android/app/profile
 universe/android/app/release
 
+universe/lib/assets/config.json
+universe/android/app/google-services.json
+universe/ios/Runner/GoogleService-Info.plist
+universe/lib/firebase_options.dart
+universe/firebase.json
+
+# Build results
+Universe_Backend/bin/
+Universe_Backend/obj/
+Universe_Backend/.vs/
+
 universe/android/app/google-services.json
 universe/ios/Runner/GoogleService-Info.plist
 universe/lib/firebase_options.dart

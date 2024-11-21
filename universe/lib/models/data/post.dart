@@ -2,17 +2,19 @@ import 'package:universe/models/data/post_reaction.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/models/data/widget.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'post.g.dart';
 
 @JsonSerializable()
 class Post {
   int id;
+  String? uid;
   final String title;
   final String body;
-  final List<dynamic> images;
-  final List<dynamic> videos;
-  final List<dynamic> audios;
+  List<dynamic> images;
+  List<dynamic> videos;
+  List<dynamic> audios;
   final DateTime publishDate;
   final int replyToPost;
   final int childPostId;
@@ -25,6 +27,7 @@ class Post {
 
   Post({
     this.id = -1,
+    this.uid,
     required this.title,
     required this.body,
     required this.images,
@@ -38,7 +41,9 @@ class Post {
     required this.reactionsCount,
     required this.repliesCount,
     required this.reactedToByCaller,
-  });
+  }) {
+    uid ??= const Uuid().v4();
+  }
 
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 

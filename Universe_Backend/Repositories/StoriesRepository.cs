@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Universe_Backend.Data;
 using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;

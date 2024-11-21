@@ -1,13 +1,16 @@
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:universe/repositories/posts_files_repository.dart';
 import 'package:universe/ui/blocs/new_post_bloc.dart';
 import 'package:universe/repositories/posts_repository.dart';
 
 class NewPost extends StatefulWidget {
   final NewPostBloc bloc;
-  NewPost({super.key}) : bloc = NewPostBloc(PostsRepository());
+  NewPost({super.key})
+      : bloc = NewPostBloc(PostsRepository(), PostsFilesRepository());
 
   @override
   State<NewPost> createState() => _NewPostState();
@@ -36,22 +39,7 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
       create: (context) => widget.bloc,
       child: BlocListener<NewPostBloc, NewPostState>(
         listener: (context, state) {
-          if (state.state == NewPostStates.loading) {
-            // showDialog(
-            //   barrierDismissible: false,
-            //   context: context,
-            //   builder: (context) => const PopScope(
-            //     canPop: false,
-            //     child: Center(
-            //       child: CircularProgressIndicator(),
-            //     ),
-            //   ),
-            // );
-          }
-
-          // if (state.previousState == NewPostStates.loading) {
-          //   RouteGenerator.mainNavigatorkey.currentState?.pop();
-          // }
+          if (state.state == NewPostStates.loading) {}
 
           if (state.state == NewPostStates.failed) {
             showDialog(
@@ -98,6 +86,54 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
+                  state.images.isNotEmpty
+                      ? SizedBox(
+                          height: 100,
+                          child: ListView.builder(
+                            itemCount: state.images.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              var image = state.images[index].clone();
+                              return FutureBuilder(
+                                  future: image.finalize().toList(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      return Image.memory(
+                                        (snapshot.data as List<Uint8List>)
+                                            .reduce((value, element) =>
+                                                Uint8List(value.length +
+                                                    element.length)
+                                                  ..setAll(0, value)
+                                                  ..setAll(
+                                                      value.length, element)),
+                                        fit: BoxFit.cover,
+                                      );
+                                    }
+                                    return const SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  });
+                            },
+                          ),
+                        )
+                      : const SizedBox(),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => widget.bloc.add(SelectImagesEvent()),
+                        icon: Icon(Icons.image_outlined),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.videocam_outlined,
+                        ),
+                      ),
+                    ],
+                  ),
                   ElevatedButton(
                     onLongPress: null,
                     onPressed: () => widget.bloc.add(
@@ -113,14 +149,6 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         state.state == NewPostStates.informative ||
-                                // Lottie.asset(
-                                //     Icons8.checkmark_ok,
-                                //     controller: _doneController..forward(),
-                                //     width: 30,
-                                //     height: 30,
-                                //     frameRate: FrameRate(30),
-                                //   )
-                                // :
                                 state.state == NewPostStates.loading
                             ? Center(
                                 child: SizedBox(

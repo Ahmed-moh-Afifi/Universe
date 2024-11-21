@@ -1,8 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/models/config.dart';
 
@@ -20,10 +20,18 @@ class ApiClient {
     };
 
     _dio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: true,
+        error: true,
+        compact: true,
+      ),
+    );
+    _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          log('Raw Request: ${options.method} ${options.uri} ${options.data}',
-              name: 'ApiClient');
           try {
             var tokens = await _tokenManager.readSavedTokens();
             if (tokens != null) {
@@ -57,8 +65,6 @@ class ApiClient {
           }
         },
         onResponse: (response, handler) {
-          log('Raw Response: ${response.statusCode} ${response.requestOptions.uri}',
-              name: 'ApiClient');
           return handler.next(response);
         },
       ),

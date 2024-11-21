@@ -31,6 +31,9 @@ class TokenManager {
 
   TokensModel? _tokensModel;
 
+  bool _isRefreshing = false;
+  Future<TokensModel?>? refreshTokensFuture;
+
   Future<TokensModel?> readSavedTokens() async {
     log("Reading saved tokens", name: "TokenManager");
     AndroidOptions options = const AndroidOptions(
@@ -84,7 +87,7 @@ class TokenManager {
     return !(_tokensModel!.isAccessTokenExpired());
   }
 
-  Future<TokensModel?> refreshTokens() async {
+  Future<TokensModel?> _internalRefreshTokens() async {
     log("Refreshing tokens", name: "TokenManager");
     log(jsonEncode(_tokensModel), name: "TokenManager");
     var response = await _dio.post<Map<String, dynamic>>(
@@ -100,6 +103,19 @@ class TokenManager {
       await deleteTokens();
       _tokensModel = null;
     }
+
+    return _tokensModel;
+  }
+
+  Future<TokensModel?> refreshTokens() async {
+    if (_isRefreshing) {
+      return refreshTokensFuture;
+    }
+
+    _isRefreshing = true;
+    refreshTokensFuture = _internalRefreshTokens();
+    await refreshTokensFuture;
+    _isRefreshing = false;
 
     return _tokensModel;
   }
