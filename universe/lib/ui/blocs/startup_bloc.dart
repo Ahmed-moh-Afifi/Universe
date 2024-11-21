@@ -69,7 +69,7 @@ class StartupBloc extends Bloc<Object, StartupState> {
       platform = notification_token.Platform.web;
     }
 
-    if (!kIsWeb) {
+    if (!kIsWeb && !Platform.isWindows) {
       // until adding the vapid key for web support.
       String fcmToken = await FCM().init();
 
