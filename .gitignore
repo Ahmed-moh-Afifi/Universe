@@ -50,3 +50,7 @@ universe/android/app/google-services.json
 universe/ios/Runner/GoogleService-Info.plist
 universe/lib/firebase_options.dart
 universe/firebase.json
+
+# Build results
+bin/
+obj/
