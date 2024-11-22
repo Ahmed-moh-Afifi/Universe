@@ -101,7 +101,7 @@ namespace Universe_Backend.Controllers
         }
 
         [HttpGet("{initiator}/And/{targeted}")]
-        public async Task<ActionResult<Chat>> GetChatByParticipants(string userId, string initiator, string targeted)
+        public async Task<ActionResult<ChatDTO>> GetChatByParticipants(string userId, string initiator, string targeted)
         {
             try
             {

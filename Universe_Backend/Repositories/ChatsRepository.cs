@@ -79,12 +79,21 @@ namespace Universe_Backend.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<Chat> GetChatByParticipantsAsync(string conversationInitiatorId, string targetedGuyId)
+        public async Task<ChatDTO> GetChatByParticipantsAsync(string conversationInitiatorId, string targetedGuyId)
         {
-            var chat = await dbContext.Chats.
-                FirstOrDefaultAsync(c => c.Users.Count() == 2 &&
-                c.Users.Any(u => u.Id == conversationInitiatorId) &&
-                c.Users.Any(u => u.Id == targetedGuyId));
+            ChatDTO? chat;
+            if (conversationInitiatorId == targetedGuyId)
+            {
+                chat = (await dbContext.Chats.
+                    FirstOrDefaultAsync(c => c.Users.All(u => u.Id == conversationInitiatorId)))?.ToDTO();
+            }
+            else
+            {
+                chat = (await dbContext.Chats.
+                    FirstOrDefaultAsync(c => c.Users.Count() == 2 &&
+                    c.Users.Any(u => u.Id == conversationInitiatorId) &&
+                    c.Users.Any(u => u.Id == targetedGuyId)))?.ToDTO();
+            }
 
             if (chat == null)
             {
@@ -95,13 +104,15 @@ namespace Universe_Backend.Repositories
                     ?? throw new ArgumentException("Conversation initiator not found. Make sure you're a good hacker.");
 
 
-                chat = new Chat() { Name = targetedGuy.UserName!, LastEdited = DateTime.UtcNow };
+                var cht = new Chat() { Name = targetedGuy.UserName!, LastEdited = DateTime.UtcNow };
 
-                chat.Users.Add(conversationInitiator);
-                chat.Users.Add(targetedGuy);
+                cht.Users.Add(conversationInitiator);
+                cht.Users.Add(targetedGuy);
 
-                await dbContext.Chats.AddAsync(chat);
+                await dbContext.Chats.AddAsync(cht);
                 await dbContext.SaveChangesAsync();
+
+                chat = cht.ToDTO();
             }
 
             return chat;
