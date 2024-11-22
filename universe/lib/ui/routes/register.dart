@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:loading_btn/loading_btn.dart';
 import 'package:universe/ui/blocs/register_bloc.dart';
 import 'package:universe/route_generator.dart';
 
@@ -8,16 +10,16 @@ class Register extends StatelessWidget {
   final RegisterBloc bloc;
   Register({super.key}) : bloc = RegisterBloc();
 
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController firstNameController = TextEditingController();
-    final TextEditingController lastNameController = TextEditingController();
-    final TextEditingController usernameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController confirmPasswordController =
-        TextEditingController();
-
     return BlocProvider(
       create: (context) => bloc,
       child: Scaffold(
@@ -25,26 +27,26 @@ class Register extends StatelessWidget {
         body: BlocListener<RegisterBloc, RegisterState>(
           listener: (context, state) {
             if (state.state == RegisterStates.loading) {
-              showDialog(
-                barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
-                barrierDismissible: false,
-                context: context,
-                builder: (context) => PopScope(
-                  canPop: false,
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-              );
+              // showDialog(
+              //   barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
+              //   barrierDismissible: false,
+              //   context: context,
+              //   builder: (context) => PopScope(
+              //     canPop: false,
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              //       child: const Center(
+              //         child: CircularProgressIndicator(),
+              //       ),
+              //     ),
+              //   ),
+              // );
             }
 
             if ((state.state == RegisterStates.success ||
                     state.state == RegisterStates.failed) &&
                 state.previouseState == RegisterStates.loading) {
-              RouteGenerator.mainNavigatorkey.currentState?.pop();
+              // RouteGenerator.mainNavigatorkey.currentState?.pop();
             }
 
             if (state.state == RegisterStates.failed) {
@@ -65,7 +67,7 @@ class Register extends StatelessWidget {
               RouteGenerator.mainNavigatorkey.currentState!.pop();
               RouteGenerator.mainNavigatorkey.currentState!.pop();
               RouteGenerator.mainNavigatorkey.currentState!
-                  .pushNamed(RouteGenerator.completeAccount);
+                  .pushNamed(RouteGenerator.editProfile);
               showBottomSheet(
                 context: context,
                 builder: (context) => BottomSheet(
@@ -214,41 +216,67 @@ class Register extends StatelessWidget {
                       controller: confirmPasswordController,
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10),
-                          height: 66,
-                          child: ElevatedButton(
-                            onPressed: () => bloc.add(
-                              RegisterEvent(
-                                  firstName: firstNameController.text,
-                                  lastName: lastNameController.text,
-                                  email: emailController.text,
-                                  userName: usernameController.text,
-                                  gender: true,
-                                  password: passwordController.text,
-                                  confirmPassword:
-                                      confirmPasswordController.text),
+                  Container(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
+                      height: 66,
+                      child: LoadingBtn(
+                        height: 66,
+                        width: MediaQuery.of(context).size.width,
+                        animate: true,
+                        borderRadius: 10,
+                        loader: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: const Center(
+                            child: SpinKitDoubleBounce(
+                              color: Colors.black,
                             ),
-                            style: const ButtonStyle(
-                              elevation: WidgetStatePropertyAll(0),
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            child: const Text("Register"),
                           ),
                         ),
+                        onTap: (startLoading, stopLoading, btnState) {
+                          if (btnState == ButtonState.idle) {
+                            startLoading();
+                            bloc.add(
+                              RegisterEvent(
+                                firstName: firstNameController.text,
+                                lastName: lastNameController.text,
+                                email: emailController.text,
+                                userName: usernameController.text,
+                                gender: true,
+                                password: passwordController.text,
+                                confirmPassword: confirmPasswordController.text,
+                                finishedCallback: stopLoading,
+                              ),
+                            );
+                          }
+                        },
+                        child: Text('Register'),
+                      )
+                      // ElevatedButton(
+                      //   onPressed: () => bloc.add(
+                      //     RegisterEvent(
+                      //         firstName: firstNameController.text,
+                      //         lastName: lastNameController.text,
+                      //         email: emailController.text,
+                      //         userName: usernameController.text,
+                      //         gender: true,
+                      //         password: passwordController.text,
+                      //         confirmPassword:
+                      //             confirmPasswordController.text),
+                      //   ),
+                      //   style: const ButtonStyle(
+                      //     elevation: WidgetStatePropertyAll(0),
+                      //     shape: WidgetStatePropertyAll(
+                      //       RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.all(
+                      //           Radius.circular(10),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      //   child: const Text("Register"),
+                      // ),
                       ),
-                    ],
-                  ),
                   const SizedBox(
                     height: 30,
                   )

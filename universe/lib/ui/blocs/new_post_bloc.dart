@@ -66,6 +66,7 @@ class PostEvent {
   final List<String> videos;
   final List<String> audios;
   final List<Widget> widgets;
+  final Function finishedCallback;
 
   const PostEvent({
     required this.content,
@@ -73,6 +74,7 @@ class PostEvent {
     required this.videos,
     required this.audios,
     required this.widgets,
+    required this.finishedCallback,
   });
 }
 
@@ -137,35 +139,33 @@ class NewPostBloc extends Bloc<Object, NewPostState> {
 
             await postsRepository.addPost(post);
 
-            if (!isClosed) {
-              emit(
-                NewPostState(
-                  previousState: state.state,
-                  state: NewPostStates.informative,
-                  content: event.content,
-                  images: state.images,
-                  videos: state.videos,
-                ),
-              );
-            }
-            await Future.delayed(
-              const Duration(milliseconds: 1500),
-              () {
-                if (!isClosed) {
-                  emit(
-                    NewPostState(
-                      previousState: state.state,
-                      state: NewPostStates.success,
-                      content: event.content,
-                      images: state.images,
-                      videos: state.videos,
-                    ),
-                  );
-                }
-                RouteGenerator.mainNavigatorkey.currentState!.pop();
-              },
+            // if (!isClosed) {
+            //   emit(
+            //     NewPostState(
+            //       previousState: state.state,
+            //       state: NewPostStates.informative,
+            //       content: event.content,
+            //       images: state.images,
+            //       videos: state.videos,
+            //     ),
+            //   );
+            // }
+
+            event.finishedCallback();
+            await Future.delayed(const Duration(milliseconds: 500));
+
+            emit(
+              NewPostState(
+                previousState: state.state,
+                state: NewPostStates.success,
+                content: event.content,
+                images: state.images,
+                videos: state.videos,
+              ),
             );
+            RouteGenerator.mainNavigatorkey.currentState!.pop();
           } else {
+            event.finishedCallback();
             if (!isClosed) {
               emit(
                 NewPostState(

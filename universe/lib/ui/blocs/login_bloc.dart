@@ -18,8 +18,12 @@ class SignInState {
 class EmailLoginEvent {
   String email;
   String password;
+  Function finishedCallback;
 
-  EmailLoginEvent({required this.email, required this.password});
+  EmailLoginEvent(
+      {required this.email,
+      required this.password,
+      required this.finishedCallback});
 }
 
 class GoogleLoginEvent {}
@@ -68,6 +72,8 @@ class LoginBloc extends Bloc<Object, SignInState> {
               state: SignInStates.success,
               userCredential: user,
             );
+            event.finishedCallback();
+            await Future.delayed(Duration(milliseconds: 500));
             if (state.state == SignInStates.success) {
               RouteGenerator.mainNavigatorkey.currentState!
                   .pushNamedAndRemoveUntil(
@@ -90,8 +96,11 @@ class LoginBloc extends Bloc<Object, SignInState> {
                 error: 'something\'s gone wrong :( \n${(e)}',
               ),
             );
+          } finally {
+            event.finishedCallback();
           }
         } else {
+          event.finishedCallback();
           emit(
             SignInState(
               state: SignInStates.failed,
