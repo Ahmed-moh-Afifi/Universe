@@ -24,8 +24,9 @@ jobs:
         run: |
           total_lines=$(cloc --include-lang=Dart . | grep 'Dart' | awk '{print $5}')
           echo "Total lines of Dart code: $total_lines"
-          echo "dart_lines=$total_lines" >> $GITHUB_ENV
+          echo "dart_lines=${total_lines}" >> $GITHUB_ENV
 
       # Output the result
       - name: Display the result
         run: echo "Total Dart lines of code: ${{ env.dart_lines }}"
+        shell: bash
