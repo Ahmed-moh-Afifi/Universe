@@ -27,15 +27,18 @@ class RegisterEvent {
   final bool gender;
   final String password;
   final String confirmPassword;
+  final Function finishedCallback;
 
-  const RegisterEvent(
-      {required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.userName,
-      required this.gender,
-      required this.password,
-      required this.confirmPassword});
+  const RegisterEvent({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.userName,
+    required this.gender,
+    required this.password,
+    required this.confirmPassword,
+    required this.finishedCallback,
+  });
 }
 
 class RegisterBloc extends Bloc<Object, RegisterState> {
@@ -71,6 +74,8 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
                     password: event.password,
                   ),
                 );
+            event.finishedCallback();
+            await Future.delayed(const Duration(milliseconds: 500));
             // await user.user
             //     ?.updateDisplayName("${event.firstName} ${event.lastName}");
             emit(
@@ -120,8 +125,11 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
                 error: "something's gone wrong :(\n${e.runtimeType}",
               ),
             );
+          } finally {
+            event.finishedCallback();
           }
         } else {
+          event.finishedCallback();
           emit(
             RegisterState(
               previouseState: state.state,

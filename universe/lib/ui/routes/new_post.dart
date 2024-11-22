@@ -2,7 +2,9 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_btn/loading_btn.dart';
 import 'package:universe/repositories/posts_files_repository.dart';
 import 'package:universe/ui/blocs/new_post_bloc.dart';
 import 'package:universe/repositories/posts_repository.dart';
@@ -60,7 +62,7 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -134,17 +136,35 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                  ElevatedButton(
-                    onLongPress: null,
-                    onPressed: () => widget.bloc.add(
-                      PostEvent(
-                        content: postController.text,
-                        images: [],
-                        videos: [],
-                        audios: [],
-                        widgets: [],
+                  LoadingBtn(
+                    height: 66,
+                    width: MediaQuery.of(context).size.width,
+                    borderRadius: 10,
+                    animate: true,
+                    loader: Container(
+                      padding: const EdgeInsets.all(10),
+                      child: const Center(
+                        child: SpinKitDoubleBounce(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
+                    onTap: (startLoading, stopLoading, btnState) {
+                      if (btnState == ButtonState.idle &&
+                          state.state != NewPostStates.loading) {
+                        startLoading();
+                        widget.bloc.add(
+                          PostEvent(
+                            content: postController.text,
+                            images: [],
+                            videos: [],
+                            audios: [],
+                            widgets: [],
+                            finishedCallback: stopLoading,
+                          ),
+                        );
+                      }
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

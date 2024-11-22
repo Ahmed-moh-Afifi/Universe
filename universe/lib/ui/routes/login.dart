@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_btn/loading_btn.dart';
 import 'package:universe/ui/blocs/login_bloc.dart';
 import 'package:universe/route_generator.dart';
 
@@ -9,11 +11,11 @@ class Login extends StatelessWidget {
   final LoginBloc bloc;
   Login({super.key}) : bloc = LoginBloc();
 
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-
     return BlocProvider(
       create: (context) => bloc,
       child: Scaffold(
@@ -30,25 +32,25 @@ class Login extends StatelessWidget {
         body: BlocListener<LoginBloc, SignInState>(
           listener: (context, state) {
             if (state.state == SignInStates.loading) {
-              showDialog(
-                barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
-                barrierDismissible: false,
-                context: context,
-                builder: (context) => PopScope(
-                  canPop: false,
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-              );
+              // showDialog(
+              //   barrierColor: const Color.fromRGBO(255, 255, 255, 0.05),
+              //   barrierDismissible: false,
+              //   context: context,
+              //   builder: (context) => PopScope(
+              //     canPop: false,
+              //     child: BackdropFilter(
+              //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              //       child: const Center(
+              //         child: CircularProgressIndicator(),
+              //       ),
+              //     ),
+              //   ),
+              // );
             }
 
             if (state.state == SignInStates.success ||
                 state.state == SignInStates.failed) {
-              RouteGenerator.mainNavigatorkey.currentState?.pop();
+              // RouteGenerator.mainNavigatorkey.currentState?.pop();
             }
 
             if (state.state == SignInStates.failed) {
@@ -165,36 +167,55 @@ class Login extends StatelessWidget {
                       )
                     ],
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10),
-                          height: 66,
-                          child: ElevatedButton(
-                            onPressed: () => bloc.add(
-                              EmailLoginEvent(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              ),
+                  Container(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
+                      height: 66,
+                      child: LoadingBtn(
+                        height: 66,
+                        width: MediaQuery.of(context).size.width,
+                        animate: true,
+                        borderRadius: 10,
+                        loader: Container(
+                          padding: const EdgeInsets.all(10),
+                          child: const Center(
+                            child: SpinKitDoubleBounce(
+                              color: Colors.black,
                             ),
-                            style: const ButtonStyle(
-                              elevation: WidgetStatePropertyAll(0),
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            child: const Text("Login"),
                           ),
                         ),
+                        onTap: (startLoading, stopLoading, btnState) {
+                          if (btnState == ButtonState.idle) {
+                            startLoading();
+                            bloc.add(EmailLoginEvent(
+                              email: emailController.text,
+                              password: passwordController.text,
+                              finishedCallback: stopLoading,
+                            ));
+                          }
+                        },
+                        child: Text('Login'),
+                      )
+                      // ElevatedButton(
+                      //   onPressed: () => bloc.add(
+                      //     EmailLoginEvent(
+                      //       email: emailController.text,
+                      //       password: passwordController.text,
+                      //     ),
+                      //   ),
+                      //   style: const ButtonStyle(
+                      //     elevation: WidgetStatePropertyAll(0),
+                      //     shape: WidgetStatePropertyAll(
+                      //       RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.all(
+                      //           Radius.circular(10),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      //   child: const Text("Login"),
+                      // ),
                       ),
-                    ],
-                  ),
                   const Padding(
                     padding: EdgeInsets.only(
                         top: 30, bottom: 30, left: 10, right: 10),
