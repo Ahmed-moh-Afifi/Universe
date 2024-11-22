@@ -1,4 +1,4 @@
-﻿namespace Universe_Backend.Data.Models;
+namespace Universe_Backend.Data.Models;
 
 public class UserTokens
 {

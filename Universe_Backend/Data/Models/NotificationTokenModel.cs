@@ -1,4 +1,4 @@
-﻿using NotificationService.Models;
+using NotificationService.Models;
 
 namespace Universe_Backend.Data.Models;
 
