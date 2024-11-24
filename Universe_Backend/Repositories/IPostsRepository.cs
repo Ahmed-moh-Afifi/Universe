@@ -5,6 +5,7 @@ namespace Universe_Backend.Repositories;
 public interface IPostsRepository
 {
     public Task<int> AddPost(PostDTO post);
+    public Task<PostDTO> GetPost(int postId, string callerId);
     public Task<PostDTO> UpdatePost(PostDTO post);
     public Task RemovePost(int postId);
     public IEnumerable<PostDTO> GetReplies(int postId, string callerId, DateTime? lastDate, int? lastId);

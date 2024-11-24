@@ -111,6 +111,10 @@ namespace Universe_Backend.Hubs
                 user.OnlineSessions++;
                 await dbContext.SaveChangesAsync();
             }
+            else
+            {
+                logger.LogDebug("**************************************** User = Null");
+            }
 
             await base.OnConnectedAsync();
         }

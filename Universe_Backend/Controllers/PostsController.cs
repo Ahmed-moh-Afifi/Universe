@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Hosting;
 using NotificationService.Models;
 using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;
@@ -28,6 +29,21 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
         }
 
         return Ok(postsRepository.GetPosts(userId, User.FindFirstValue("uid")!, null, null));
+    }
+
+    [HttpGet]
+    [Route("{postId}")]
+    public async Task<ActionResult<PostDTO>> GetPost(int postId, string userId)
+    {
+        logger.LogDebug("PostsController.GetPost: Getting post with id: {postId}", postId);
+        //var authorizationResult = await authorizationService.AuthorizeAsync(User, userId, "IsFollower");
+        //if (!authorizationResult.Succeeded)
+        //{
+        //    logger.LogWarning("PostsController.GetPost: User with id {userId} is not a follower of the owner of post {postId}", userId, postId);
+        //    return Unauthorized();
+        //}
+
+        return Ok(await postsRepository.GetPost(postId, User.FindFirstValue("uid")!));
     }
 
     [HttpGet]

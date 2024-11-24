@@ -19,6 +19,12 @@ class PostsRepository implements IPostsRepository {
   }
 
   @override
+  Future<Post> getPost(String authorId, int postId) async {
+    log('Getting post: $postId', name: 'PostsRepository');
+    return await _postsApi.getPost(authorId, postId);
+  }
+
+  @override
   Future addPost(Post post) async {
     log('Adding post: ${post.toJson()}', name: 'PostsRepository');
     post.id = -1;

@@ -45,6 +45,43 @@ class Post {
     uid ??= const Uuid().v4();
   }
 
+  Post copyWith({
+    int? id,
+    String? uid,
+    String? title,
+    String? body,
+    List<dynamic>? images,
+    List<dynamic>? videos,
+    List<dynamic>? audios,
+    DateTime? publishDate,
+    int? replyToPost,
+    int? childPostId,
+    List<Widget>? widgets,
+    User? author,
+    int? reactionsCount,
+    int? repliesCount,
+    bool? reactedToByCaller,
+    PostReaction? callerReaction,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      uid: uid ?? this.uid,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      images: images ?? this.images,
+      videos: videos ?? this.videos,
+      audios: audios ?? this.audios,
+      publishDate: publishDate ?? this.publishDate,
+      replyToPost: replyToPost ?? this.replyToPost,
+      childPostId: childPostId ?? this.childPostId,
+      widgets: widgets ?? this.widgets,
+      author: author ?? this.author,
+      reactionsCount: reactionsCount ?? this.reactionsCount,
+      repliesCount: repliesCount ?? this.repliesCount,
+      reactedToByCaller: reactedToByCaller ?? this.reactedToByCaller,
+    )..callerReaction = callerReaction ?? this.callerReaction;
+  }
+
   factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 
   Map<String, dynamic> toJson() => _$PostToJson(this);

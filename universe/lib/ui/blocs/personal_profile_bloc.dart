@@ -106,6 +106,8 @@ class PersonalProfileBloc extends Bloc<Object, PersonalProfileState> {
       followingCount: await usersRepository.getFollowingCount(state.user.id),
     );
 
-    add(GotUserEvent(state: newState));
+    if (!isClosed) {
+      add(GotUserEvent(state: newState));
+    }
   }
 }

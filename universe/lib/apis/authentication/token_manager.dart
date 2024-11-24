@@ -112,8 +112,8 @@ class TokenManager {
       return refreshTokensFuture;
     }
 
-    _isRefreshing = true;
     refreshTokensFuture = _internalRefreshTokens();
+    _isRefreshing = true;
     await refreshTokensFuture;
     _isRefreshing = false;
 

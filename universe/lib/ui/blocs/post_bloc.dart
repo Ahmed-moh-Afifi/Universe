@@ -8,12 +8,17 @@ import 'package:universe/models/config.dart';
 import 'package:universe/models/data/post.dart';
 import 'package:universe/models/data/post_reaction.dart';
 import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/route_generator.dart';
+
+enum PostStates { initial, loading, loaded, failed }
 
 class PostState {
+  final PostStates state;
   final int? reactionsCount;
   bool isLiked;
 
-  PostState({this.reactionsCount = 0, required this.isLiked});
+  PostState(
+      {required this.state, this.reactionsCount = 0, required this.isLiked});
 }
 
 class LikeClicked {
@@ -31,6 +36,13 @@ class ReactionsCountChanged {
   ReactionsCountChanged(this.reactionsCount, this.isLiked);
 }
 
+class ShareClicked {
+  final Post post;
+  final Function finishedCallback;
+
+  ShareClicked(this.post, this.finishedCallback);
+}
+
 class PostBloc extends Bloc<Object, PostState> {
   // PostReaction? reaction;
   final IPostsRepository postsRepository;
@@ -40,6 +52,7 @@ class PostBloc extends Bloc<Object, PostState> {
   PostBloc(this.postsRepository, this.post)
       : super(
           PostState(
+            state: PostStates.initial,
             isLiked: post.reactedToByCaller,
             reactionsCount: post.reactionsCount,
           ),
@@ -53,6 +66,7 @@ class PostBloc extends Bloc<Object, PostState> {
           post.reactionsCount--;
           emit(
             PostState(
+              state: state.state,
               reactionsCount: post.reactionsCount,
               isLiked: false,
             ),
@@ -69,6 +83,7 @@ class PostBloc extends Bloc<Object, PostState> {
           post.reactionsCount++;
           emit(
             PostState(
+              state: state.state,
               reactionsCount: post.reactionsCount,
               isLiked: true,
             ),
@@ -164,11 +179,37 @@ class PostBloc extends Bloc<Object, PostState> {
         if (!isClosed) {
           emit(
             PostState(
+              state: state.state,
               reactionsCount: event.reactionsCount,
               isLiked: event.isLiked,
             ),
           );
         }
+      },
+    );
+
+    on<ShareClicked>(
+      (event, emit) async {
+        log('Share clicked for post: ${post.id}');
+        emit(
+          PostState(
+            state: PostStates.loading,
+            reactionsCount: post.reactionsCount,
+            isLiked: post.reactedToByCaller,
+          ),
+        );
+        var finalPost = event.post.copyWith(
+            childPostId: post.childPostId != -1 ? post.childPostId : post.id);
+        postsRepository.sharePost(post.author.id, finalPost);
+        emit(
+          PostState(
+            state: PostStates.loaded,
+            reactionsCount: post.reactionsCount,
+            isLiked: post.reactedToByCaller,
+          ),
+        );
+        event.finishedCallback();
+        RouteGenerator.mainNavigatorkey.currentState!.pop();
       },
     );
 

@@ -24,6 +24,25 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         }
     }
 
+    public async Task<PostDTO> GetPost(int postId, string callerId)
+    {
+        logger.LogDebug($"PostsRepository.GetPost: Getting post with id: {postId}");
+        try
+        {
+            var post = await dbContext.Posts
+                .Where(p => p.Id == postId)
+                .Include(p => p.Author)
+                .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
+                .FirstOrDefaultAsync();
+            return post ?? throw new ArgumentException("Post not found");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, $"PostsRepository.GetPost: Error getting post with id: {postId}");
+            throw;
+        }
+    }
+
     public async Task<PostDTO> UpdatePost(PostDTO post)
     {
         logger.LogDebug("PostsRepository.UpdatePost: Updating post {@Post}", post);
@@ -193,6 +212,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         try
         {
             post.ChildPostId = sharedPostId;
+            post.Id = 0;
             await dbContext.Posts.AddAsync(post.ToModel());
             await dbContext.SaveChangesAsync();
             return post.Id;

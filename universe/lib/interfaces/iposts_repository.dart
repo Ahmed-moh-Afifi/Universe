@@ -7,6 +7,8 @@ abstract class IPostsRepository {
   Future<List<Post>> getUserPosts(
       String authorId, ApiCallStart start, int limit);
 
+  Future<Post> getPost(String authorId, int postId);
+
   Future addPost(Post post);
 
   Future<List<Post>> getPostReplies(

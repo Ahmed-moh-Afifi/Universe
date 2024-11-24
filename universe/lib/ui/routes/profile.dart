@@ -32,10 +32,10 @@ class Profile extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: FollowButton(user),
           ),
-          IconButton(
-            onPressed: () => bloc.add(const ChatEvent()),
-            icon: const Icon(Icons.chat_bubble_outline),
-          ),
+          // IconButton(
+          //   onPressed: () => bloc.add(const ChatEvent()),
+          //   icon: const Icon(Icons.chat_bubble_outline),
+          // ),
         ],
       ),
       body: SafeArea(

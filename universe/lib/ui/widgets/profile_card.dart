@@ -3,6 +3,7 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/repositories/chats_repository.dart';
 import 'package:universe/repositories/posts_repository.dart';
 import 'package:universe/repositories/users_repository.dart';
 import 'package:universe/route_generator.dart';
@@ -20,7 +21,8 @@ class ProfileCard extends StatefulWidget {
   ProfileCard(
       this.user, this.postsCount, this.followersCount, this.followingCount,
       {super.key})
-      : bloc = ProfileCardBloc(UsersRepository(), PostsRepository(), user);
+      : bloc = ProfileCardBloc(
+            UsersRepository(), PostsRepository(), ChatsRepository(), user);
 
   @override
   State<ProfileCard> createState() => _ProfileCardState();
@@ -245,68 +247,96 @@ class _ProfileCardState extends State<ProfileCard> {
               borderRadius: BorderRadius.circular(30),
               color: Theme.of(context).colorScheme.secondary),
           clipBehavior: Clip.antiAlias,
-          child: widget.user.bio == null || widget.user.bio!.isEmpty
-              ? Text('No bio', style: TextStyles.subtitleStyle)
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'About',
-                      style: TextStyles.titleStyle,
-                    ),
-                    Text(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                widget.user.bio == null || widget.user.bio!.isEmpty
+                    ? ''
+                    : 'About',
+                style: widget.user.bio == null || widget.user.bio!.isEmpty
+                    ? TextStyles.subtitleStyle
+                    : TextStyles.titleStyle,
+              ),
+              widget.user.bio == null || widget.user.bio!.isEmpty
+                  ? const SizedBox(
+                      width: 0,
+                      height: 0,
+                    )
+                  : Text(
                       widget.user.bio!,
                       style: TextStyles.subtitleStyle,
                     ),
-                    Spacer(),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ExpandableItem(
-                            Material(
-                              color: Colors.transparent,
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  // color: Color.fromRGBO(35, 35, 35, 1),
-                                  border: Border.all(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text('Contact Info',
-                                      style: TextStyles.subtitleStyle.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16)),
-                                ),
-                              ),
-                            ),
-                            Material(
-                              color: Colors.transparent,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                height: 300,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 35, 35, 1),
-                                  border: Border.all(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                ),
-                                padding: const EdgeInsets.all(30),
-                                child: Text(
-                                  'Email: ${widget.user.email}',
-                                  style: TextStyles.subtitleStyle,
-                                ),
-                              ),
+              Spacer(),
+              Container(
+                height: 45,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: TextButton(
+                  style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  )),
+                  onPressed: () => widget.bloc.add(const ChatEvent()),
+                  child: Text(
+                    'Message',
+                    style: TextStyles.subtitleStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ExpandableItem(
+                      Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            // color: Color.fromRGBO(35, 35, 35, 1),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
+                          child: Center(
+                            child: Text('Contact Info',
+                                style: TextStyles.subtitleStyle.copyWith(
+                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                          ),
                         ),
-                        SizedBox(width: 10),
-                        Expanded(
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: Color.fromRGBO(35, 35, 35, 1),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(30),
+                          child: Text(
+                            'Email: ${widget.user.email}',
+                            style: TextStyles.subtitleStyle,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: widget.user.links != null ? 5 : 0),
+                  widget.user.links != null
+                      ? Expanded(
                           child: ExpandableItem(
                             Material(
                               color: Colors.transparent,
@@ -349,9 +379,12 @@ class _ProfileCardState extends State<ProfileCard> {
                                         shrinkWrap: true,
                                         physics:
                                             const NeverScrollableScrollPhysics(),
-                                        itemCount: widget.user.links!.length,
+                                        itemCount: widget.user.links?.length,
                                         itemBuilder: (context, index) =>
                                             TextButton(
+                                          style: ButtonStyle(
+                                            alignment: Alignment.centerLeft,
+                                          ),
                                           onPressed: () => widget.bloc.add(
                                             OpenLinkEvent(
                                               type: LinkType.http,
@@ -371,10 +404,11 @@ class _ProfileCardState extends State<ProfileCard> {
                             ),
                           ),
                         )
-                      ],
-                    ),
-                  ],
-                ),
+                      : const SizedBox(width: 0),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

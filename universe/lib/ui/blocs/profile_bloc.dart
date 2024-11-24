@@ -102,7 +102,7 @@ class ProfileBloc extends Bloc<Object, ProfileState> {
       posts: posts,
       postCount: posts.length,
       followersCount: await usersRepository.getFollowersCount(state.user.id),
-      followingCount: await usersRepository.getFollowersCount(state.user.id),
+      followingCount: await usersRepository.getFollowingCount(state.user.id),
     );
 
     add(GotUserEvent(state: newState));

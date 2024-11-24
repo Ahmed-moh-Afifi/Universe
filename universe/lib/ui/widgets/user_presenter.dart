@@ -40,6 +40,8 @@ class UserPresenter extends StatelessWidget {
             .pushNamed(RouteGenerator.profile, arguments: user),
         child: ListTile(
           contentPadding: contentPadding,
+          dense: true,
+          visualDensity: VisualDensity.compact,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
@@ -48,14 +50,15 @@ class UserPresenter extends StatelessWidget {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 maxLines: 1,
+                style: TextStyle(fontSize: 12),
                 '${user.firstName} ${user.lastName}',
               ),
               user.verified
                   ? const Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: VerifiedBadge(
-                        width: 15,
-                        height: 15,
+                        width: 10,
+                        height: 10,
                       ),
                     )
                   : const SizedBox(
@@ -64,20 +67,26 @@ class UserPresenter extends StatelessWidget {
                     ),
             ],
           ),
-          subtitle: Text('@${user.userName}'),
-          subtitleTextStyle: TextStyles.subtitleStyle,
-          leading: Container(
-            width: 50,
-            height: 50,
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(27.5),
-              ),
-            ),
-            child: CachedNetworkImage(
-                imageUrl: user.photoUrl ?? 'https://via.placeholder.com/150'),
+          subtitle: Text('@${user.userName}',
+              style: TextStyles.subtitleStyle.copyWith(fontSize: 10)),
+          subtitleTextStyle: TextStyles.subtitleStyle.copyWith(fontSize: 10),
+          leading: CircleAvatar(
+            radius: 15,
+            backgroundImage: CachedNetworkImageProvider(
+                user.photoUrl ?? 'https://via.placeholder.com/150'),
           ),
+          // Container(
+          //   width: 50,
+          //   height: 50,
+          //   clipBehavior: Clip.antiAlias,
+          //   decoration: const BoxDecoration(
+          //     borderRadius: BorderRadius.all(
+          //       Radius.circular(27.5),
+          //     ),
+          //   ),
+          //   child: CachedNetworkImage(
+          //       imageUrl: user.photoUrl ?? 'https://via.placeholder.com/150'),
+          // ),
           trailing: showFollowButton
               ? SizedBox(width: 110, child: FollowButton(user))
               : const SizedBox(),

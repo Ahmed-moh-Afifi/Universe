@@ -20,6 +20,7 @@ class NewPost extends StatefulWidget {
 
 class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
   late AnimationController _doneController;
+  final postController = TextEditingController();
 
   @override
   void initState() {
@@ -36,7 +37,6 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final postController = TextEditingController();
     return BlocProvider<NewPostBloc>(
       create: (context) => widget.bloc,
       child: BlocListener<NewPostBloc, NewPostState>(
@@ -62,7 +62,6 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -126,12 +125,22 @@ class _NewPostState extends State<NewPost> with TickerProviderStateMixin {
                     children: [
                       IconButton(
                         onPressed: () => widget.bloc.add(SelectImagesEvent()),
-                        icon: Icon(Icons.image_outlined),
+                        icon: SvgPicture.asset(
+                          'lib/assets/icons/image.svg',
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
+                        ),
                       ),
                       IconButton(
                         onPressed: () {},
-                        icon: Icon(
-                          Icons.videocam_outlined,
+                        icon: SvgPicture.asset(
+                          'lib/assets/icons/video.svg',
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ],

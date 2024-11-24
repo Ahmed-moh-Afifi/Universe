@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:universe/ui/blocs/follow_button_bloc.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
@@ -28,8 +29,6 @@ class FollowButton extends StatelessWidget {
               }
             },
             child: SizedBox(
-              width: 110,
-              height: 40,
               child: state.isFollowed != null
                   ? (user.id ==
                           AuthenticationRepository()
@@ -38,7 +37,7 @@ class FollowButton extends StatelessWidget {
                               .id
                       ? Container()
                       : (state.isFollowed!
-                          ? TextButton(
+                          ? IconButton(
                               style: const ButtonStyle(
                                 backgroundColor:
                                     WidgetStatePropertyAll(Colors.transparent),
@@ -50,10 +49,16 @@ class FollowButton extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              child: const Text('Unfollow'),
+                              icon: SvgPicture.asset(
+                                'lib/assets/icons/circle-minus.svg',
+                                colorFilter: ColorFilter.mode(
+                                  Theme.of(context).colorScheme.primary,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
                               onPressed: () => bloc.add(UnfollowEvent()),
                             )
-                          : ElevatedButton(
+                          : IconButton(
                               style: const ButtonStyle(
                                 shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
@@ -63,7 +68,13 @@ class FollowButton extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              child: const Text('Follow'),
+                              icon: SvgPicture.asset(
+                                'lib/assets/icons/circle-plus.svg',
+                                colorFilter: ColorFilter.mode(
+                                  Theme.of(context).colorScheme.primary,
+                                  BlendMode.srcIn,
+                                ),
+                              ),
                               onPressed: () => bloc.add(FollowEvent()),
                             )))
                   : const SizedBox(

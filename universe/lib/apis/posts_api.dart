@@ -16,6 +16,12 @@ abstract class PostsApi {
     @Body() Post post,
   );
 
+  @GET('/{userId}/Posts/{postId}')
+  Future<Post> getPost(
+    @Path() String userId,
+    @Path() int postId,
+  );
+
   @POST('/{userId}/Posts/{postId}/Reactions')
   Future<int> addReaction(
     @Path() String userId,
@@ -98,8 +104,8 @@ abstract class PostsApi {
     @Path() int reactionId,
   );
 
-  @GET('/{userId}/Posts/Share/{sharedPostId}')
-  Future sharePost(
+  @POST('/{userId}/Posts/Share/{sharedPostId}')
+  Future<int> sharePost(
     @Path() String userId,
     @Path() int sharedPostId,
     @Body() Post post,

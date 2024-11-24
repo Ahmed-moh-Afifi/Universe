@@ -1,7 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:universe/interfaces/ichats_repository.dart';
 import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/interfaces/iusers_repository.dart';
 import 'package:universe/models/data/user.dart';
+import 'package:universe/repositories/authentication_repository.dart';
+import 'package:universe/route_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileCardState {
@@ -37,11 +40,17 @@ class OpenLinkEvent {
   const OpenLinkEvent({required this.type, required this.link});
 }
 
+class ChatEvent {
+  const ChatEvent();
+}
+
 class ProfileCardBloc extends Bloc<Object, ProfileCardState> {
   final IUsersRepository usersRepository;
   final IPostsRepository postsRepository;
+  final IChatsRepository chatsRepository;
 
-  ProfileCardBloc(this.usersRepository, this.postsRepository, User user)
+  ProfileCardBloc(this.usersRepository, this.postsRepository,
+      this.chatsRepository, User user)
       : super(ProfileCardState(user: user)) {
     on<GetUserEvent>(
       (event, emit) async {
@@ -73,6 +82,23 @@ class ProfileCardBloc extends Bloc<Object, ProfileCardState> {
             await launchUrl(uri);
           }
         }
+      },
+    );
+
+    on<ChatEvent>(
+      (event, emit) async {
+        // emit(state..state = ProfileStates.loading);
+        final chat = await chatsRepository.getChatByParticipants(
+          AuthenticationRepository().authenticationService.currentUser()!.id,
+          user.id,
+        );
+
+        // RouteGenerator.mainNavigatorkey.currentState!.pop();
+
+        RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
+          RouteGenerator.chat,
+          arguments: [user, chat],
+        );
       },
     );
 
