@@ -17,6 +17,8 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       gender: json['gender'] as bool,
       verified: json['verified'] as bool,
       bio: json['bio'] as String?,
+      links:
+          (json['links'] as List<dynamic>?)?.map((e) => e as String).toList(),
       accountState:
           $enumDecodeNullable(_$AccountStateEnumMap, json['accountState']),
       accountPrivacy:
@@ -37,9 +39,10 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'gender': instance.gender,
       'joinDate': instance.joinDate.toIso8601String(),
-      'photoUrl': instance.photoUrl,
       'verified': instance.verified,
+      'photoUrl': instance.photoUrl,
       'bio': instance.bio,
+      'links': instance.links,
       'accountState': _$AccountStateEnumMap[instance.accountState],
       'accountPrivacy': _$AccountPrivacyEnumMap[instance.accountPrivacy],
       'onlineStatus': _$OnlineStatusEnumMap[instance.onlineStatus],

@@ -8,6 +8,10 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+dependencies {
+    implementation 'com.github.yalantis:ucrop:2.2.6'
+}
+
 android {
     namespace = "com.example.universe"
     compileSdk = flutter.compileSdkVersion

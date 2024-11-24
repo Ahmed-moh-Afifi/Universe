@@ -14,6 +14,7 @@ public class UserDTO
     public string? PhotoUrl { get; set; } = null;
     public bool Verified { get; set; } = false;
     public string? Bio { get; set; }
+    public List<string>? Links { get; set; }
     public required AccountState AccountState { get; set; }
     public required AccountPrivacy AccountPrivacy { get; set; }
     public DateTime? LastOnline { get; set; }
@@ -33,6 +34,7 @@ public class UserDTO
             PhotoUrl = PhotoUrl,
             Verified = Verified,
             Bio = Bio,
+            Links = Links,
             AccountState = AccountState,
             LastOnline = LastOnline,
             OnlineSessions = OnlineSesions,

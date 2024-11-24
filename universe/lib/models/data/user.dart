@@ -36,9 +36,10 @@ class User {
   final String email;
   final bool gender;
   final DateTime joinDate;
-  String? photoUrl;
   final bool verified;
+  String? photoUrl;
   String? bio;
+  List<String>? links;
   AccountState? accountState;
   AccountPrivacy? accountPrivacy;
   OnlineStatus? onlineStatus;
@@ -56,6 +57,7 @@ class User {
     required this.gender,
     required this.verified,
     required this.bio,
+    required this.links,
     required this.accountState,
     required this.accountPrivacy,
     required this.onlineStatus,

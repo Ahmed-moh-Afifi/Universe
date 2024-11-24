@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/interfaces/iposts_repository.dart';
 import 'package:universe/interfaces/iusers_repository.dart';
 import 'package:universe/models/data/user.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileCardState {
   final User user;
@@ -23,6 +24,19 @@ class GetUserEvent {
   const GetUserEvent({required this.user});
 }
 
+enum LinkType {
+  http,
+  mail,
+  phone,
+}
+
+class OpenLinkEvent {
+  final LinkType type;
+  final String link;
+
+  const OpenLinkEvent({required this.type, required this.link});
+}
+
 class ProfileCardBloc extends Bloc<Object, ProfileCardState> {
   final IUsersRepository usersRepository;
   final IPostsRepository postsRepository;
@@ -38,6 +52,27 @@ class ProfileCardBloc extends Bloc<Object, ProfileCardState> {
           followingCount: await usersRepository.getFollowingCount(user.id),
         );
         emit(newState);
+      },
+    );
+
+    on<OpenLinkEvent>(
+      (event, emit) async {
+        if (event.type == LinkType.mail) {
+          var uri = Uri.tryParse('mailto:${event.link}');
+          if (uri != null && await canLaunchUrl(uri)) {
+            await launchUrl(uri);
+          }
+        } else if (event.type == LinkType.phone) {
+          var uri = Uri.tryParse('tel:${event.link}');
+          if (uri != null && await canLaunchUrl(uri)) {
+            await launchUrl(uri);
+          }
+        } else if (event.type == LinkType.http) {
+          var uri = Uri.tryParse(event.link);
+          if (uri != null && await canLaunchUrl(uri)) {
+            await launchUrl(uri);
+          }
+        }
       },
     );
 

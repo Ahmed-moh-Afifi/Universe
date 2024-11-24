@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -5,7 +8,6 @@ import 'package:loading_btn/loading_btn.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/users_repository.dart';
-import 'package:universe/route_generator.dart';
 import 'package:universe/ui/blocs/edit_profile_bloc.dart';
 import 'package:universe/ui/styles/text_styles.dart';
 import 'package:universe/ui/widgets/expandable_image.dart';
@@ -17,41 +19,52 @@ class CompleteAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => EditProfileBloc(UsersRepository()),
-      child: const CompleteAccountContent(),
+      child: CompleteAccountContent(),
     );
   }
 }
 
 class CompleteAccountContent extends StatelessWidget {
-  const CompleteAccountContent({super.key});
+  CompleteAccountContent({super.key});
+
+  final TextEditingController firstNameController = TextEditingController(
+      text: AuthenticationRepository()
+          .authenticationService
+          .currentUser()!
+          .firstName);
+  final TextEditingController lastNameController = TextEditingController(
+      text: AuthenticationRepository()
+          .authenticationService
+          .currentUser()!
+          .lastName);
+  final TextEditingController usernameController = TextEditingController(
+      text: AuthenticationRepository()
+          .authenticationService
+          .currentUser()!
+          .userName);
+  final TextEditingController emailController = TextEditingController(
+      text: AuthenticationRepository()
+          .authenticationService
+          .currentUser()!
+          .email);
+  final TextEditingController bioController = TextEditingController(
+      text:
+          AuthenticationRepository().authenticationService.currentUser()!.bio ??
+              '');
+  final TextEditingController linksController = TextEditingController(
+      text: AuthenticationRepository()
+              .authenticationService
+              .currentUser()!
+              .links
+              ?.join('\n') ??
+          '');
+  final TextEditingController oldPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmNewPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController firstNameController = TextEditingController(
-        text: AuthenticationRepository()
-            .authenticationService
-            .currentUser()!
-            .firstName);
-    final TextEditingController lastNameController = TextEditingController(
-        text: AuthenticationRepository()
-            .authenticationService
-            .currentUser()!
-            .lastName);
-    final TextEditingController usernameController = TextEditingController(
-        text: AuthenticationRepository()
-            .authenticationService
-            .currentUser()!
-            .userName);
-    final TextEditingController emailController = TextEditingController(
-        text: AuthenticationRepository()
-            .authenticationService
-            .currentUser()!
-            .email);
-    final TextEditingController oldPasswordController = TextEditingController();
-    final TextEditingController newPasswordController = TextEditingController();
-    final TextEditingController confirmNewPasswordController =
-        TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
@@ -71,20 +84,44 @@ class CompleteAccountContent extends StatelessWidget {
                       borderRadius: BorderRadius.circular(60),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: ExpandableImage(
-                        AuthenticationRepository()
-                                .authenticationService
-                                .currentUser()!
-                                .photoUrl ??
-                            'https://via.placeholder.com/150',
-                        'pf'),
+                    child: BlocBuilder<EditProfileBloc, EditProfileState>(
+                      builder: (context, state) {
+                        return ExpandableImageProvider(
+                            (state.image != null
+                                    ? FileImage(File(state.image!.path))
+                                    : CachedNetworkImageProvider(
+                                        AuthenticationRepository()
+                                                .authenticationService
+                                                .currentUser()!
+                                                .photoUrl ??
+                                            'https://via.placeholder.com/150'))
+                                as ImageProvider,
+                            'pf',
+                            state.image != null
+                                ? Image.file(File(state.image!.path))
+                                : CachedNetworkImage(
+                                    imageUrl: AuthenticationRepository()
+                                            .authenticationService
+                                            .currentUser()!
+                                            .photoUrl ??
+                                        'https://via.placeholder.com/150'));
+                      },
+                    ),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextButton(onPressed: () {}, child: Text('Take picture')),
                       TextButton(
-                        onPressed: () {},
+                          onPressed: () {
+                            BlocProvider.of<EditProfileBloc>(context)
+                                .add(CaptureImageEvent());
+                          },
+                          child: Text('Take picture')),
+                      TextButton(
+                        onPressed: () {
+                          BlocProvider.of<EditProfileBloc>(context)
+                              .add(PickImageEvent());
+                        },
                         child: Text('Pick from gallery'),
                       ),
                     ],
@@ -198,6 +235,44 @@ class CompleteAccountContent extends StatelessWidget {
                   ),
                 ),
                 controller: emailController,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                maxLines: null,
+                minLines: null,
+                decoration: const InputDecoration(
+                  label: Text('Bio'),
+                  filled: true,
+                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                ),
+                controller: bioController,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                maxLines: null,
+                minLines: null,
+                decoration: const InputDecoration(
+                  label: Text('Links (separate with newlines)'),
+                  filled: true,
+                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                ),
+                controller: linksController,
               ),
             ),
             Padding(
@@ -330,10 +405,7 @@ class CompleteAccountContent extends StatelessWidget {
                         .authenticationService
                         .currentUser()!
                         .verified,
-                    bio: AuthenticationRepository()
-                        .authenticationService
-                        .currentUser()!
-                        .bio,
+                    bio: bioController.text,
                     accountState: AuthenticationRepository()
                         .authenticationService
                         .currentUser()!
@@ -350,21 +422,28 @@ class CompleteAccountContent extends StatelessWidget {
                         .authenticationService
                         .currentUser()!
                         .lastOnline,
+                    links: linksController.text.split('\n')
+                      ..forEach(
+                        (element) => element.trim(),
+                      ),
                   );
 
-                  UsersRepository().updateUser(user.id, user).then(
-                    (value) {
-                      AuthenticationRepository()
-                          .authenticationService
-                          .loadUser()
-                          .then(
-                        (value) {
-                          stopLoading();
-                          RouteGenerator.mainNavigatorkey.currentState!.pop();
-                        },
-                      );
-                    },
-                  );
+                  // UsersRepository().updateUser(user.id, user).then(
+                  //   (value) {
+                  //     AuthenticationRepository()
+                  //         .authenticationService
+                  //         .loadUser()
+                  //         .then(
+                  //       (value) {
+                  //         stopLoading();
+                  //         RouteGenerator.mainNavigatorkey.currentState!.pop();
+                  //       },
+                  //     );
+                  //   },
+                  // );
+
+                  BlocProvider.of<EditProfileBloc>(context)
+                      .add(UpdateProfileEvent(user, stopLoading));
                 },
                 child: const Text('Save'),
               ),

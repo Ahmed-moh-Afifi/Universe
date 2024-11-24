@@ -32,11 +32,11 @@ public class User : IdentityUser
     public string? PhotoUrl { get; set; } = null;
     public bool Verified { get; set; } = false;
     public string? Bio { get; set; }
+    public List<string>? Links { get; set; }
     public AccountState AccountState { get; set; } = AccountState.Active;
     public DateTime? LastOnline { get; set; }
-    //public required OnlineStatus OnlineStatus { get; set; } = OnlineStatus.Offline;
     public int OnlineSessions { get; set; }
-    public AccountPrivacy AccountPrivacy { get; set; } = AccountPrivacy.Public; 
+    public AccountPrivacy AccountPrivacy { get; set; } = AccountPrivacy.Public;
 
     public ICollection<NotificationToken> NotificationTokens { get; set; } = [];
     public virtual ICollection<User> Followers { get; set; } = [];
@@ -78,6 +78,7 @@ public class User : IdentityUser
             PhotoUrl = PhotoUrl,
             Verified = Verified,
             Bio = Bio,
+            Links = Links,
             AccountState = AccountState,
             LastOnline = LastOnline,
             OnlineSesions = OnlineSessions,
@@ -94,6 +95,7 @@ public class User : IdentityUser
         UserName = dto.UserName;
         PhotoUrl = dto.PhotoUrl;
         Bio = dto.Bio;
+        Links = dto.Links;
         AccountState = dto.AccountState;
         LastOnline = dto.LastOnline;
         OnlineSessions = dto.OnlineSesions;
