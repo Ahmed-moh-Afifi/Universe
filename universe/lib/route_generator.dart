@@ -75,7 +75,10 @@ class RouteGenerator {
       case registerPage:
         return MaterialPageRoute(builder: (_) => Register());
       case editProfile:
-        return MaterialPageRoute(builder: (_) => const CompleteAccount());
+        return MaterialPageRoute(
+            builder: (_) => CompleteAccount(
+                  previousRouteName: settings.arguments as String,
+                ));
       case startup:
         return MaterialPageRoute(builder: (_) => const Startup());
       case profile:

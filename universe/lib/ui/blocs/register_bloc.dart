@@ -76,8 +76,6 @@ class RegisterBloc extends Bloc<Object, RegisterState> {
                 );
             event.finishedCallback();
             await Future.delayed(const Duration(milliseconds: 500));
-            // await user.user
-            //     ?.updateDisplayName("${event.firstName} ${event.lastName}");
             emit(
               RegisterState(
                 previouseState: state.state,

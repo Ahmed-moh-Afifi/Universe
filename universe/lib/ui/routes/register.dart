@@ -66,8 +66,10 @@ class Register extends StatelessWidget {
             if (state.state == RegisterStates.success) {
               RouteGenerator.mainNavigatorkey.currentState!.pop();
               RouteGenerator.mainNavigatorkey.currentState!.pop();
-              RouteGenerator.mainNavigatorkey.currentState!
-                  .pushNamed(RouteGenerator.editProfile);
+              RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
+                RouteGenerator.editProfile,
+                arguments: RouteGenerator.registerPage,
+              );
               showBottomSheet(
                 context: context,
                 builder: (context) => BottomSheet(

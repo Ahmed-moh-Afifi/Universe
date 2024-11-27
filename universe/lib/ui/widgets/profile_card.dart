@@ -35,16 +35,15 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     super.initState();
     _controller = FlipCardController();
-    Future.delayed(Duration(milliseconds: 1000), () {
-      doStuff();
+    Future.delayed(Duration(milliseconds: 2000), () async {
+      await hint();
     });
   }
 
-  void doStuff() {
-    _controller!.hint(
-      duration: Duration(milliseconds: 200),
-      total: Duration(milliseconds: 400),
-    );
+  Future<void> hint() async {
+    await _controller!.toggleCard();
+    await Future.delayed(Duration(milliseconds: 600));
+    await _controller!.toggleCard();
   }
 
   @override
@@ -78,7 +77,10 @@ class _ProfileCardState extends State<ProfileCard> {
                       child: IconButton(
                         onPressed: () => RouteGenerator
                             .mainNavigatorkey.currentState!
-                            .pushNamed(RouteGenerator.editProfile),
+                            .pushNamed(
+                          RouteGenerator.editProfile,
+                          arguments: RouteGenerator.profile,
+                        ),
                         icon: Icon(Icons.edit),
                       ),
                     )

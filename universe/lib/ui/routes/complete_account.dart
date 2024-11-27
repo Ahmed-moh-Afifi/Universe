@@ -13,12 +13,14 @@ import 'package:universe/ui/styles/text_styles.dart';
 import 'package:universe/ui/widgets/expandable_image.dart';
 
 class CompleteAccount extends StatelessWidget {
-  const CompleteAccount({super.key});
+  final String previousRouteName;
+  const CompleteAccount({required this.previousRouteName, super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => EditProfileBloc(UsersRepository()),
+      create: (context) =>
+          EditProfileBloc(previousRouteName, UsersRepository()),
       child: CompleteAccountContent(),
     );
   }
@@ -422,8 +424,10 @@ class CompleteAccountContent extends StatelessWidget {
                         .authenticationService
                         .currentUser()!
                         .lastOnline,
-                    links: linksController.text.split('\n')
-                      ..forEach(
+                    links: linksController.text.trim().isEmpty
+                        ? null
+                        : linksController.text.split('\n')
+                      ?..forEach(
                         (element) => element.trim(),
                       ),
                   );

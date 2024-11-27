@@ -59,8 +59,10 @@ class ProfileUpdatedEvent {}
 class EditProfileBloc extends Bloc<Object?, EditProfileState> {
   final UsersRepository _userRepository;
   final PostsFilesRepository _filesRepository = PostsFilesRepository();
+  final String previousRouteName;
 
-  EditProfileBloc(this._userRepository) : super(EditProfileState.initial()) {
+  EditProfileBloc(this.previousRouteName, this._userRepository)
+      : super(EditProfileState.initial()) {
     on<PickImageEvent>(
       (event, emit) async {
         var image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -122,7 +124,12 @@ class EditProfileBloc extends Bloc<Object?, EditProfileState> {
         }
 
         event.finishedCallback();
-        RouteGenerator.mainNavigatorkey.currentState!.pop();
+        if (previousRouteName == RouteGenerator.registerPage) {
+          RouteGenerator.mainNavigatorkey.currentState!.pushNamedAndRemoveUntil(
+              RouteGenerator.homePage, (route) => false);
+        } else {
+          RouteGenerator.mainNavigatorkey.currentState!.pop();
+        }
       },
     );
   }
