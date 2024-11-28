@@ -27,8 +27,9 @@ class ChatScreen extends StatelessWidget {
 class ChatContent extends StatelessWidget {
   final Chat chat;
   final User user;
+  final TextEditingController _messageController = TextEditingController();
 
-  const ChatContent(this.user, this.chat, {super.key});
+  ChatContent(this.user, this.chat, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,43 +90,48 @@ class ChatContent extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          borderSide: BorderSide.none,
+                    child: Container(
+                      constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height * 0.2),
+                      child: TextField(
+                        controller: _messageController,
+                        maxLines: null,
+                        minLines: null,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: 'Message',
+                          hintStyle: TextStyle(color: Colors.grey),
                         ),
-                        hintText: 'Message',
-                        hintStyle: TextStyle(color: Colors.grey),
                       ),
-                      onSubmitted: (text) {
-                        BlocProvider.of<ChatBloc>(context).add(SendMessage(
-                            Message(
-                              id: 0,
-                              body: text,
-                              images: [],
-                              videos: [],
-                              audios: [],
-                              publishDate: DateTime.now(),
-                              authorId: AuthenticationRepository()
-                                  .authenticationService
-                                  .currentUser()!
-                                  .id,
-                              reactionsCount: 0,
-                              repliesCount: 0,
-                              chatId: chat.id,
-                            ),
-                            user.id));
-                      },
                     ),
                   ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    // Handle send button press
+                    BlocProvider.of<ChatBloc>(context).add(SendMessage(
+                        Message(
+                          id: 0,
+                          body: _messageController.text,
+                          images: [],
+                          videos: [],
+                          audios: [],
+                          publishDate: DateTime.now(),
+                          authorId: AuthenticationRepository()
+                              .authenticationService
+                              .currentUser()!
+                              .id,
+                          reactionsCount: 0,
+                          repliesCount: 0,
+                          chatId: chat.id,
+                        ),
+                        user.id));
+                    _messageController.clear();
                   },
                 ),
               ],
