@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 class ExpandableImage extends StatelessWidget {
   final String url;
   final String tag;
-  const ExpandableImage(this.url, this.tag, {super.key});
+  ExpandableImage(this.url, {super.key}) : tag = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {

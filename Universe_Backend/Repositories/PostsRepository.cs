@@ -99,7 +99,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                 logger.LogDebug("PostsRepository.GetPosts: Getting first 10 posts");
                 posts = dbContext.Posts
                     .Where(p => p.AuthorId == userId && p.ReplyToPost == -1)
-                    .OrderBy(p => p.PublishDate)
+                    .OrderByDescending(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
                     .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
@@ -110,7 +110,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                 logger.LogDebug("PostsRepository.GetPosts: Getting posts after date {LastDate} and id {LastId}", lastDate, lastId);
                 posts = dbContext.Posts
                     .Where(p => p.AuthorId == userId)
-                    .OrderBy(p => p.PublishDate)
+                    .OrderByDescending(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
@@ -250,7 +250,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                 logger.LogDebug("PostsRepository.GetFollowingPosts: Getting first 10 posts");
                 posts = dbContext.Posts
                     .Where(p => dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).Select(u => u.Id).Contains(p.AuthorId))
-                    .OrderBy(p => p.PublishDate)
+                    .OrderByDescending(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
                     .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
@@ -261,7 +261,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                 logger.LogDebug("PostsRepository.GetFollowingPosts: Getting posts after date {LastDate} and id {LastId}", lastDate, lastId);
                 posts = dbContext.Posts
                     .Where(p => dbContext.Users.Where(u => u.Id == userId).SelectMany(u => u.Following).Select(u => u.Id).Contains(p.AuthorId))
-                    .OrderBy(p => p.PublishDate)
+                    .OrderByDescending(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)

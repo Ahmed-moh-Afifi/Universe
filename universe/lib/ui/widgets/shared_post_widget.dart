@@ -96,8 +96,6 @@ class SharedPostContentWidget extends StatelessWidget {
                                   ),
                                   child: ExpandableImage(
                                     state.post!.images[index],
-                                    state.post!.id.toString() +
-                                        index.toString(),
                                   ),
                                 );
                               },

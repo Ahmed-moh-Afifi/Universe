@@ -99,7 +99,6 @@ class PostContent extends StatelessWidget {
                             ),
                             child: ExpandableImage(
                               post.images[index],
-                              post.id.toString() + index.toString(),
                             ),
                           );
                         },

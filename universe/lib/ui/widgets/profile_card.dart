@@ -35,7 +35,7 @@ class _ProfileCardState extends State<ProfileCard> {
   void initState() {
     super.initState();
     _controller = FlipCardController();
-    Future.delayed(Duration(milliseconds: 2000), () async {
+    Future.delayed(Duration(milliseconds: 1000), () async {
       await hint();
     });
   }
@@ -100,9 +100,8 @@ class _ProfileCardState extends State<ProfileCard> {
                     ),
                     clipBehavior: Clip.antiAlias,
                     child: ExpandableImage(
-                        widget.user.photoUrl ??
-                            'https://via.placeholder.com/150',
-                        'pf'),
+                      widget.user.photoUrl ?? 'https://via.placeholder.com/150',
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
