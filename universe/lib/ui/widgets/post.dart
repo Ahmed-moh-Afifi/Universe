@@ -76,7 +76,9 @@ class PostContent extends StatelessWidget {
             ),
             Text(post.body),
             post.childPostId != -1
-                ? SharedPostWidget(postId: post.childPostId)
+                ? SharedPostWidget(
+                    post: post.childPost!,
+                  )
                 : const SizedBox(width: 0, height: 0),
             post.images.isNotEmpty
                 ? Container(
@@ -309,7 +311,7 @@ class PostContent extends StatelessWidget {
                                                   videos: [],
                                                   audios: [],
                                                   widgets: [],
-                                                  replyToPost: -1,
+                                                  replyToPostId: -1,
                                                   childPostId: -1,
                                                   publishDate: DateTime.now(),
                                                   reactionsCount: 0,

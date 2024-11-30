@@ -121,7 +121,7 @@ class NewPostBloc extends Bloc<Object, NewPostState> {
               videos: event.videos,
               audios: event.audios,
               widgets: event.widgets,
-              replyToPost: -1,
+              replyToPostId: -1,
               childPostId: -1,
               publishDate: DateTime.now(),
               reactionsCount: 0,

@@ -32,7 +32,9 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
             var post = await dbContext.Posts
                 .Where(p => p.Id == postId)
                 .Include(p => p.Author)
-                .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
+                .Include(p => p.ChildPost)
+                .ThenInclude(p => p.Author)
+                .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault(), p.ChildPost.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                 .FirstOrDefaultAsync();
             return post ?? throw new ArgumentException("Post not found");
         }
@@ -98,23 +100,27 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
             {
                 logger.LogDebug("PostsRepository.GetPosts: Getting first 10 posts");
                 posts = dbContext.Posts
-                    .Where(p => p.AuthorId == userId && p.ReplyToPost == -1)
+                    .Where(p => p.AuthorId == userId && p.ReplyToPostId == null)
                     .OrderByDescending(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
+                    .Include(p => p.ChildPost)
+                    .ThenInclude(p => p.Author)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault(), p.ChildPost.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(20);
             }
             else
             {
                 logger.LogDebug("PostsRepository.GetPosts: Getting posts after date {LastDate} and id {LastId}", lastDate, lastId);
                 posts = dbContext.Posts
-                    .Where(p => p.AuthorId == userId)
+                    .Where(p => p.AuthorId == userId && p.ReplyToPostId == null)
                     .OrderByDescending(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
+                    .Include(p => p.ChildPost)
+                    .ThenInclude(p => p.Author)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault(), p.ChildPost.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(20);
             }
 
@@ -137,23 +143,23 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
             {
                 logger.LogDebug("PostsRepository.GetReplies: Getting first 10 replies");
                 replies = dbContext.Posts
-                    .Where(p => p.ReplyToPost == postId)
+                    .Where(p => p.ReplyToPostId == postId)
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault(), p.ChildPost.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(10);
             }
             else
             {
                 logger.LogDebug("PostsRepository.GetReplies: Getting replies after date {LastDate} and id {LastId}", lastDate, lastId);
                 replies = dbContext.Posts
-                    .Where(p => p.ReplyToPost == postId)
+                    .Where(p => p.ReplyToPostId == postId)
                     .OrderBy(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault(), p.ChildPost.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
                     .Take(10);
             }
 
@@ -172,7 +178,7 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         try
         {
             reply.Id = 0;
-            reply.ReplyToPost = postId;
+            reply.ReplyToPostId = postId;
             await dbContext.Posts.AddAsync(reply.ToModel());
             await dbContext.SaveChangesAsync();
             return reply.Id;
@@ -253,8 +259,10 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .OrderByDescending(p => p.PublishDate)
                     .ThenBy(p => p.Id)
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
-                    .Take(10);
+                    .Include(p => p.ChildPost)
+                    .ThenInclude(p => p.Author)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault(), p.ChildPost.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
+                    .Take(20);
             }
             else
             {
@@ -265,8 +273,10 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
                     .ThenBy(p => p.Id)
                     .Where(p => p.PublishDate > lastDate || (p.PublishDate == lastDate && p.Id > lastId))
                     .Include(p => p.Author)
-                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
-                    .Take(10);
+                    .Include(p => p.ChildPost)
+                    .ThenInclude(p => p.Author)
+                    .Select(p => PostDTO.FromPost(p, p.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault(), p.ChildPost.Reactions.Any(r => r.UserId == callerId), p.Reactions.Where(r => r.UserId == callerId).Select(r => r.ToDTO()).FirstOrDefault()))
+                    .Take(20);
             }
 
             return posts;

@@ -15,7 +15,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       videos: json['videos'] as List<dynamic>,
       audios: json['audios'] as List<dynamic>,
       publishDate: DateTime.parse(json['publishDate'] as String),
-      replyToPost: (json['replyToPost'] as num?)?.toInt() ?? -1,
+      replyToPostId: (json['replyToPostId'] as num?)?.toInt() ?? -1,
       childPostId: (json['childPostId'] as num?)?.toInt() ?? -1,
       widgets: (json['widgets'] as List<dynamic>)
           .map((e) => Widget.fromJson(e as Map<String, dynamic>))
@@ -24,6 +24,12 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       reactionsCount: (json['reactionsCount'] as num).toInt(),
       repliesCount: (json['repliesCount'] as num).toInt(),
       reactedToByCaller: json['reactedToByCaller'] as bool,
+      childPost: json['childPost'] == null
+          ? null
+          : Post.fromJson(json['childPost'] as Map<String, dynamic>),
+      replyToPost: json['replyToPost'] == null
+          ? null
+          : Post.fromJson(json['replyToPost'] as Map<String, dynamic>),
     )..callerReaction = json['callerReaction'] == null
         ? null
         : PostReaction.fromJson(json['callerReaction'] as Map<String, dynamic>);
@@ -37,7 +43,7 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'videos': instance.videos,
       'audios': instance.audios,
       'publishDate': instance.publishDate.toIso8601String(),
-      'replyToPost': instance.replyToPost,
+      'replyToPostId': instance.replyToPostId,
       'childPostId': instance.childPostId,
       'widgets': instance.widgets,
       'author': instance.author,
@@ -45,4 +51,6 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'repliesCount': instance.repliesCount,
       'reactedToByCaller': instance.reactedToByCaller,
       'callerReaction': instance.callerReaction,
+      'childPost': instance.childPost,
+      'replyToPost': instance.replyToPost,
     };
