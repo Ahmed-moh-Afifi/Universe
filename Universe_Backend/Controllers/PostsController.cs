@@ -136,7 +136,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
             Body = $"{reply.Author.UserName} replied to {postAuthor.UserName}'s post.",
             Platform= Platform.Android,
             RecipientType = RecipientType.Topic,
-            Recipient = reply.ReplyToPost.ToString()!,
+            Recipient = reply.ReplyToPostId.ToString()!,
             Sender = reply.Author.Id,
         };
         await notificationService.SendNotificationAsync(audienceNotification);

@@ -53,7 +53,6 @@ class HomePage extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.only(top: 0),
                   child: PageView(
-                    physics: const NeverScrollableScrollPhysics(),
                     onPageChanged: (value) {
                       switch (value) {
                         case 0:

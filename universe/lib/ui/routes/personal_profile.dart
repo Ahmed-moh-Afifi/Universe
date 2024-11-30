@@ -7,8 +7,8 @@ import 'package:universe/ui/blocs/personal_profile_bloc.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/post.dart';
 import 'package:universe/ui/widgets/profile_card.dart';
-import 'package:universe/ui/widgets/user_posts_viewer.dart';
 
 class PersonalProfile extends StatelessWidget {
   const PersonalProfile({super.key});
@@ -47,79 +47,83 @@ class PersonalProfileContent extends StatelessWidget {
         },
         child: SafeArea(
           bottom: false,
+          top: false,
           child: Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 115,
-              elevation: 0,
-              flexibleSpace: Padding(
-                padding:
-                    const EdgeInsets.only(top: 0.0, left: 16.0, right: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: SvgPicture.asset(
-                            'lib/assets/icons/save.svg',
-                            colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => RouteGenerator
-                              .mainNavigatorkey.currentState!
-                              .pushNamed(
-                            RouteGenerator.settingsPage,
-                          ),
-                          icon: SvgPicture.asset(
-                            'lib/assets/icons/settings.svg',
-                            colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.primary,
-                                BlendMode.srcIn),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10.0),
-                    Text(
-                      'Profile',
-                      style: TextStyles.hugeStyle,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            body: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 0),
-                      child: ProfileCard(
-                        AuthenticationRepository()
-                            .authenticationService
-                            .currentUser()!,
-                        state.postCount,
-                        state.followersCount,
-                        state.followingCount,
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  floating: true,
+                  expandedHeight: 125,
+                  actions: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: SvgPicture.asset(
+                        'lib/assets/icons/save.svg',
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.primary,
+                            BlendMode.srcIn),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, bottom: 10),
-                      child: UserPostsViewer(state.user, state.posts),
+                    IconButton(
+                      onPressed: () => RouteGenerator
+                          .mainNavigatorkey.currentState!
+                          .pushNamed(
+                        RouteGenerator.settingsPage,
+                      ),
+                      icon: SvgPicture.asset(
+                        'lib/assets/icons/settings.svg',
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.primary,
+                            BlendMode.srcIn),
+                      ),
                     ),
                   ],
+                  flexibleSpace: FlexibleSpaceBar(
+                    expandedTitleScale: 1.3,
+                    titlePadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    title: Text(
+                      'Profile',
+                      style: TextStyles.titleStyle,
+                    ),
+                    background: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [],
+                    ),
+                  ),
                 ),
-              ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => index == 0
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 10, left: 16, right: 16),
+                            child: ProfileCard(
+                              AuthenticationRepository()
+                                  .authenticationService
+                                  .currentUser()!,
+                              state.postCount,
+                              state.followersCount,
+                              state.followingCount,
+                            ),
+                          )
+                        : index == state.posts.length + 1
+                            ? SizedBox(
+                                height: 100,
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 16),
+                                child: PostWidget(
+                                  post: state.posts.elementAt(index - 1),
+                                  user: state.user,
+                                  showFollowButton: false,
+                                ),
+                              ),
+                    childCount: state.posts.length + 2,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

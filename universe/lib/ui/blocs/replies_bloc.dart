@@ -73,7 +73,7 @@ class RepliesBloc extends Bloc<Object, RepliesState> {
               videos: [],
               audios: [],
               widgets: [],
-              replyToPost: post.id,
+              replyToPostId: post.id,
               childPostId: -1,
               publishDate: DateTime.now(),
               reactionsCount: 0,

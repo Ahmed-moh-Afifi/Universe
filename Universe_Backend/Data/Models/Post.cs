@@ -13,7 +13,7 @@ public class Post
     public List<string> Videos { get; set; } = [];
     public List<string> Audios { get; set; } = [];
     public DateTime PublishDate { get; set; } = DateTime.Now;
-    public int? ReplyToPost { get; set; }
+    public int? ReplyToPostId { get; set; }
     public int? ChildPostId { get; set; }
     public required string AuthorId { get; set; }
     public ICollection<Widget>? Widgets { get; set; }
@@ -21,6 +21,8 @@ public class Post
     public int RepliesCount { get; set; }
 
     public virtual User? Author { get; set; }
+    public virtual Post? ReplyToPost { get; set; }
+    public virtual Post? ChildPost { get; set; }
     public virtual ICollection<PostReaction> Reactions { get; set; } = [];
     public virtual ICollection<Tag> Tags { get; set; } = [];
     public virtual ICollection<User> Mentions { get; set; } = [];
@@ -37,12 +39,14 @@ public class Post
             Videos = Videos,
             Audios = Audios,
             PublishDate = PublishDate,
-            ReplyToPost = ReplyToPost,
+            ReplyToPostId = ReplyToPostId,
             ChildPostId = ChildPostId,
             Widgets = Widgets,
             Author = Author!.ToDTO(),
             ReactionsCount = ReactionsCount,
             RepliesCount = RepliesCount,
+            ReplyToPost = ReplyToPost?.ToDTO(),
+            ChildPost = ChildPost?.ToDTO()
         };
     }
 
@@ -54,7 +58,7 @@ public class Post
         Videos = post.Videos;
         Audios = post.Audios;
         PublishDate = post.PublishDate;
-        ReplyToPost = post.ReplyToPost;
+        ReplyToPostId = post.ReplyToPostId;
         ChildPostId = post.ChildPostId;
         AuthorId = post.Author.Id;
         Widgets = post.Widgets;

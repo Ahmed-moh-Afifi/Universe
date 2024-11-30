@@ -12,7 +12,7 @@ public class PostDTO
     public List<string> Videos { get; set; } = [];
     public List<string> Audios { get; set; } = [];
     public DateTime PublishDate { get; set; } = DateTime.Now;
-    public int? ReplyToPost { get; set; }
+    public int? ReplyToPostId { get; set; }
     public int? ChildPostId { get; set; }
     public ICollection<Widget>? Widgets { get; set; }
     public required UserDTO Author { get; set; }
@@ -20,6 +20,8 @@ public class PostDTO
     public int RepliesCount { get; set; }
     public bool ReactedToByCaller { get; set; }
     public PostReactionDTO? CallerReaction { get; set; }
+    public PostDTO? ReplyToPost { get; set; }
+    public PostDTO? ChildPost { get; set; }
 
     public Post ToModel()
     {
@@ -33,7 +35,7 @@ public class PostDTO
             Videos = Videos,
             Audios = Audios,
             PublishDate = PublishDate,
-            ReplyToPost = ReplyToPost,
+            ReplyToPostId = ReplyToPostId,
             ChildPostId = ChildPostId,
             AuthorId = Author.Id,
             Widgets = Widgets,
@@ -42,7 +44,7 @@ public class PostDTO
         };
     }
 
-    public static PostDTO FromPost(Post post, bool reactedToByCaller, PostReactionDTO? callerReaction)
+    public static PostDTO FromPost(Post post, bool reactedToByCaller, PostReactionDTO? callerReaction, bool? childReactedToByCaller, PostReactionDTO? childCallerReaction)
     {
         return new PostDTO
         {
@@ -54,14 +56,16 @@ public class PostDTO
             Videos = post.Videos,
             Audios = post.Audios,
             PublishDate = post.PublishDate,
-            ReplyToPost = post.ReplyToPost,
+            ReplyToPostId = post.ReplyToPostId,
             ChildPostId = post.ChildPostId,
             Author = post.Author!.ToDTO(),
             Widgets = post.Widgets,
             ReactionsCount = post.ReactionsCount,
             RepliesCount = post.RepliesCount,
             ReactedToByCaller = reactedToByCaller,
-            CallerReaction = callerReaction
+            CallerReaction = callerReaction,
+            ReplyToPost = post.ReplyToPost?.ToDTO(),
+            ChildPost = post.ChildPost != null ? PostDTO.FromPost(post.ChildPost, childReactedToByCaller ?? false, childCallerReaction, null, null) : null
         };
     }
 }

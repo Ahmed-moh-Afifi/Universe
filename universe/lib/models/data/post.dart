@@ -16,7 +16,7 @@ class Post {
   List<dynamic> videos;
   List<dynamic> audios;
   final DateTime publishDate;
-  final int replyToPost;
+  final int replyToPostId;
   final int childPostId;
   final List<Widget> widgets;
   final User author;
@@ -24,6 +24,8 @@ class Post {
   int repliesCount;
   bool reactedToByCaller;
   PostReaction? callerReaction;
+  Post? childPost;
+  Post? replyToPost;
 
   Post({
     this.id = -1,
@@ -34,13 +36,15 @@ class Post {
     required this.videos,
     required this.audios,
     required this.publishDate,
-    this.replyToPost = -1,
+    this.replyToPostId = -1,
     this.childPostId = -1,
     required this.widgets,
     required this.author,
     required this.reactionsCount,
     required this.repliesCount,
     required this.reactedToByCaller,
+    this.childPost,
+    this.replyToPost,
   }) {
     uid ??= const Uuid().v4();
   }
@@ -54,7 +58,7 @@ class Post {
     List<dynamic>? videos,
     List<dynamic>? audios,
     DateTime? publishDate,
-    int? replyToPost,
+    int? replyToPostId,
     int? childPostId,
     List<Widget>? widgets,
     User? author,
@@ -72,7 +76,7 @@ class Post {
       videos: videos ?? this.videos,
       audios: audios ?? this.audios,
       publishDate: publishDate ?? this.publishDate,
-      replyToPost: replyToPost ?? this.replyToPost,
+      replyToPostId: replyToPostId ?? this.replyToPostId,
       childPostId: childPostId ?? this.childPostId,
       widgets: widgets ?? this.widgets,
       author: author ?? this.author,
