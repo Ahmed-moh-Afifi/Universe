@@ -1,3 +1,4 @@
+import 'package:auto_direction/auto_direction.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:universe/models/data/message.dart';
@@ -67,10 +68,13 @@ class MessageWidget extends StatelessWidget {
                           : Colors.grey[850],
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Text(
-                      message.body,
-                      style: TextStyle(
-                        color: Colors.white,
+                    child: AutoDirection(
+                      text: message.body,
+                      child: Text(
+                        message.body,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

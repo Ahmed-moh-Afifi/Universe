@@ -1,4 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:ui';
+
+import 'package:auto_direction/auto_direction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/models/data/chat.dart';
@@ -8,6 +10,7 @@ import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/chats_repository.dart';
 import 'package:universe/ui/blocs/chat_bloc.dart';
 import 'package:universe/ui/widgets/message.dart';
+import 'package:universe/ui/widgets/user_presenter.dart';
 
 class ChatScreen extends StatelessWidget {
   final Chat chat;
@@ -24,27 +27,54 @@ class ChatScreen extends StatelessWidget {
   }
 }
 
-class ChatContent extends StatelessWidget {
+class ChatContent extends StatefulWidget {
   final Chat chat;
   final User user;
-  final TextEditingController _messageController = TextEditingController();
 
-  ChatContent(this.user, this.chat, {super.key});
+  const ChatContent(this.user, this.chat, {super.key});
+
+  @override
+  State<ChatContent> createState() => _ChatContentState();
+}
+
+class _ChatContentState extends State<ChatContent> {
+  final TextEditingController _messageController = TextEditingController();
+  String text = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-          title: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(
-                user.photoUrl ?? 'https://via.placeholder.com/150'),
-          ),
-          const SizedBox(width: 8),
-          Text(user.userName),
-        ],
-      )),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        forceMaterialTransparency: true,
+        flexibleSpace: FlexibleSpaceBar(
+          background: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+              child: Container(color: Colors.transparent)),
+        ),
+        title: UserPresenter(
+          user: widget.user,
+          contentPadding: EdgeInsets.all(0),
+        ),
+        titleSpacing: 0,
+        // Row(
+        //   children: [
+        //     CircleAvatar(
+        //       radius: 20,
+        //       backgroundImage: CachedNetworkImageProvider(
+        //           widget.user.photoUrl ?? 'https://via.placeholder.com/150'),
+        //     ),
+        //     const SizedBox(width: 8),
+        //     Text(
+        //       '${widget.user.firstName} ${widget.user.lastName}',
+        //     ),
+        //   ],
+        // ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -66,7 +96,7 @@ class ChatContent extends StatelessWidget {
                               : null;
                       Message? nextMessage =
                           index - 1 >= 0 ? state.messages![index - 1] : null;
-                      message!.author = user;
+                      message!.author = widget.user;
                       if (previousMessage != null) {
                         return MessageWidget(
                           message,
@@ -120,19 +150,27 @@ class ChatContent extends StatelessWidget {
                     child: Container(
                       constraints: BoxConstraints(
                           maxHeight: MediaQuery.of(context).size.height * 0.2),
-                      child: TextField(
-                        controller: _messageController,
-                        maxLines: null,
-                        minLines: null,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            borderSide: BorderSide.none,
+                      child: AutoDirection(
+                        text: text,
+                        child: TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              text = value;
+                            });
+                          },
+                          controller: _messageController,
+                          maxLines: null,
+                          minLines: null,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              borderSide: BorderSide.none,
+                            ),
+                            hintText: 'Message',
+                            hintStyle: TextStyle(color: Colors.grey),
                           ),
-                          hintText: 'Message',
-                          hintStyle: TextStyle(color: Colors.grey),
                         ),
                       ),
                     ),
@@ -155,9 +193,9 @@ class ChatContent extends StatelessWidget {
                               .id,
                           reactionsCount: 0,
                           repliesCount: 0,
-                          chatId: chat.id,
+                          chatId: widget.chat.id,
                         ),
-                        user.id));
+                        widget.user.id));
                     _messageController.clear();
                   },
                 ),
