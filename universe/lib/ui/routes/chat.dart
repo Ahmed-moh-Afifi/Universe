@@ -60,8 +60,35 @@ class ChatContent extends StatelessWidget {
                     itemCount: state.messages?.length,
                     itemBuilder: (context, index) {
                       final message = state.messages?[index];
+                      Message? previousMessage =
+                          index + 1 < state.messages!.length
+                              ? state.messages![index + 1]
+                              : null;
+                      Message? nextMessage =
+                          index - 1 >= 0 ? state.messages![index - 1] : null;
                       message!.author = user;
-                      return MessageWidget(message);
+                      if (previousMessage != null) {
+                        return MessageWidget(
+                          message,
+                          (nextMessage == null ||
+                                  nextMessage.publishDate
+                                          .difference(message.publishDate)
+                                          .inMinutes >=
+                                      5) ||
+                              nextMessage.authorId != message.authorId,
+                          previousMessage.authorId != message.authorId,
+                        );
+                      } else {
+                        return MessageWidget(
+                            message,
+                            (nextMessage == null ||
+                                    nextMessage.publishDate
+                                            .difference(message.publishDate)
+                                            .inMinutes >=
+                                        5) ||
+                                nextMessage.authorId != message.authorId,
+                            true);
+                      }
                     },
                   );
                 } else {

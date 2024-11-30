@@ -6,13 +6,16 @@ import 'package:universe/ui/styles/text_styles.dart';
 
 class MessageWidget extends StatelessWidget {
   final Message message;
+  final bool showDate;
+  final bool showProfileAvatar;
 
-  const MessageWidget(this.message, {super.key});
+  const MessageWidget(this.message, this.showDate, this.showProfileAvatar,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.only(bottom: showDate ? 16 : 0, left: 8, right: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: message.authorId ==
@@ -28,12 +31,15 @@ class MessageWidget extends StatelessWidget {
                   .authenticationService
                   .currentUser()!
                   .id)
-            CircleAvatar(
-              radius: 16,
-              backgroundImage: CachedNetworkImageProvider(
-                message.author!.photoUrl ?? 'https://via.placeholder.com/150',
-              ),
-            ),
+            showProfileAvatar
+                ? CircleAvatar(
+                    radius: 16,
+                    backgroundImage: CachedNetworkImageProvider(
+                      message.author!.photoUrl ??
+                          'https://via.placeholder.com/150',
+                    ),
+                  )
+                : const SizedBox(width: 32),
           Flexible(
             child: Padding(
               padding: const EdgeInsets.only(left: 8),
@@ -69,10 +75,12 @@ class MessageWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    '${(message.publishDate.hour > 12 && message.publishDate.hour != 0 ? message.publishDate.hour - 12 : message.publishDate.hour == 0 ? 12 : message.publishDate.hour)}:${message.publishDate.minute < 10 ? 0 : ''}${message.publishDate.minute} ${message.publishDate.hour >= 12 ? 'PM' : 'AM'}',
-                    style: TextStyles.subtitleStyle,
-                  ),
+                  showDate
+                      ? Text(
+                          '${(message.publishDate.hour > 12 && message.publishDate.hour != 0 ? message.publishDate.hour - 12 : message.publishDate.hour == 0 ? 12 : message.publishDate.hour)}:${message.publishDate.minute < 10 ? 0 : ''}${message.publishDate.minute} ${message.publishDate.hour >= 12 ? 'PM' : 'AM'}',
+                          style: TextStyles.subtitleStyle,
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
