@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -52,6 +54,8 @@ class PersonalProfileContent extends StatelessWidget {
             body: CustomScrollView(
               slivers: [
                 SliverAppBar(
+                  backgroundColor: Colors.transparent,
+                  surfaceTintColor: Colors.transparent,
                   floating: true,
                   expandedHeight: 125,
                   actions: [
@@ -86,9 +90,11 @@ class PersonalProfileContent extends StatelessWidget {
                       'Profile',
                       style: TextStyles.titleStyle,
                     ),
-                    background: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [],
+                    background: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+                      child: Container(
+                        color: Colors.transparent,
+                      ),
                     ),
                   ),
                 ),
