@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/apis/firebase_cloud_messaging.dart';
+import 'package:universe/apis/hubs/reactions_count_hub.dart';
 import 'package:universe/models/config.dart';
 import 'package:universe/models/authentication/notification_token.dart'
     as notification_token;
@@ -54,6 +55,7 @@ class StartupBloc extends Bloc<Object, StartupState> {
 
   Future initializeApp() async {
     await Config.load();
+    await ReactionsCountHub().start();
     late final Future<FirebaseApp> initialization;
     initialization =
         Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

@@ -4,16 +4,16 @@ namespace Universe_Backend.Hubs
 {
     public class ReactionsCountHub(ILogger<ReactionsCountHub> logger) : Hub
     {
-        public async Task JoinGroup(string connectionId, string postId)
+        public async Task JoinGroup(string postId)
         {
-            logger.LogDebug($"Adding user {connectionId} to group {postId}");
-            await Groups.AddToGroupAsync(connectionId, postId);
+            logger.LogDebug($"Adding user {Context.ConnectionId} to group {postId}");
+            await Groups.AddToGroupAsync(Context.ConnectionId, postId);
         }
 
-        public async Task LeaveGroup(string connectionId, string postId)
+        public async Task LeaveGroup(string postId)
         {
-            logger.LogDebug($"Removing user {connectionId} from group {postId}");
-            await Groups.RemoveFromGroupAsync(connectionId, postId);
+            logger.LogDebug($"Removing user {Context.ConnectionId} from group {postId}");
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, postId);
         }
     }
 }

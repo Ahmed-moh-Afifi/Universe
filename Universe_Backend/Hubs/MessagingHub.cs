@@ -24,7 +24,6 @@ namespace Universe_Backend.Hubs
 
             if (sender != userId)
             {
-
                 var onlineSessions = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.OnlineSessions).FirstOrDefaultAsync();
                 if (onlineSessions > 0)
                 {

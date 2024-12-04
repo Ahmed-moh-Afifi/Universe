@@ -23,9 +23,14 @@ namespace Universe_Backend.Repositories
 
         public async Task<List<Chat>> GetUserChatsAsync(string userId)
         {
-            return await dbContext.Chats
+            var chats = await dbContext.Chats
+                .Include(c => c.Users)
+                .OrderByDescending(c => c.LastEdited)
                 .Where(chat => chat.Users.Any(user => user.Id == userId))
                 .ToListAsync();
+
+            chats.ForEach(c => { c.Name = c.Users.Where(u => u.Id != userId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{c.Users.First().FirstName} {c.Users.First().LastName}"; c.Users = []; });
+            return chats;
         }
 
         public async Task<ChatDTO> GetChatAsync(int chatId)
@@ -113,6 +118,13 @@ namespace Universe_Backend.Repositories
                 await dbContext.SaveChangesAsync();
 
                 chat = cht.ToDTO();
+            }
+            else
+            {
+                var targetedGuy = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == targetedGuyId)
+                    ?? throw new ArgumentException("Targeted guy not found. Make sure you're a good stalker.");
+
+                chat.Name = targetedGuy.UserName!;
             }
 
             return chat;

@@ -1,81 +1,51 @@
-import 'dart:async';
-import 'dart:developer';
+import 'package:signalr_netcore/http_connection_options.dart';
 import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
+import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/models/config.dart';
-import 'package:universe/models/data/post_reaction.dart';
 
 class ReactionsCountHub {
-  static String serverUrl = '${Config().api}/ReactionsCountHub';
-  late HubConnection hubConnection;
-  late Future<void>? connection;
+  static final ReactionsCountHub _singleton = ReactionsCountHub._internal();
 
-  ReactionsCountHub._privateConstructor() {
-    hubConnection = HubConnectionBuilder().withUrl(serverUrl).build();
+  ReactionsCountHub._internal();
+
+  factory ReactionsCountHub() {
+    return _singleton;
   }
 
-  static final ReactionsCountHub _instance =
-      ReactionsCountHub._privateConstructor();
+  final HubConnection _hubConnection = HubConnectionBuilder()
+      .withUrl('${Config().api}/ReactionsCountHub',
+          options: HttpConnectionOptions(
+            accessTokenFactory: () => Future.microtask(
+              () async {
+                return (await TokenManager().getValidTokens()).accessToken;
+              },
+            ),
+          ))
+      .withAutomaticReconnect()
+      .build();
 
-  factory ReactionsCountHub() => _instance;
-
-  Future<void>? connect() async {
-    if (hubConnection.state == HubConnectionState.Connected) {
-      log('Already connected with connectionId: ${hubConnection.connectionId}',
-          name: 'ReactionsCountHub');
-      return;
-    }
-
-    if (hubConnection.state == HubConnectionState.Connecting) {
-      log('Already connecting...', name: 'ReactionsCountHub');
-      await connection;
-      return;
-    }
-
-    log('Connecting to $serverUrl', name: 'ReactionsCountHub');
-    connection = hubConnection.start();
-    await connection;
-    log('Connection started with connectionId: ${hubConnection.connectionId}',
-        name: 'ReactionsCountHub');
+  Future<void> start() async {
+    await _hubConnection.start();
   }
 
-  Future<void> disconnect() async {
-    log('Disconnecting from connectionId: ${hubConnection.connectionId}',
-        name: 'ReactionsCountHub');
-    await hubConnection.stop();
-    log('Disconnected from connectionId: ${hubConnection.connectionId}',
-        name: 'ReactionsCountHub');
+  Future<void> stop() async {
+    await _hubConnection.stop();
   }
 
-  Future<void> subscribeToPostReactionsCount(String postId) async {
-    log('Subscribing to post reactions count for postId: $postId',
-        name: 'ReactionsCountHub');
-    await hubConnection
-        .invoke('JoinGroup', args: [hubConnection.connectionId!, postId]);
-    log('Subscribed to post reactions count for postId: $postId',
-        name: 'ReactionsCountHub');
+  void on(String methodName, void Function(List<Object?>?) handler) {
+    _hubConnection.on(methodName, handler);
   }
 
-  Future<void> unsubscribeFromPostReactionsCount(String postId) async {
-    log('Unsubscribing from post reactions count for postId: $postId',
-        name: 'ReactionsCountHub');
-    await hubConnection
-        .invoke('LeaveGroup', args: [hubConnection.connectionId!, postId]);
-    log('Unsubscribed from post reactions count for postId: $postId',
-        name: 'ReactionsCountHub');
+  void off(String methodName, void Function(List<Object?>?)? handler) {
+    _hubConnection.off(methodName, method: handler);
   }
 
-  void onReactionsCountChanged(Function(int, String, PostReaction) callback) {
-    hubConnection.on('UpdateReactionsCount', (arguments) {
-      log('Received reactions count changes: $arguments',
-          name: 'ReactionsCountHub');
-      final reactionCount = arguments![0] as int;
-      final userId = arguments[1] as String;
-      final reaction =
-          PostReaction.fromJson(arguments[2] as Map<String, dynamic>);
+  Future invoke(String methodName, List<Object>? arguments) async {
+    await _hubConnection.invoke(methodName, args: arguments);
+  }
 
-      callback(reactionCount, userId, reaction);
-    });
-    log('Listening to reactions count changes', name: 'ReactionsCountHub');
+  void isRunning() {
+    _hubConnection.state == HubConnectionState.Connected;
   }
 }

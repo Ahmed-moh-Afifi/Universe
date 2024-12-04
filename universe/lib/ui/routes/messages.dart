@@ -1,10 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:universe/extensions/date_time_extensions.dart';
+import 'package:universe/repositories/chats_repository.dart';
+import 'package:universe/ui/blocs/messages_bloc.dart';
 import 'package:universe/ui/styles/text_styles.dart';
 
 class Messages extends StatelessWidget {
   const Messages({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          MessagesBloc(ChatsRepository())..add(GetChatsEvent()),
+      child: MessagesContent(),
+    );
+  }
+}
+
+class MessagesContent extends StatelessWidget {
+  const MessagesContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,41 +78,58 @@ class Messages extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: ListView(
-                children: const [
-                  ChatTile(
-                    name: 'Donna Gray',
-                    message: 'Hey! I saw you like hiking...',
-                    time: '3m ago',
-                    image:
-                        'https://via.placeholder.com/150', // Placeholder for avatar
-                    isOnline: true,
-                  ),
-                  ChatTile(
-                    name: 'Luciana Garcia',
-                    message: 'Your dog is adorable. What’s his name?',
-                    time: '7m ago',
-                    image: 'https://via.placeholder.com/150',
-                    isOnline: false,
-                  ),
-                  ChatTile(
-                    name: 'Amina Murphy',
-                    message: 'Hello! I noticed we both love sushi.',
-                    time: '22h ago',
-                    image: 'https://via.placeholder.com/150',
-                    isOnline: false,
-                  ),
-                  ChatTile(
-                    name: 'Aisha Ahmad',
-                    message: 'Hey there! I see you’re into photography',
-                    time: '3d ago',
-                    image: 'https://via.placeholder.com/150',
-                    isOnline: false,
-                  ),
-                ],
-              ),
-            ),
+            Expanded(child: BlocBuilder<MessagesBloc, MessagesState>(
+              builder: (context, state) {
+                return state.state == MessagesStates.loaded
+                    ? ListView.builder(
+                        itemBuilder: (context, index) => ChatTile(
+                          name: state.chats![index].name,
+                          message: '',
+                          time:
+                              state.chats![index].lastEdited.toEnglishString(),
+                          image: 'https://via.placeholder.com/150',
+                        ),
+                        itemCount: state.chats?.length,
+                      )
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      );
+              },
+            )
+                // ListView(
+                //   children: const [
+                //     ChatTile(
+                //       name: 'Donna Gray',
+                //       message: 'Hey! I saw you like hiking...',
+                //       time: '3m ago',
+                //       image:
+                //           'https://via.placeholder.com/150', // Placeholder for avatar
+                //       isOnline: true,
+                //     ),
+                //     ChatTile(
+                //       name: 'Luciana Garcia',
+                //       message: 'Your dog is adorable. What’s his name?',
+                //       time: '7m ago',
+                //       image: 'https://via.placeholder.com/150',
+                //       isOnline: false,
+                //     ),
+                //     ChatTile(
+                //       name: 'Amina Murphy',
+                //       message: 'Hello! I noticed we both love sushi.',
+                //       time: '22h ago',
+                //       image: 'https://via.placeholder.com/150',
+                //       isOnline: false,
+                //     ),
+                //     ChatTile(
+                //       name: 'Aisha Ahmad',
+                //       message: 'Hey there! I see you’re into photography',
+                //       time: '3d ago',
+                //       image: 'https://via.placeholder.com/150',
+                //       isOnline: false,
+                //     ),
+                //   ],
+                // ),
+                ),
           ],
         ),
         floatingActionButton: Padding(
