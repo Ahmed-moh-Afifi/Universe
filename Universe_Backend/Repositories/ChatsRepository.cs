@@ -21,15 +21,16 @@ namespace Universe_Backend.Repositories
             return chat;
         }
 
-        public async Task<List<Chat>> GetUserChatsAsync(string userId)
+        public async Task<List<ChatDTO>> GetUserChatsAsync(string userId)
         {
             var chats = await dbContext.Chats
-                .Include(c => c.Users)
                 .OrderByDescending(c => c.LastEdited)
                 .Where(chat => chat.Users.Any(user => user.Id == userId))
+                .Include(c => c.Users)
+                .Select(c => new ChatDTO() { Id = c.Id, Name = c.Name, LastEdited = c.LastEdited, Users = c.Users.Select(u => u.ToDTO()).ToList(), Messages = c.Messages.Where(m => m.Id == c.Messages.OrderByDescending(m => m.PublishDate).First().Id).Select(m => m.ToDTO()).ToList() })
                 .ToListAsync();
 
-            chats.ForEach(c => { c.Name = c.Users.Where(u => u.Id != userId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{c.Users.First().FirstName} {c.Users.First().LastName}"; c.Users = []; });
+            chats.ForEach(c => { c.Name = c.Users.Where(u => u.Id != userId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{c.Users.First().FirstName} {c.Users.First().LastName}"; });
             return chats;
         }
 

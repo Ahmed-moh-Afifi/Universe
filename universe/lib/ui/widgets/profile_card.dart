@@ -41,9 +41,13 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 
   Future<void> hint() async {
-    await _controller!.toggleCard();
-    await Future.delayed(Duration(milliseconds: 600));
-    await _controller!.toggleCard();
+    if (mounted) {
+      await _controller!.toggleCard();
+      await Future.delayed(Duration(milliseconds: 600));
+      if (mounted) {
+        await _controller!.toggleCard();
+      }
+    }
   }
 
   @override

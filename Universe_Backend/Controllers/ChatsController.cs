@@ -26,7 +26,7 @@ namespace Universe_Backend.Controllers
         }
 
         [HttpGet("")]
-        public async Task<ActionResult<List<Chat>>> GetUserChatsAsync(string userId)
+        public async Task<ActionResult<List<ChatDTO>>> GetUserChatsAsync(string userId)
         {
             try
             {

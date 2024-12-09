@@ -144,7 +144,7 @@ class SearchContent extends StatelessWidget {
                         shrinkWrap: true,
                         itemBuilder: (context, index) => UserPresenter(
                           user: state.data!.elementAt(index),
-                          margin: const EdgeInsets.only(top: 10, bottom: 10),
+                          margin: const EdgeInsets.only(top: 0, bottom: 0),
                           contentPadding: const EdgeInsets.all(10),
                         ),
                       )

@@ -1,11 +1,14 @@
+import 'package:auto_direction/auto_direction.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:universe/extensions/date_time_extensions.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/chats_repository.dart';
 import 'package:universe/ui/blocs/messages_bloc.dart';
 import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/verified_badge.dart';
 
 class Messages extends StatelessWidget {
   const Messages({super.key});
@@ -84,10 +87,59 @@ class MessagesContent extends StatelessWidget {
                     ? ListView.builder(
                         itemBuilder: (context, index) => ChatTile(
                           name: state.chats![index].name,
-                          message: '',
-                          time:
-                              state.chats![index].lastEdited.toEnglishString(),
-                          image: 'https://via.placeholder.com/150',
+                          message: state.chats![index].messages[0].body,
+                          time: state.chats![index].messages.first.publishDate
+                              .toEnglishString(),
+                          image: state.chats![index].users.any((u) =>
+                                  u.id !=
+                                  AuthenticationRepository()
+                                      .authenticationService
+                                      .currentUser()!
+                                      .id)
+                              ? state.chats![index].users
+                                      .where((u) =>
+                                          u.id !=
+                                          AuthenticationRepository()
+                                              .authenticationService
+                                              .currentUser()!
+                                              .id)
+                                      .first
+                                      .photoUrl ??
+                                  'https://via.placeholder.com/150'
+                              : state.chats![index].users
+                                      .where((u) =>
+                                          u.id ==
+                                          AuthenticationRepository()
+                                              .authenticationService
+                                              .currentUser()!
+                                              .id)
+                                      .first
+                                      .photoUrl ??
+                                  'https://via.placeholder.com/150',
+                          verified: state.chats![index].users.any((u) =>
+                                  u.id !=
+                                  AuthenticationRepository()
+                                      .authenticationService
+                                      .currentUser()!
+                                      .id)
+                              ? state.chats![index].users
+                                  .where((u) =>
+                                      u.id !=
+                                      AuthenticationRepository()
+                                          .authenticationService
+                                          .currentUser()!
+                                          .id)
+                                  .first
+                                  .verified
+                              : state.chats![index].users
+                                  .where((u) =>
+                                      u.id ==
+                                      AuthenticationRepository()
+                                          .authenticationService
+                                          .currentUser()!
+                                          .id)
+                                  .first
+                                  .verified,
                         ),
                         itemCount: state.chats?.length,
                       )
@@ -154,6 +206,7 @@ class ChatTile extends StatelessWidget {
   final String time;
   final String image;
   final bool isOnline;
+  final bool verified;
 
   const ChatTile({
     super.key,
@@ -162,6 +215,7 @@ class ChatTile extends StatelessWidget {
     required this.time,
     required this.image,
     this.isOnline = false,
+    this.verified = false,
   });
 
   @override
@@ -189,8 +243,29 @@ class ChatTile extends StatelessWidget {
             ),
         ],
       ),
-      title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(message),
+      title: Row(
+        children: [
+          Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+          verified
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: VerifiedBadge(
+                    width: 15,
+                    height: 15,
+                  ),
+                )
+              : const SizedBox(width: 0, height: 0),
+        ],
+      ),
+      subtitle: AutoDirection(
+          text: message,
+          child: Text(
+            message,
+            textAlign: TextAlign.left,
+            softWrap: false,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyles.subtitleStyle.copyWith(fontSize: 16),
+          )),
       trailing: Text(
         time,
         style: const TextStyle(color: Colors.grey),
