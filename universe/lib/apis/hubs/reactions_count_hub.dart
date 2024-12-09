@@ -1,7 +1,6 @@
 import 'package:signalr_netcore/http_connection_options.dart';
 import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
-import 'package:universe/apis/authentication/token_manager.dart';
 import 'package:universe/models/config.dart';
 
 class ReactionsCountHub {
@@ -16,12 +15,12 @@ class ReactionsCountHub {
   final HubConnection _hubConnection = HubConnectionBuilder()
       .withUrl('${Config().api}/ReactionsCountHub',
           options: HttpConnectionOptions(
-            accessTokenFactory: () => Future.microtask(
-              () async {
-                return (await TokenManager().getValidTokens()).accessToken;
-              },
-            ),
-          ))
+              // accessTokenFactory: () => Future.microtask(
+              //   () async {
+              //     return (await TokenManager().getValidTokens()).accessToken;
+              //   },
+              // ),
+              ))
       .withAutomaticReconnect()
       .build();
 

@@ -44,7 +44,7 @@ class ShareClicked {
 class PostBloc extends Bloc<Object, PostState> {
   final IPostsRepository postsRepository;
   final Post post;
-  late void Function(List<Object?>?)? onReactionCallback;
+  void Function(List<Object?>?)? onReactionCallback;
   bool waitingForReactionEcho = false;
 
   PostBloc(this.postsRepository, this.post)
