@@ -14,7 +14,7 @@
 
 ### Motivation
 
-As a freshman computer science student, I developed Universe not just to create “another social media app,” but as an exploration of what it takes to build a scalable, user-centered platform from the ground up. I wanted to challenge myself, test my skills in **Flutter** and **ASP.NET Core**, and create a project that could reflect both my technical abilities and my passion for coding. More than just a tech project, Universe represents a journey of:
+As a freshman computer science student, I developed Universe not just to create “another social media app,” but as an exploration of what it takes to build a scalable, user-centered platform from the ground up. I wanted to challenge myself, test my skills, and create a project that could reflect both my technical abilities and my passion for coding. More than just a tech project, Universe represents a journey of:
 
 - **Experimentation with Real-World Technologies**: Through Universe, I explored everything from real-time data synchronization to cloud-based media storage. This helped me understand what goes on behind the scenes of large platforms.
 - **Learning Through Challenges**: Along the way, I encountered complex technical challenges, like managing high volumes of media, implementing real-time features with SignalR, and building a robust API. Solving these issues taught me skills that extend beyond classroom knowledge.
