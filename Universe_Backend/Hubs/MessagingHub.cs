@@ -20,6 +20,7 @@ namespace Universe_Backend.Hubs
 
             message.Id = 0;
             await dbContext.Messages.AddAsync(message);
+            var chat = await dbContext.Chats.FindAsync(message.ChatId);
             await dbContext.SaveChangesAsync();
 
             if (sender != userId)
@@ -38,7 +39,7 @@ namespace Universe_Backend.Hubs
                         {
                             Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
                             Sender = sender,
-                            Title = "New message",
+                            Title = $"{chat?.Name}",
                             Body = message.Body,
                             Platform = Platform.Android
                         };
@@ -127,7 +128,7 @@ namespace Universe_Backend.Hubs
             if (user != null)
             {
                 user.LastOnline = DateTime.UtcNow;
-                user.OnlineSessions--;
+                user.OnlineSessions = user.OnlineSessions > 0 ? user.OnlineSessions - 1 : 0;
                 await dbContext.SaveChangesAsync();
             }
 

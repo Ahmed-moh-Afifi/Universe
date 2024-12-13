@@ -84,19 +84,51 @@ class MessagesContent extends StatelessWidget {
             Expanded(child: BlocBuilder<MessagesBloc, MessagesState>(
               builder: (context, state) {
                 return state.state == MessagesStates.loaded
-                    ? ListView.builder(
-                        itemBuilder: (context, index) => ChatTile(
-                          name: state.chats![index].name,
-                          message: state.chats![index].messages[0].body,
-                          time: state.chats![index].messages.first.publishDate
-                              .toEnglishString(),
-                          image: state.chats![index].users.any((u) =>
-                                  u.id !=
-                                  AuthenticationRepository()
-                                      .authenticationService
-                                      .currentUser()!
-                                      .id)
-                              ? state.chats![index].users
+                    ? state.chats?.length != null && state.chats!.isNotEmpty
+                        ? ListView.builder(
+                            itemCount:
+                                state.chats != null ? state.chats!.length : 0,
+                            itemBuilder: (context, index) => ChatTile(
+                              name: state.chats?[index].name ?? '',
+                              message:
+                                  state.chats?[index].messages[0].body ?? '',
+                              time: state
+                                      .chats?[index].messages.first.publishDate
+                                      .toEnglishString() ??
+                                  '',
+                              image: state.chats![index].users.any((u) =>
+                                      u.id !=
+                                      AuthenticationRepository()
+                                          .authenticationService
+                                          .currentUser()!
+                                          .id)
+                                  ? state.chats![index].users
+                                          .where((u) =>
+                                              u.id !=
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                          .first
+                                          .photoUrl ??
+                                      'https://via.placeholder.com/150'
+                                  : state.chats![index].users
+                                          .where((u) =>
+                                              u.id ==
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                          .first
+                                          .photoUrl ??
+                                      'https://via.placeholder.com/150',
+                              verified: state.chats![index].users.any((u) =>
+                                      u.id !=
+                                      AuthenticationRepository()
+                                          .authenticationService
+                                          .currentUser()!
+                                          .id)
+                                  ? state.chats![index].users
                                       .where((u) =>
                                           u.id !=
                                           AuthenticationRepository()
@@ -104,9 +136,8 @@ class MessagesContent extends StatelessWidget {
                                               .currentUser()!
                                               .id)
                                       .first
-                                      .photoUrl ??
-                                  'https://via.placeholder.com/150'
-                              : state.chats![index].users
+                                      .verified
+                                  : state.chats![index].users
                                       .where((u) =>
                                           u.id ==
                                           AuthenticationRepository()
@@ -114,35 +145,12 @@ class MessagesContent extends StatelessWidget {
                                               .currentUser()!
                                               .id)
                                       .first
-                                      .photoUrl ??
-                                  'https://via.placeholder.com/150',
-                          verified: state.chats![index].users.any((u) =>
-                                  u.id !=
-                                  AuthenticationRepository()
-                                      .authenticationService
-                                      .currentUser()!
-                                      .id)
-                              ? state.chats![index].users
-                                  .where((u) =>
-                                      u.id !=
-                                      AuthenticationRepository()
-                                          .authenticationService
-                                          .currentUser()!
-                                          .id)
-                                  .first
-                                  .verified
-                              : state.chats![index].users
-                                  .where((u) =>
-                                      u.id ==
-                                      AuthenticationRepository()
-                                          .authenticationService
-                                          .currentUser()!
-                                          .id)
-                                  .first
-                                  .verified,
-                        ),
-                        itemCount: state.chats?.length,
-                      )
+                                      .verified,
+                            ),
+                          )
+                        : const Center(
+                            child: Text('No chats yet!'),
+                          )
                     : const Center(
                         child: CircularProgressIndicator(),
                       );

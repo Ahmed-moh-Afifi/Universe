@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Universe_Backend.Data;
 using Universe_Backend.Data.DTOs;
 using Universe_Backend.Data.Models;
@@ -26,11 +27,23 @@ namespace Universe_Backend.Repositories
             var chats = await dbContext.Chats
                 .OrderByDescending(c => c.LastEdited)
                 .Where(chat => chat.Users.Any(user => user.Id == userId))
+                .Where(chat => chat.Messages.Count() > 0)
                 .Include(c => c.Users)
-                .Select(c => new ChatDTO() { Id = c.Id, Name = c.Name, LastEdited = c.LastEdited, Users = c.Users.Select(u => u.ToDTO()).ToList(), Messages = c.Messages.Where(m => m.Id == c.Messages.OrderByDescending(m => m.PublishDate).First().Id).Select(m => m.ToDTO()).ToList() })
+                .Select(c => new ChatDTO()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    LastEdited = c.LastEdited,
+                    Users = c.Users.Select(u => u.ToDTO()).ToList(),
+                    Messages = c.Messages.Where(m => m.Id == c.Messages.OrderByDescending(m => m.PublishDate).First().Id).Select(m => m.ToDTO()).ToList()
+                })
                 .ToListAsync();
 
-            chats.ForEach(c => { c.Name = c.Users.Where(u => u.Id != userId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{c.Users.First().FirstName} {c.Users.First().LastName}"; });
+            chats.AsParallel().Where(c => c.Users.Count <= 2).ForAll(c =>
+            {
+                c.Name = c.Users.Where(u => u.Id != userId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{c.Users.First().FirstName} {c.Users.First().LastName}";
+            });
+
             return chats;
         }
 
@@ -108,7 +121,6 @@ namespace Universe_Backend.Repositories
 
                 var conversationInitiator = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == conversationInitiatorId)
                     ?? throw new ArgumentException("Conversation initiator not found. Make sure you're a good hacker.");
-
 
                 var cht = new Chat() { Name = targetedGuy.UserName!, LastEdited = DateTime.UtcNow };
 
