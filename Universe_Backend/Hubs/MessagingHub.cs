@@ -11,7 +11,7 @@ using Universe_Backend.Repositories;
 namespace Universe_Backend.Hubs
 {
     [Authorize]
-    public class MessagingHub(ILogger<MessagingHub> logger, ApplicationDbContext dbContext, NotificationService.NotificationService notificationService, IUsersRepository usersRepository) : Hub
+    public class MessagingHub(ILogger<MessagingHub> logger, ApplicationDbContext dbContext, NotificationService.NotificationService notificationService, IUsersRepository usersRepository, IChatsRepository chatsRepository) : Hub
     {
         public async Task SendToUserAsync(string userId, Message message)
         {
@@ -20,7 +20,7 @@ namespace Universe_Backend.Hubs
 
             message.Id = 0;
             await dbContext.Messages.AddAsync(message);
-            var chat = await dbContext.Chats.FindAsync(message.ChatId);
+            var chat = await chatsRepository.GetChatAsync(userId, message.ChatId);
             await dbContext.SaveChangesAsync();
 
             if (sender != userId)
@@ -28,10 +28,12 @@ namespace Universe_Backend.Hubs
                 var onlineSessions = await dbContext.Users.Where(u => u.Id == userId).Select(u => u.OnlineSessions).FirstOrDefaultAsync();
                 if (onlineSessions > 0)
                 {
-                    await Clients.User(userId).SendAsync("MessageReceived", message);
+                    logger.LogDebug("Sending signalr...");
+                    await Clients.User(userId).SendAsync("MessageReceived", message.ToDTO());
                 }
                 else
                 {
+                    logger.LogDebug("Sending firebase...");
                     var notificationTokens = await usersRepository.GetNotificationTokens(userId);
                     if (!notificationTokens.IsNullOrEmpty())
                     {
@@ -41,7 +43,8 @@ namespace Universe_Backend.Hubs
                             Sender = sender,
                             Title = $"{chat?.Name}",
                             Body = message.Body,
-                            Platform = Platform.Android
+                            Platform = Platform.Android,
+                            Icon = "C:\\Users\\Ahmed\\Downloads\\U.svg"
                         };
 
                         await notificationService.SendNotificationAsync(notification);
@@ -65,7 +68,8 @@ namespace Universe_Backend.Hubs
                     Sender = notification.Sender,
                     Title = notification.Title,
                     Body = notification.Body,
-                    Platform = Platform.Android
+                    Platform = Platform.Android,
+                    Icon = "C:\\Users\\Ahmed\\Downloads\\U.svg"
                 });
             }
         }
@@ -94,7 +98,8 @@ namespace Universe_Backend.Hubs
                         Sender = notification.Sender,
                         Title = notification.Title,
                         Body = notification.Body,
-                        Platform = Platform.Android
+                        Platform = Platform.Android,
+                        Icon = "C:\\Users\\Ahmed\\Downloads\\U.svg"
                     });
                 }
             }

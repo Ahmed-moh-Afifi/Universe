@@ -47,14 +47,21 @@ namespace Universe_Backend.Repositories
             return chats;
         }
 
-        public async Task<ChatDTO> GetChatAsync(int chatId)
+        public async Task<ChatDTO> GetChatAsync(string callerId, int chatId)
         {
-            return await dbContext.Chats
+            var chat = await dbContext.Chats
                 .Where(c => c.Id == chatId)
                 .Include(chat => chat.Users)
                 .Include(chat => chat.Messages)
                 .Select(c => c.ToDTO())
                 .FirstOrDefaultAsync() ?? throw new ArgumentException("Chat not found.");
+
+            if (chat.Users.Count <= 2)
+            {
+                chat.Name = chat.Users.Where(u => u.Id != callerId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{chat.Users.First().FirstName} {chat.Users.First().LastName}";
+            }
+
+            return chat;
         }
 
         public async Task AddUserToChatAsync(int chatId, string userId)
