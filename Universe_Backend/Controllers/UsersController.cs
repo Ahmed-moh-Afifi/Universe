@@ -22,7 +22,7 @@ public class UsersController(IUsersRepository usersRepository, NotificationServi
 
     [HttpGet]
     [Route("")]
-    [Authorize()]
+    //[Authorize()]
     public async Task<ActionResult<IEnumerable<UserDTO>>> SearchUsers(string query, DateTime lastDate, string? lastId)
     {
         logger.LogDebug("UsersController.SearchUsers: Searching for users with query: {query}", query);

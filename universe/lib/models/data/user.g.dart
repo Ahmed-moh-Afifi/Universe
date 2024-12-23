@@ -23,8 +23,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
           $enumDecodeNullable(_$AccountStateEnumMap, json['accountState']),
       accountPrivacy:
           $enumDecodeNullable(_$AccountPrivacyEnumMap, json['accountPrivacy']),
-      onlineStatus:
-          $enumDecodeNullable(_$OnlineStatusEnumMap, json['onlineStatus']),
+      onlineSessions: (json['onlineSessions'] as num).toInt(),
       lastOnline: json['lastOnline'] == null
           ? null
           : DateTime.parse(json['lastOnline'] as String),
@@ -45,7 +44,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'links': instance.links,
       'accountState': _$AccountStateEnumMap[instance.accountState],
       'accountPrivacy': _$AccountPrivacyEnumMap[instance.accountPrivacy],
-      'onlineStatus': _$OnlineStatusEnumMap[instance.onlineStatus],
+      'onlineSessions': instance.onlineSessions,
       'lastOnline': instance.lastOnline?.toIso8601String(),
       'notificationToken': instance.notificationToken,
     };
@@ -60,9 +59,4 @@ const _$AccountStateEnumMap = {
 const _$AccountPrivacyEnumMap = {
   AccountPrivacy.public: 0,
   AccountPrivacy.private: 1,
-};
-
-const _$OnlineStatusEnumMap = {
-  OnlineStatus.online: 0,
-  OnlineStatus.offline: 1,
 };

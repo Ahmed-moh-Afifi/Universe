@@ -416,10 +416,10 @@ class CompleteAccountContent extends StatelessWidget {
                         .authenticationService
                         .currentUser()!
                         .accountPrivacy,
-                    onlineStatus: AuthenticationRepository()
+                    onlineSessions: AuthenticationRepository()
                         .authenticationService
                         .currentUser()!
-                        .onlineStatus,
+                        .onlineSessions,
                     lastOnline: AuthenticationRepository()
                         .authenticationService
                         .currentUser()!

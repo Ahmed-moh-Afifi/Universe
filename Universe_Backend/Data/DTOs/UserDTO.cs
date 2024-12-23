@@ -18,7 +18,7 @@ public class UserDTO
     public required AccountState AccountState { get; set; }
     public required AccountPrivacy AccountPrivacy { get; set; }
     public DateTime? LastOnline { get; set; }
-    public int OnlineSesions { get; set; }
+    public int OnlineSessions { get; set; }
 
     public User ToModel()
     {
@@ -37,7 +37,7 @@ public class UserDTO
             Links = Links,
             AccountState = AccountState,
             LastOnline = LastOnline,
-            OnlineSessions = OnlineSesions,
+            OnlineSessions = OnlineSessions,
             AccountPrivacy = AccountPrivacy
         };
     }

@@ -42,7 +42,8 @@ class User {
   List<String>? links;
   AccountState? accountState;
   AccountPrivacy? accountPrivacy;
-  OnlineStatus? onlineStatus;
+  // OnlineStatus? onlineStatus;
+  int onlineSessions;
   DateTime? lastOnline;
   String? notificationToken;
 
@@ -60,7 +61,7 @@ class User {
     required this.links,
     required this.accountState,
     required this.accountPrivacy,
-    required this.onlineStatus,
+    required this.onlineSessions,
     required this.lastOnline,
     this.notificationToken,
   });

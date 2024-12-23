@@ -81,7 +81,7 @@ public class User : IdentityUser
             Links = Links,
             AccountState = AccountState,
             LastOnline = LastOnline,
-            OnlineSesions = OnlineSessions,
+            OnlineSessions = OnlineSessions,
             AccountPrivacy = AccountPrivacy
         };
     }
@@ -98,7 +98,7 @@ public class User : IdentityUser
         Links = dto.Links;
         AccountState = dto.AccountState;
         LastOnline = dto.LastOnline;
-        OnlineSessions = dto.OnlineSesions;
+        OnlineSessions = dto.OnlineSessions;
         AccountPrivacy = dto.AccountPrivacy;
         Verified = dto.Verified;
     }

@@ -257,7 +257,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("{postId}/Reactions")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddReaction([FromBody] PostReactionDTO reaction, string userId, int postId, [FromServices] IHubContext<ReactionsCountHub> hubContext)
+    public async Task<ActionResult<int>> AddReaction([FromBody] PostReactionDTO reaction, string userId, int postId, [FromServices] IHubContext<ReactionsCountHub> hubContext, [FromServices] NotificationService.NotificationService notificationService)
     {
         logger.LogDebug("ReactionsController.AddReaction: Adding reaction {@Reaction}", reaction);
         // Validate route parameters.
@@ -280,6 +280,17 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
         logger.LogDebug("ReactionsController.AddReaction: Sending notification to subscribers");
         await hubContext.Clients.Group(postId.ToString()).SendAsync("UpdateReactionsCount", 1, User.FindFirstValue("uid")!, reaction);
+
+        var notificationTokens = await usersRepository.GetNotificationTokens(reaction.UserId);
+
+        var notification = new MultipleUserNotification() 
+        {
+            Recipients = notificationTokens.Select(nt => nt.Token).ToList(),
+            Sender = reaction.UserId,
+            Title = "New Like",
+            Body = $"Your post has got a new like.",
+            Platform = Platform.Android
+        };
 
         return Ok(reactionId);
     }

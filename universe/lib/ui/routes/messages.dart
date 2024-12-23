@@ -146,6 +146,32 @@ class MessagesContent extends StatelessWidget {
                                               .id)
                                       .first
                                       .verified,
+                              isOnline: state.chats![index].users.any((u) =>
+                                      u.id !=
+                                      AuthenticationRepository()
+                                          .authenticationService
+                                          .currentUser()!
+                                          .id)
+                                  ? state.chats![index].users
+                                          .where((u) =>
+                                              u.id !=
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                          .first
+                                          .onlineSessions >
+                                      0
+                                  : state.chats![index].users
+                                          .where((u) =>
+                                              u.id ==
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                          .first
+                                          .onlineSessions >
+                                      0,
                             ),
                           )
                         : const Center(

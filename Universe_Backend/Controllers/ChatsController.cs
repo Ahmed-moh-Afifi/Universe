@@ -45,7 +45,7 @@ namespace Universe_Backend.Controllers
         {
             try
             {
-                var chat = await chatsRepository.GetChatAsync(chatId);
+                var chat = await chatsRepository.GetChatAsync(userId, chatId);
                 return Ok(chat);
             }
             catch (Exception e)

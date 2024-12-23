@@ -44,13 +44,17 @@ namespace Universe_Backend.Hubs
                             Title = $"{chat?.Name}",
                             Body = message.Body,
                             Platform = Platform.Android,
-                            Icon = "C:\\Users\\Ahmed\\Downloads\\U.svg"
                         };
 
                         await notificationService.SendNotificationAsync(notification);
                     }
                 }
             }
+        }
+
+        public async Task SendUserStatus(string status)
+        {
+            await Clients.Group(Context.User!.FindFirstValue("uid")!).SendAsync("UpdateUserStatus", status);
         }
 
         public async Task NotifyUserAsync(string userId, InAppNotification notification)
@@ -69,7 +73,6 @@ namespace Universe_Backend.Hubs
                     Title = notification.Title,
                     Body = notification.Body,
                     Platform = Platform.Android,
-                    Icon = "C:\\Users\\Ahmed\\Downloads\\U.svg"
                 });
             }
         }
@@ -99,7 +102,6 @@ namespace Universe_Backend.Hubs
                         Title = notification.Title,
                         Body = notification.Body,
                         Platform = Platform.Android,
-                        Icon = "C:\\Users\\Ahmed\\Downloads\\U.svg"
                     });
                 }
             }
