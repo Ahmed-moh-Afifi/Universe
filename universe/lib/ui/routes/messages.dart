@@ -1,5 +1,3 @@
-import 'package:auto_direction/auto_direction.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,7 +6,7 @@ import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/chats_repository.dart';
 import 'package:universe/ui/blocs/messages_bloc.dart';
 import 'package:universe/ui/styles/text_styles.dart';
-import 'package:universe/ui/widgets/verified_badge.dart';
+import 'package:universe/ui/widgets/chat_tile.dart';
 
 class Messages extends StatelessWidget {
   const Messages({super.key});
@@ -89,6 +87,15 @@ class MessagesContent extends StatelessWidget {
                             itemCount:
                                 state.chats != null ? state.chats!.length : 0,
                             itemBuilder: (context, index) => ChatTile(
+                              userIds: state.chats![index].users
+                                  .map((u) => u.id)
+                                  .where((u) =>
+                                      u !=
+                                      AuthenticationRepository()
+                                          .authenticationService
+                                          .currentUser()!
+                                          .id)
+                                  .toList(),
                               name: state.chats?[index].name ?? '',
                               message:
                                   state.chats?[index].messages[0].body ?? '',
@@ -229,80 +236,6 @@ class MessagesContent extends StatelessWidget {
             child: const Icon(Icons.add, color: Colors.black),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ChatTile extends StatelessWidget {
-  final String name;
-  final String message;
-  final String time;
-  final String image;
-  final bool isOnline;
-  final bool verified;
-
-  const ChatTile({
-    super.key,
-    required this.name,
-    required this.message,
-    required this.time,
-    required this.image,
-    this.isOnline = false,
-    this.verified = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Stack(
-        children: [
-          CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(image),
-            radius: 25,
-          ),
-          if (isOnline)
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                height: 12,
-                width: 12,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.black, width: 2),
-                ),
-              ),
-            ),
-        ],
-      ),
-      title: Row(
-        children: [
-          Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-          verified
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: VerifiedBadge(
-                    width: 15,
-                    height: 15,
-                  ),
-                )
-              : const SizedBox(width: 0, height: 0),
-        ],
-      ),
-      subtitle: AutoDirection(
-          text: message,
-          child: Text(
-            message,
-            textAlign: TextAlign.left,
-            softWrap: false,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyles.subtitleStyle.copyWith(fontSize: 16),
-          )),
-      trailing: Text(
-        time,
-        style: const TextStyle(color: Colors.grey),
       ),
     );
   }

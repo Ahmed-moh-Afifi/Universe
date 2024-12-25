@@ -17,8 +17,12 @@ class UnfollowEvent {}
 
 class UserPresenterBloc extends Bloc<Object, UserPresenterState> {
   final User user;
-  UserPresenterBloc(IUsersRepository usersRepository, this.user)
-      : super(const UserPresenterState()) {
+  void Function(List<Object?>?)? onOnlineStateCallback;
+
+  UserPresenterBloc(
+    IUsersRepository usersRepository,
+    this.user,
+  ) : super(UserPresenterState()) {
     on<GetFollowState>(
       (event, emit) async {
         emit(

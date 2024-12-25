@@ -122,38 +122,42 @@ class PostBloc extends Bloc<Object, PostState> {
         await ReactionsCountHub().invoke('JoinGroup', [post.id.toString()]);
 
         onReactionCallback = (arguments) {
-          log(arguments.toString(),
-              name: 'ListenToReactionCountChanges (PostBloc)');
-          if (arguments![1] as String ==
-                  AuthenticationRepository()
+          log((arguments?[2] as int).toString());
+          if ((arguments?[2] as int) == post.id) {
+            log(arguments.toString(),
+                name: 'ListenToReactionCountChanges (PostBloc)');
+            if (arguments![1] as String ==
+                    AuthenticationRepository()
+                        .authenticationService
+                        .currentUser()!
+                        .id &&
+                waitingForReactionEcho) {
+              waitingForReactionEcho = false;
+            } else {
+              post.reactionsCount += arguments[0] as int;
+              log(isClosed.toString(),
+                  name: 'ListenToReactionCountChanges (PostBloc)');
+              post.reactedToByCaller = state.isLiked;
+              if (AuthenticationRepository()
                       .authenticationService
                       .currentUser()!
-                      .id &&
-              waitingForReactionEcho) {
-            waitingForReactionEcho = false;
-          } else {
-            post.reactionsCount += arguments[0] as int;
-            log(isClosed.toString(),
-                name: 'ListenToReactionCountChanges (PostBloc)');
-            post.reactedToByCaller = state.isLiked;
-            if (AuthenticationRepository()
-                    .authenticationService
-                    .currentUser()!
-                    .id ==
-                arguments[1] as String) {
-              if (arguments[0] as int == 1) {
-                post.reactedToByCaller = true;
-              } else {
-                post.reactedToByCaller = false;
+                      .id ==
+                  arguments[1] as String) {
+                if (arguments[0] as int == 1) {
+                  post.reactedToByCaller = true;
+                } else {
+                  post.reactedToByCaller = false;
+                }
+                post.callerReaction = arguments[0] as int == 1
+                    ? PostReaction.fromJson(
+                        arguments[2] as Map<String, dynamic>)
+                    : null;
               }
-              post.callerReaction = arguments[0] as int == 1
-                  ? PostReaction.fromJson(arguments[2] as Map<String, dynamic>)
-                  : null;
+              add(ReactionsCountChanged(
+                  post.reactionsCount, post.reactedToByCaller));
+              log('Emitted new reactions count: ${post.reactionsCount}',
+                  name: 'ListenToReactionCountChanges (PostBloc)');
             }
-            add(ReactionsCountChanged(
-                post.reactionsCount, post.reactedToByCaller));
-            log('Emitted new reactions count: ${post.reactionsCount}',
-                name: 'ListenToReactionCountChanges (PostBloc)');
           }
         };
         ReactionsCountHub().on('UpdateReactionsCount', onReactionCallback!);

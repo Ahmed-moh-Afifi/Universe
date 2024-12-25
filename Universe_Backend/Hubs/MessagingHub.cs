@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NotificationService.Models;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using Universe_Backend.Data;
 using Universe_Backend.Data.Models;
@@ -55,6 +56,23 @@ namespace Universe_Backend.Hubs
         public async Task SendUserStatus(string status)
         {
             await Clients.Group(Context.User!.FindFirstValue("uid")!).SendAsync("UpdateUserStatus", status);
+        }
+
+        public async Task SubscribeToUsersStatus(List<string> userIds)
+        {
+            logger.LogDebug($"Subscribing to users: {userIds.Count}");
+            foreach (string uid in userIds)
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, uid);
+            }
+        }
+
+        public async Task UnsubscribeFromUsersStatus(List<string> userIds)
+        {
+            foreach (string uid in userIds)
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, uid);
+            }
         }
 
         public async Task NotifyUserAsync(string userId, InAppNotification notification)
@@ -117,6 +135,7 @@ namespace Universe_Backend.Hubs
             {
                 user.OnlineSessions++;
                 await dbContext.SaveChangesAsync();
+                await Clients.Group(sender).SendAsync("UpdateUserStatus", sender, "Online");
             }
             else
             {
@@ -137,6 +156,10 @@ namespace Universe_Backend.Hubs
                 user.LastOnline = DateTime.UtcNow;
                 user.OnlineSessions = user.OnlineSessions > 0 ? user.OnlineSessions - 1 : 0;
                 await dbContext.SaveChangesAsync();
+                if (user.OnlineSessions == 0)
+                {
+                    await Clients.Group(sender).SendAsync("UpdateUserStatus", sender, "Offline");
+                }
             }
 
             await base.OnDisconnectedAsync(exception);

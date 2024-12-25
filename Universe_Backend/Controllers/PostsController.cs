@@ -279,7 +279,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
         logger.LogDebug($"ReactionsController.AddReaction: Added reaction {reactionId}");
 
         logger.LogDebug("ReactionsController.AddReaction: Sending notification to subscribers");
-        await hubContext.Clients.Group(postId.ToString()).SendAsync("UpdateReactionsCount", 1, User.FindFirstValue("uid")!, reaction);
+        await hubContext.Clients.Group(postId.ToString()).SendAsync("UpdateReactionsCount", 1, User.FindFirstValue("uid")!, postId, reaction);
 
         var notificationTokens = await usersRepository.GetNotificationTokens(reaction.UserId);
 
@@ -310,7 +310,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
 
         await reactionsRepository.RemoveReaction(reactionId);
 
-        await hubContext.Clients.Group(postId.ToString()).SendAsync("UpdateReactionsCount", -1, User.FindFirstValue("uid")!);
+        await hubContext.Clients.Group(postId.ToString()).SendAsync("UpdateReactionsCount", -1, User.FindFirstValue("uid")!, postId);
 
         return Ok();
     }
