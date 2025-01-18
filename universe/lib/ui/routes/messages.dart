@@ -87,6 +87,30 @@ class MessagesContent extends StatelessWidget {
                             itemCount:
                                 state.chats != null ? state.chats!.length : 0,
                             itemBuilder: (context, index) => ChatTile(
+                              lastOnline: state.chats![index].users.any((u) =>
+                                      u.id !=
+                                      AuthenticationRepository()
+                                          .authenticationService
+                                          .currentUser()!
+                                          .id)
+                                  ? state.chats![index].users
+                                      .where((u) =>
+                                          u.id !=
+                                          AuthenticationRepository()
+                                              .authenticationService
+                                              .currentUser()!
+                                              .id)
+                                      .first
+                                      .lastOnline!
+                                  : state.chats![index].users
+                                      .where((u) =>
+                                          u.id ==
+                                          AuthenticationRepository()
+                                              .authenticationService
+                                              .currentUser()!
+                                              .id)
+                                      .first
+                                      .lastOnline!,
                               userIds: state.chats![index].users
                                   .map((u) => u.id)
                                   .where((u) =>

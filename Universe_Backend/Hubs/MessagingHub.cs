@@ -53,7 +53,7 @@ namespace Universe_Backend.Hubs
             }
         }
 
-        public async Task SendUserStatus(string status)
+        public async Task SendUserStatus(UserStatus status)
         {
             await Clients.Group(Context.User!.FindFirstValue("uid")!).SendAsync("UpdateUserStatus", status);
         }
@@ -135,7 +135,7 @@ namespace Universe_Backend.Hubs
             {
                 user.OnlineSessions++;
                 await dbContext.SaveChangesAsync();
-                await Clients.Group(sender).SendAsync("UpdateUserStatus", sender, "Online");
+                await Clients.Group(sender).SendAsync("UpdateUserStatus", sender, new UserStatus() { Status = "Online", LastOnline = DateTime.Now });
             }
             else
             {
@@ -158,7 +158,7 @@ namespace Universe_Backend.Hubs
                 await dbContext.SaveChangesAsync();
                 if (user.OnlineSessions == 0)
                 {
-                    await Clients.Group(sender).SendAsync("UpdateUserStatus", sender, "Offline");
+                    await Clients.Group(sender).SendAsync("UpdateUserStatus", sender, new UserStatus() { Status = "Offline", LastOnline = DateTime.Now });
                 }
             }
 

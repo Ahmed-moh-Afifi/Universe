@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/ui/styles/text_styles.dart';
+import 'package:universe/ui/widgets/fading_circle_progress_indicator.dart';
 import 'package:universe/ui/widgets/follow_button.dart';
 import 'package:universe/ui/widgets/verified_badge.dart';
 
@@ -11,11 +12,14 @@ class UserPresenter extends StatelessWidget {
   final EdgeInsets? contentPadding;
   final EdgeInsets? margin;
   final bool showFollowButton;
+  final bool loading;
+
   const UserPresenter({
     required this.user,
     this.contentPadding,
     this.margin,
     this.showFollowButton = false,
+    this.loading = false,
     super.key,
   });
 
@@ -70,10 +74,31 @@ class UserPresenter extends StatelessWidget {
           subtitle: Text('@${user.userName}',
               style: TextStyles.subtitleStyle.copyWith(fontSize: 10)),
           subtitleTextStyle: TextStyles.subtitleStyle.copyWith(fontSize: 10),
-          leading: CircleAvatar(
-            radius: 15,
-            backgroundImage: CachedNetworkImageProvider(
-                user.photoUrl ?? 'https://via.placeholder.com/150'),
+          leading: SizedBox(
+            width: 34,
+            height: 34,
+            child: loading
+                ? Stack(
+                    children: [
+                      FadingCircleLoader(
+                        radius: 17,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: CircleAvatar(
+                          radius: 15,
+                          foregroundImage: CachedNetworkImageProvider(
+                              user.photoUrl ??
+                                  'https://via.placeholder.com/150'),
+                        ),
+                      ),
+                    ],
+                  )
+                : CircleAvatar(
+                    radius: 15,
+                    foregroundImage: CachedNetworkImageProvider(
+                        user.photoUrl ?? 'https://via.placeholder.com/150'),
+                  ),
           ),
           // Container(
           //   width: 50,

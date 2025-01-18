@@ -12,6 +12,7 @@ class ChatTile extends StatelessWidget {
   final String time;
   final String image;
   final bool isOnline;
+  final DateTime lastOnline;
   final bool verified;
   final List<String> userIds;
 
@@ -23,14 +24,17 @@ class ChatTile extends StatelessWidget {
     required this.image,
     required this.userIds,
     this.isOnline = false,
+    required this.lastOnline,
     this.verified = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          OnlineStatusBloc(userIds: userIds, isOnline: isOnline),
+      create: (context) => OnlineStatusBloc(
+          userIds: userIds,
+          state: isOnline ? 'Online' : 'Offline',
+          lastOnline: lastOnline),
       child: ChatTileContent(
         name: name,
         message: message,
@@ -60,7 +64,7 @@ class ChatTileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OnlineStatusBloc, OnlineState>(
+    return BlocBuilder<OnlineStatusBloc, UserState>(
       builder: (context, state) {
         return ListTile(
           leading: Stack(
@@ -69,7 +73,7 @@ class ChatTileContent extends StatelessWidget {
                 backgroundImage: CachedNetworkImageProvider(image),
                 radius: 25,
               ),
-              if (state.isOnline)
+              if (state.state != 'Offline')
                 Positioned(
                   bottom: 0,
                   right: 0,
