@@ -94,7 +94,7 @@ class ProfileCardBloc extends Bloc<Object, ProfileCardState> {
         );
 
         // RouteGenerator.mainNavigatorkey.currentState!.pop();
-
+        user = await usersRepository.getUser(user.id);
         RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
           RouteGenerator.chat,
           arguments: [user, chat],

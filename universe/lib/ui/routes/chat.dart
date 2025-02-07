@@ -21,7 +21,7 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChatBloc(chat, ChatsRepository()),
+      create: (context) => ChatBloc(chat, user, ChatsRepository()),
       child: ChatContent(user, chat),
     );
   }
@@ -56,9 +56,20 @@ class _ChatContentState extends State<ChatContent> {
               filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
               child: Container(color: Colors.transparent)),
         ),
-        title: UserPresenter(
-          user: widget.user,
-          contentPadding: EdgeInsets.all(0),
+        title: BlocBuilder<ChatBloc, ChatState>(
+          builder: (context, state) {
+            return UserPresenter(
+              user: widget.user,
+              contentPadding: EdgeInsets.all(0),
+              subtitle: state.isOnline != null
+                  ? !state.isOnline!
+                      ? "Offline"
+                      : state.isTyping != null && state.isTyping!
+                          ? "Typing..."
+                          : "Online"
+                  : '',
+            );
+          },
         ),
         titleSpacing: 0,
         // Row(
@@ -154,6 +165,8 @@ class _ChatContentState extends State<ChatContent> {
                         text: text,
                         child: TextField(
                           onChanged: (value) {
+                            BlocProvider.of<ChatBloc>(context)
+                                .add(TextChangedEvent());
                             setState(() {
                               text = value;
                             });

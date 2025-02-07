@@ -55,7 +55,7 @@ namespace Universe_Backend.Hubs
 
         public async Task SendUserStatus(UserStatus status)
         {
-            await Clients.Group(Context.User!.FindFirstValue("uid")!).SendAsync("UpdateUserStatus", status);
+            await Clients.Group(Context.User!.FindFirstValue("uid")!).SendAsync("UpdateUserStatus", Context.User!.FindFirstValue("uid")!, status);
         }
 
         public async Task SubscribeToUsersStatus(List<string> userIds)
