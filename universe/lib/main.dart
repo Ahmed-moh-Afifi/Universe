@@ -45,14 +45,14 @@ class MyApp extends StatelessWidget {
           primaryColorLight: const Color.fromRGBO(80, 80, 80, 0.3),
           indicatorColor: Colors.black,
           colorScheme: const ColorScheme.dark(
-            surface: Color.fromRGBO(20, 20, 20, 1),
+            surface: Color.fromRGBO(21, 26, 34, 1),
             primary: Colors.white,
             secondary: Color.fromRGBO(80, 80, 80, 0.3),
             tertiary: Colors.grey,
             brightness: Brightness.dark,
           ),
           useMaterial3: true,
-          scaffoldBackgroundColor: const Color.fromRGBO(16, 16, 16, 1),
+          scaffoldBackgroundColor: const Color.fromRGBO(11, 14, 20, 1),
           appBarTheme:
               const AppBarTheme(backgroundColor: Color.fromRGBO(16, 16, 16, 1)),
           elevatedButtonTheme: const ElevatedButtonThemeData(
