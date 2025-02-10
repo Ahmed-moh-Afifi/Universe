@@ -60,8 +60,8 @@ class HomeBloc extends Bloc<Object, HomeState> {
   }
 
   HomeState changeRoute(String routeName, HomeState currentState) {
-    // RouteGenerator.homeNavigatorKey.currentState!
-    //     .pushReplacementNamed(routeName);
+    RouteGenerator.homeNavigatorKey.currentState!
+        .pushReplacementNamed(routeName);
 
     final state = HomeState(currentState.state, selectedRouteName: routeName);
     state.homeIcon = 'lib/assets/icons/home.svg';
@@ -73,11 +73,13 @@ class HomeBloc extends Bloc<Object, HomeState> {
     switch (routeName) {
       case RouteGenerator.feed:
         state.homeIcon = 'lib/assets/icons/homeFilled.svg';
-        pageController.jumpToPage(0);
+        // pageController.animateToPage(0,
+        //     curve: Curves.decelerate, duration: Duration(milliseconds: 200));
         break;
       case RouteGenerator.search:
         state.searchIcon = 'lib/assets/icons/searchFilled.svg';
-        pageController.jumpToPage(1);
+        // pageController.animateToPage(1,
+        //     curve: Curves.decelerate, duration: Duration(milliseconds: 200));
         break;
       case RouteGenerator.newPost:
         state.newPostIcon = 'lib/assets/icons/editFilled.svg';
@@ -85,11 +87,13 @@ class HomeBloc extends Bloc<Object, HomeState> {
         break;
       case RouteGenerator.messages:
         state.messagesIcon = 'lib/assets/icons/messageFilled.svg';
-        pageController.jumpToPage(2);
+        // pageController.animateToPage(2,
+        //     curve: Curves.decelerate, duration: Duration(milliseconds: 200));
         break;
       case RouteGenerator.personalProfile:
         state.profileIcon = 'lib/assets/icons/userFilled.svg';
-        pageController.jumpToPage(3);
+        // pageController.animateToPage(3,
+        //     curve: Curves.decelerate, duration: Duration(milliseconds: 200));
         break;
     }
     return state;

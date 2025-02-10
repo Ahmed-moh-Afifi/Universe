@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           scaffoldBackgroundColor: const Color.fromRGBO(11, 14, 20, 1),
           appBarTheme:
-              const AppBarTheme(backgroundColor: Color.fromRGBO(16, 16, 16, 1)),
+              const AppBarTheme(backgroundColor: Color.fromRGBO(11, 14, 20, 1)),
           elevatedButtonTheme: const ElevatedButtonThemeData(
             style: ButtonStyle(
               foregroundColor: WidgetStatePropertyAll(Colors.black),

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:universe/route_generator.dart';
 import 'package:uuid/uuid.dart';
 
 class ExpandableImage extends StatelessWidget {
@@ -14,8 +15,7 @@ class ExpandableImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
+        RouteGenerator.mainNavigatorkey.currentState!.push(
           TransparentRoute(
             builder: (context) => HeroPhotoViewRouteWrapper(
               imageProvider: CachedNetworkImageProvider(url),
@@ -47,8 +47,7 @@ class ExpandableImageProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
+        RouteGenerator.mainNavigatorkey.currentState!.push(
           TransparentRoute(
             builder: (context) => HeroPhotoViewRouteWrapper(
               imageProvider: imageProvider,
@@ -221,8 +220,7 @@ class ExpandableItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
+        RouteGenerator.mainNavigatorkey.currentState!.push(
           TransparentRoute(
             builder: (context) => HeroItemRouteWrapper(
               destination: destination,

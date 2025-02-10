@@ -7,16 +7,26 @@ import 'package:toastification/toastification.dart';
 import 'package:universe/ui/blocs/home_bloc.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/ui/blocs/notifications_bloc.dart';
-import 'package:universe/ui/routes/feed.dart';
-import 'package:universe/ui/routes/messages.dart';
 import 'package:universe/ui/routes/new_post.dart';
-import 'package:universe/ui/routes/personal_profile.dart';
-import 'package:universe/ui/routes/search.dart';
 import 'package:universe/ui/widgets/universe_appbar.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final HomeBloc bloc;
+
   HomePage({super.key}) : bloc = HomeBloc();
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  late AnimationController pageViewAnimationController;
+
+  @override
+  void initState() {
+    super.initState();
+    pageViewAnimationController = AnimationController(vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +53,7 @@ class HomePage extends StatelessWidget {
           }
         },
         child: BlocProvider<HomeBloc>(
-          create: (context) => bloc,
+          create: (context) => widget.bloc,
           child: Scaffold(
             resizeToAvoidBottomInset: false,
             extendBody: true,
@@ -51,40 +61,68 @@ class HomePage extends StatelessWidget {
               bottom: false,
               top: false,
               child: Padding(
-                  padding: const EdgeInsets.only(top: 0),
-                  child: PageView(
-                    onPageChanged: (value) {
-                      switch (value) {
-                        case 0:
-                          bloc.add(const ChangeIcon(RouteGenerator.feed));
-                          break;
-                        case 1:
-                          bloc.add(const ChangeIcon(RouteGenerator.search));
-                          break;
-                        case 2:
-                          bloc.add(const ChangeIcon(RouteGenerator.messages));
-                          break;
-                        case 3:
-                          bloc.add(
-                              const ChangeIcon(RouteGenerator.personalProfile));
-                          break;
-                        default:
-                      }
-                    },
-                    controller: bloc.pageController,
-                    children: [
-                      const Feed(),
-                      Search(),
-                      const Messages(),
-                      const PersonalProfile(),
-                    ],
-                  )
-                  // Navigator(
-                  //   initialRoute: RouteGenerator.feed,
-                  //   onGenerateRoute: RouteGenerator.generateRoute,
-                  //   key: RouteGenerator.homeNavigatorKey,
-                  // ),
-                  ),
+                padding: const EdgeInsets.only(top: 0),
+                child:
+                    // PageView(
+                    //   onPageChanged: (value) {
+                    //     switch (value) {
+                    //       case 0:
+                    //         widget.bloc
+                    //             .add(const ChangeIcon(RouteGenerator.feed));
+                    //         break;
+                    //       case 1:
+                    //         widget.bloc
+                    //             .add(const ChangeIcon(RouteGenerator.search));
+                    //         break;
+                    //       case 2:
+                    //         widget.bloc
+                    //             .add(const ChangeIcon(RouteGenerator.messages));
+                    //         break;
+                    //       case 3:
+                    //         widget.bloc.add(
+                    //             const ChangeIcon(RouteGenerator.personalProfile));
+                    //         break;
+                    //       default:
+                    //     }
+                    //   },
+                    //   controller: widget.bloc.pageController,
+                    //   children: [
+                    //     SharedAxisTransition(
+                    //       animation: pageViewAnimationController,
+                    //       secondaryAnimation:
+                    //           ReverseAnimation(pageViewAnimationController),
+                    //       transitionType: SharedAxisTransitionType.horizontal,
+                    //       child: const Feed(),
+                    //     ),
+                    //     SharedAxisTransition(
+                    //       animation: pageViewAnimationController,
+                    //       secondaryAnimation:
+                    //           ReverseAnimation(pageViewAnimationController),
+                    //       transitionType: SharedAxisTransitionType.horizontal,
+                    //       child: Search(),
+                    //     ),
+                    //     SharedAxisTransition(
+                    //       animation: pageViewAnimationController,
+                    //       secondaryAnimation:
+                    //           ReverseAnimation(pageViewAnimationController),
+                    //       transitionType: SharedAxisTransitionType.horizontal,
+                    //       child: const Messages(),
+                    //     ),
+                    //     SharedAxisTransition(
+                    //       animation: pageViewAnimationController,
+                    //       secondaryAnimation:
+                    //           ReverseAnimation(pageViewAnimationController),
+                    //       transitionType: SharedAxisTransitionType.horizontal,
+                    //       child: const PersonalProfile(),
+                    //     ),
+                    //   ],
+                    // )
+                    Navigator(
+                  initialRoute: RouteGenerator.feed,
+                  onGenerateRoute: RouteGenerator.generateRoute,
+                  key: RouteGenerator.homeNavigatorKey,
+                ),
+              ),
             ),
             bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) => Container(
@@ -111,8 +149,8 @@ class HomePage extends StatelessWidget {
                                 Theme.of(context).primaryIconTheme.color!,
                                 BlendMode.srcIn),
                           ),
-                          onPressed: () =>
-                              bloc.add(const Navigate(RouteGenerator.feed)),
+                          onPressed: () => widget.bloc
+                              .add(const Navigate(RouteGenerator.feed)),
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -121,8 +159,8 @@ class HomePage extends StatelessWidget {
                                 Theme.of(context).primaryIconTheme.color!,
                                 BlendMode.srcIn),
                           ),
-                          onPressed: () =>
-                              bloc.add(const Navigate(RouteGenerator.search)),
+                          onPressed: () => widget.bloc
+                              .add(const Navigate(RouteGenerator.search)),
                         ),
                         IconButton(
                           onPressed: () => showModalBottomSheet(
@@ -153,8 +191,8 @@ class HomePage extends StatelessWidget {
                                 Theme.of(context).primaryIconTheme.color!,
                                 BlendMode.srcIn),
                           ),
-                          onPressed: () =>
-                              bloc.add(const Navigate(RouteGenerator.messages)),
+                          onPressed: () => widget.bloc
+                              .add(const Navigate(RouteGenerator.messages)),
                         ),
                         IconButton(
                           icon: SvgPicture.asset(
@@ -163,7 +201,7 @@ class HomePage extends StatelessWidget {
                                 Theme.of(context).primaryIconTheme.color!,
                                 BlendMode.srcIn),
                           ),
-                          onPressed: () => bloc.add(
+                          onPressed: () => widget.bloc.add(
                               const Navigate(RouteGenerator.personalProfile)),
                         ),
                       ],

@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:universe/models/data/chat.dart';
 import 'package:universe/ui/blocs/new_post_bloc.dart';
@@ -85,31 +84,30 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => Profile(settings.arguments as User));
       case feed:
-        return PageRouteBuilder(
-          pageBuilder: (_, animation, secondaryAnimation) => const Feed(),
-          transitionDuration: Duration.zero,
-        );
+        return slidingRoute(const Feed(),
+            reverseDirection: settings.arguments != null
+                ? settings.arguments as bool
+                : false);
       case search:
-        return PageRouteBuilder(
-          pageBuilder: (_, animation, secondaryAnimation) => Search(),
-          transitionDuration: Duration.zero,
-        );
+        return slidingRoute(Search(),
+            reverseDirection: settings.arguments != null
+                ? settings.arguments as bool
+                : false);
       case newPost:
-        return PageRouteBuilder(
-          pageBuilder: (_, animation, secondaryAnimation) => NewPost(),
-          transitionDuration: Duration.zero,
-        );
+        return slidingRoute(NewPost(),
+            reverseDirection: settings.arguments != null
+                ? settings.arguments as bool
+                : false);
       case messages:
-        return PageRouteBuilder(
-          pageBuilder: (_, animation, secondaryAnimation) => const Messages(),
-          transitionDuration: Duration.zero,
-        );
+        return slidingRoute(const Messages(),
+            reverseDirection: settings.arguments != null
+                ? settings.arguments as bool
+                : false);
       case personalProfile:
-        return PageRouteBuilder(
-          pageBuilder: (_, animation, secondaryAnimation) =>
-              const PersonalProfile(),
-          transitionDuration: Duration.zero,
-        );
+        return slidingRoute(const PersonalProfile(),
+            reverseDirection: settings.arguments != null
+                ? settings.arguments as bool
+                : false);
       case followersPage:
         return MaterialPageRoute(
           builder: (_) => FollowersPage(settings.arguments as User),
@@ -146,38 +144,53 @@ class RouteGenerator {
     }
   }
 
-  static PageRouteBuilder slidingRoute(Widget route) {
+  static PageRouteBuilder slidingRoute(Widget route,
+      {bool reverseDirection = false}) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => route,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = const Offset(1, 0);
-        var tween = Tween(begin: begin, end: Offset.zero).chain(
-          CurveTween(curve: Curves.ease),
-        );
-
-        var blurTween = Tween(begin: 0.0, end: 15.0)
-            .animate(CurvedAnimation(parent: animation, curve: Curves.ease));
-        return AnimatedBuilder(
-          animation: blurTween,
-          builder: (context, child2) {
-            return BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: blurTween.value,
-                sigmaY: blurTween.value,
-              ),
-              child: FadeTransition(
-                opacity: animation,
-                child: SlideTransition(
-                  position: animation.drive(tween),
-                  child: child,
-                ),
-              ),
-            );
-          },
+        return SharedAxisTransition(
+          animation: reverseDirection ? secondaryAnimation : animation,
+          secondaryAnimation: reverseDirection ? animation : secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
         );
       },
     );
   }
+
+  // static PageRouteBuilder slidingRoute(Widget route) {
+  //   return PageRouteBuilder(
+  //     pageBuilder: (context, animation, secondaryAnimation) => route,
+  //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //       var begin = const Offset(1, 0);
+  //       var tween = Tween(begin: begin, end: Offset.zero).chain(
+  //         CurveTween(curve: Curves.ease),
+  //       );
+
+  //       var blurTween = Tween(begin: 0.0, end: 15.0)
+  //           .animate(CurvedAnimation(parent: animation, curve: Curves.ease));
+  //       return AnimatedBuilder(
+  //         animation: blurTween,
+  //         builder: (context, child2) {
+  //           return BackdropFilter(
+  //             filter: ImageFilter.blur(
+  //               sigmaX: blurTween.value,
+  //               sigmaY: blurTween.value,
+  //             ),
+  //             child: FadeTransition(
+  //               opacity: animation,
+  //               child: SlideTransition(
+  //                 position: animation.drive(tween),
+  //                 child: child,
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   static void resetAppState() {
     searchState = const SearchState(
