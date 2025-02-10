@@ -65,7 +65,7 @@ class MessageWidget extends StatelessWidget {
                                   .currentUser()!
                                   .id
                           ? Colors.blue[900]
-                          : Colors.grey[850],
+                          : Color.fromRGBO(21, 26, 34, 1),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: AutoDirection(

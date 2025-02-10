@@ -152,12 +152,14 @@ class Replies extends StatelessWidget {
                     Expanded(
                       child: TextField(
                         controller: replyController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(30)),
                             borderSide: BorderSide.none,
                           ),
                           hintText: 'Write a reply',
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
                         ),
                       ),
                     ),

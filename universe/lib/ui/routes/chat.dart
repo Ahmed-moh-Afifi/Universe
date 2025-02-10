@@ -176,7 +176,7 @@ class _ChatContentState extends State<ChatContent> {
                           minLines: null,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
+                            fillColor: Theme.of(context).colorScheme.surface,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(50),
                               borderSide: BorderSide.none,

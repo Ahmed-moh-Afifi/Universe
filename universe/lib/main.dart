@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 import 'package:universe/route_generator.dart';
@@ -17,6 +18,16 @@ class MyApp extends StatelessWidget {
         onGenerateRoute: RouteGenerator.generateRoute,
         navigatorKey: RouteGenerator.mainNavigatorkey,
         theme: ThemeData(
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: SharedAxisPageTransitionsBuilder(
+                transitionType: SharedAxisTransitionType.horizontal,
+              ),
+              TargetPlatform.iOS: SharedAxisPageTransitionsBuilder(
+                transitionType: SharedAxisTransitionType.horizontal,
+              ),
+            },
+          ),
           primaryColor: Colors.white,
           primaryColorLight: Colors.white,
           primaryColorDark: const Color.fromRGBO(230, 230, 230, 1),
@@ -40,9 +51,19 @@ class MyApp extends StatelessWidget {
           ),
         ),
         darkTheme: ThemeData(
-          primaryColor: const Color.fromRGBO(16, 16, 16, 1),
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: SharedAxisPageTransitionsBuilder(
+                transitionType: SharedAxisTransitionType.horizontal,
+              ),
+              TargetPlatform.iOS: SharedAxisPageTransitionsBuilder(
+                transitionType: SharedAxisTransitionType.horizontal,
+              ),
+            },
+          ),
+          primaryColor: const Color.fromRGBO(21, 26, 34, 1),
           primaryColorDark: Colors.black,
-          primaryColorLight: const Color.fromRGBO(80, 80, 80, 0.3),
+          primaryColorLight: Color.fromRGBO(21, 26, 34, 1),
           indicatorColor: Colors.black,
           colorScheme: const ColorScheme.dark(
             surface: Color.fromRGBO(21, 26, 34, 1),

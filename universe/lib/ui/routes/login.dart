@@ -112,10 +112,10 @@ class Login extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           child: TextField(
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: "Email or phone",
                               filled: true,
-                              fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                              fillColor: Theme.of(context).colorScheme.surface,
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                                 borderRadius: BorderRadius.all(
@@ -140,10 +140,10 @@ class Login extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           child: TextField(
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: "Password",
                               filled: true,
-                              fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                              fillColor: Theme.of(context).colorScheme.surface,
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                                 borderRadius: BorderRadius.all(

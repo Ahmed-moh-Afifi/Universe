@@ -325,7 +325,7 @@ class _ProfileCardState extends State<ProfileCard> {
                           height: 300,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(50),
-                            color: Color.fromRGBO(35, 35, 35, 1),
+                            color: Theme.of(context).colorScheme.surface,
                             border: Border.all(
                               color: Theme.of(context).colorScheme.secondary,
                             ),
@@ -370,7 +370,7 @@ class _ProfileCardState extends State<ProfileCard> {
                                 height: 300,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(50),
-                                  color: Color.fromRGBO(35, 35, 35, 1),
+                                  color: Theme.of(context).colorScheme.surface,
                                   border: Border.all(
                                     color:
                                         Theme.of(context).colorScheme.secondary,

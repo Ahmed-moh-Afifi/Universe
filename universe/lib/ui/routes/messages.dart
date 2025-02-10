@@ -27,6 +27,7 @@ class MessagesContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
       bottom: false,
       child: Scaffold(
         appBar: AppBar(
@@ -71,7 +72,7 @@ class MessagesContent extends StatelessWidget {
                   prefixIcon: const Icon(Icons.search),
                   hintText: 'Search',
                   filled: true,
-                  fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50.0),
                     borderSide: BorderSide.none,

@@ -111,10 +111,10 @@ class Register extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: TextField(
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: "First name",
                               filled: true,
-                              fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                              fillColor: Theme.of(context).colorScheme.surface,
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                                 borderRadius: BorderRadius.all(
@@ -131,10 +131,10 @@ class Register extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: TextField(
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               hintText: "Last name",
                               filled: true,
-                              fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                              fillColor: Theme.of(context).colorScheme.surface,
                               border: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                                 borderRadius: BorderRadius.all(
@@ -151,10 +151,10 @@ class Register extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Username",
                         filled: true,
-                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        fillColor: Theme.of(context).colorScheme.surface,
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(
@@ -168,10 +168,10 @@ class Register extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Email or phone",
                         filled: true,
-                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        fillColor: Theme.of(context).colorScheme.surface,
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(
@@ -185,10 +185,10 @@ class Register extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Password",
                         filled: true,
-                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        fillColor: Theme.of(context).colorScheme.surface,
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(
@@ -203,10 +203,10 @@ class Register extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Confirm password",
                         filled: true,
-                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        fillColor: Theme.of(context).colorScheme.surface,
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(

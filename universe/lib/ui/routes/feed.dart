@@ -40,15 +40,13 @@ class FeedContent extends StatelessWidget {
         return CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
+              // backgroundColor: Colors.transparent,
+              // surfaceTintColor: Colors.transparent,
               floating: true,
               toolbarHeight: 50,
               elevation: 0,
               flexibleSpace: FlexibleSpaceBar(
-                background: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                    child: Container(color: Colors.transparent)),
+                // background: Container(color: Colors.transparent),
                 titlePadding:
                     const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 title: Row(

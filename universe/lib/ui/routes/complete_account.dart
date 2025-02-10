@@ -168,10 +168,10 @@ class CompleteAccountContent extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         label: Text('First name'),
                         filled: true,
-                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        fillColor: Theme.of(context).colorScheme.surface,
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(
@@ -188,10 +188,10 @@ class CompleteAccountContent extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         label: Text('Last name'),
                         filled: true,
-                        fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                        fillColor: Theme.of(context).colorScheme.surface,
                         border: OutlineInputBorder(
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.all(
@@ -208,10 +208,10 @@ class CompleteAccountContent extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   label: Text('Username'),
                   filled: true,
-                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(
@@ -225,10 +225,10 @@ class CompleteAccountContent extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   label: Text('Email'),
                   filled: true,
-                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(
@@ -244,10 +244,10 @@ class CompleteAccountContent extends StatelessWidget {
               child: TextField(
                 maxLines: null,
                 minLines: null,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   label: Text('Bio'),
                   filled: true,
-                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(
@@ -263,10 +263,10 @@ class CompleteAccountContent extends StatelessWidget {
               child: TextField(
                 maxLines: null,
                 minLines: null,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   label: Text('Links (separate with newlines)'),
                   filled: true,
-                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(
@@ -310,10 +310,10 @@ class CompleteAccountContent extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: "Old password",
                   filled: true,
-                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(
@@ -328,10 +328,10 @@ class CompleteAccountContent extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: "New password",
                   filled: true,
-                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(
@@ -346,10 +346,10 @@ class CompleteAccountContent extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextField(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: "Confirm new password",
                   filled: true,
-                  fillColor: Color.fromRGBO(80, 80, 80, 0.3),
+                  fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.all(

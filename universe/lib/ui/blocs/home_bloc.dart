@@ -60,9 +60,6 @@ class HomeBloc extends Bloc<Object, HomeState> {
   }
 
   HomeState changeRoute(String routeName, HomeState currentState) {
-    RouteGenerator.homeNavigatorKey.currentState!
-        .pushReplacementNamed(routeName);
-
     final state = HomeState(currentState.state, selectedRouteName: routeName);
     state.homeIcon = 'lib/assets/icons/home.svg';
     state.searchIcon = 'lib/assets/icons/search.svg';
@@ -70,32 +67,60 @@ class HomeBloc extends Bloc<Object, HomeState> {
     state.messagesIcon = 'lib/assets/icons/message.svg';
     state.profileIcon = 'lib/assets/icons/user.svg';
 
+    // int currentRoute = 0;
+    // switch (currentState.selectedRouteName) {
+    //   case RouteGenerator.feed:
+    //     currentRoute = 0;
+    //     break;
+    //   case RouteGenerator.search:
+    //     currentRoute = 1;
+    //     break;
+    //   case RouteGenerator.newPost:
+    //     currentRoute = 2;
+    //     break;
+    //   case RouteGenerator.messages:
+    //     currentRoute = 3;
+    //     break;
+    //   case RouteGenerator.personalProfile:
+    //     currentRoute = 4;
+    //     break;
+    // }
+
+    // int newRoute = 0;
     switch (routeName) {
       case RouteGenerator.feed:
+        // newRoute = 0;
         state.homeIcon = 'lib/assets/icons/homeFilled.svg';
         // pageController.animateToPage(0,
         //     curve: Curves.decelerate, duration: Duration(milliseconds: 200));
         break;
       case RouteGenerator.search:
+        // newRoute = 1;
         state.searchIcon = 'lib/assets/icons/searchFilled.svg';
         // pageController.animateToPage(1,
         //     curve: Curves.decelerate, duration: Duration(milliseconds: 200));
         break;
       case RouteGenerator.newPost:
+        // newRoute = 2;
         state.newPostIcon = 'lib/assets/icons/editFilled.svg';
         state.floatingActionButtonVisible = false;
         break;
       case RouteGenerator.messages:
+        // newRoute = 3;
         state.messagesIcon = 'lib/assets/icons/messageFilled.svg';
         // pageController.animateToPage(2,
         //     curve: Curves.decelerate, duration: Duration(milliseconds: 200));
         break;
       case RouteGenerator.personalProfile:
+        // newRoute = 4;
         state.profileIcon = 'lib/assets/icons/userFilled.svg';
         // pageController.animateToPage(3,
         //     curve: Curves.decelerate, duration: Duration(milliseconds: 200));
         break;
     }
+
+    RouteGenerator.homeNavigatorKey.currentState!
+        .pushReplacementNamed(routeName);
     return state;
   }
 

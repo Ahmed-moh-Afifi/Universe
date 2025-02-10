@@ -15,6 +15,7 @@ class Search extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       bottom: false,
+      top: false,
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 115,
@@ -88,7 +89,7 @@ class SearchContent extends StatelessWidget {
               prefixIcon: const Icon(Icons.search),
               hintText: 'Search',
               filled: true,
-              fillColor: const Color.fromRGBO(80, 80, 80, 0.3),
+              fillColor: Theme.of(context).colorScheme.surface,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(50.0),
                 borderSide: BorderSide.none,

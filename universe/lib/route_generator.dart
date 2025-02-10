@@ -84,30 +84,15 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => Profile(settings.arguments as User));
       case feed:
-        return slidingRoute(const Feed(),
-            reverseDirection: settings.arguments != null
-                ? settings.arguments as bool
-                : false);
+        return MaterialPageRoute(builder: (_) => const Feed());
       case search:
-        return slidingRoute(Search(),
-            reverseDirection: settings.arguments != null
-                ? settings.arguments as bool
-                : false);
+        return MaterialPageRoute(builder: (_) => Search());
       case newPost:
-        return slidingRoute(NewPost(),
-            reverseDirection: settings.arguments != null
-                ? settings.arguments as bool
-                : false);
+        return MaterialPageRoute(builder: (_) => NewPost());
       case messages:
-        return slidingRoute(const Messages(),
-            reverseDirection: settings.arguments != null
-                ? settings.arguments as bool
-                : false);
+        return MaterialPageRoute(builder: (_) => const Messages());
       case personalProfile:
-        return slidingRoute(const PersonalProfile(),
-            reverseDirection: settings.arguments != null
-                ? settings.arguments as bool
-                : false);
+        return MaterialPageRoute(builder: (_) => const PersonalProfile());
       case followersPage:
         return MaterialPageRoute(
           builder: (_) => FollowersPage(settings.arguments as User),
@@ -128,9 +113,9 @@ class RouteGenerator {
           ),
         );
       case settingsPage:
-        return slidingRoute(const Settings());
+        return MaterialPageRoute(builder: (_) => const Settings());
       case accountSettingsPage:
-        return slidingRoute(const AccountSettings());
+        return MaterialPageRoute(builder: (_) => const AccountSettings());
       case chat:
         return MaterialPageRoute(
           builder: (_) => ChatScreen(
@@ -150,8 +135,10 @@ class RouteGenerator {
       pageBuilder: (context, animation, secondaryAnimation) => route,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return SharedAxisTransition(
-          animation: reverseDirection ? secondaryAnimation : animation,
-          secondaryAnimation: reverseDirection ? animation : secondaryAnimation,
+          animation: reverseDirection ? ReverseAnimation(animation) : animation,
+          secondaryAnimation: reverseDirection
+              ? ReverseAnimation(secondaryAnimation)
+              : secondaryAnimation,
           transitionType: SharedAxisTransitionType.horizontal,
           child: child,
         );
