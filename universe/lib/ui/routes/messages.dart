@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:universe/extensions/date_time_extensions.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/chats_repository.dart';
+import 'package:universe/repositories/users_repository.dart';
 import 'package:universe/ui/blocs/messages_bloc.dart';
 import 'package:universe/ui/styles/text_styles.dart';
 import 'package:universe/ui/widgets/chat_tile.dart';
@@ -14,8 +15,8 @@ class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          MessagesBloc(ChatsRepository())..add(GetChatsEvent()),
+      create: (context) => MessagesBloc(ChatsRepository(), UsersRepository())
+        ..add(GetChatsEvent()),
       child: MessagesContent(),
     );
   }
@@ -87,123 +88,139 @@ class MessagesContent extends StatelessWidget {
                         ? ListView.builder(
                             itemCount:
                                 state.chats != null ? state.chats!.length : 0,
-                            itemBuilder: (context, index) => ChatTile(
-                              lastOnline: state.chats![index].users.any((u) =>
-                                      u.id !=
-                                      AuthenticationRepository()
-                                          .authenticationService
-                                          .currentUser()!
-                                          .id)
-                                  ? state.chats![index].users
-                                      .where((u) =>
-                                          u.id !=
-                                          AuthenticationRepository()
-                                              .authenticationService
-                                              .currentUser()!
-                                              .id)
-                                      .first
-                                      .lastOnline!
-                                  : state.chats![index].users
-                                      .where((u) =>
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () => state.chats![index].users.every(
+                                      (u) =>
                                           u.id ==
                                           AuthenticationRepository()
                                               .authenticationService
                                               .currentUser()!
                                               .id)
-                                      .first
-                                      .lastOnline!,
-                              userIds: state.chats![index].users
-                                  .map((u) => u.id)
-                                  .where((u) =>
-                                      u !=
-                                      AuthenticationRepository()
+                                  ? BlocProvider.of<MessagesBloc>(context).add(
+                                      OpenChatEvent(AuthenticationRepository()
                                           .authenticationService
-                                          .currentUser()!
-                                          .id)
-                                  .toList(),
-                              name: state.chats?[index].name ?? '',
-                              message:
-                                  state.chats?[index].messages[0].body ?? '',
-                              time: state
-                                      .chats?[index].messages.first.publishDate
-                                      .toEnglishString() ??
-                                  '',
-                              image: state.chats![index].users.any((u) =>
-                                      u.id !=
-                                      AuthenticationRepository()
-                                          .authenticationService
-                                          .currentUser()!
-                                          .id)
-                                  ? state.chats![index].users
-                                          .where((u) =>
-                                              u.id !=
-                                              AuthenticationRepository()
-                                                  .authenticationService
-                                                  .currentUser()!
-                                                  .id)
-                                          .first
-                                          .photoUrl ??
-                                      'https://via.placeholder.com/150'
-                                  : state.chats![index].users
-                                          .where((u) =>
-                                              u.id ==
-                                              AuthenticationRepository()
-                                                  .authenticationService
-                                                  .currentUser()!
-                                                  .id)
-                                          .first
-                                          .photoUrl ??
-                                      'https://via.placeholder.com/150',
-                              verified: state.chats![index].users.any((u) =>
-                                      u.id !=
-                                      AuthenticationRepository()
-                                          .authenticationService
-                                          .currentUser()!
-                                          .id)
-                                  ? state.chats![index].users
-                                      .where((u) =>
-                                          u.id !=
-                                          AuthenticationRepository()
-                                              .authenticationService
-                                              .currentUser()!
-                                              .id)
-                                      .first
-                                      .verified
-                                  : state.chats![index].users
-                                      .where((u) =>
-                                          u.id ==
-                                          AuthenticationRepository()
-                                              .authenticationService
-                                              .currentUser()!
-                                              .id)
-                                      .first
-                                      .verified,
-                              isOnline: state.chats![index].users.any((u) =>
-                                      u.id !=
-                                      AuthenticationRepository()
-                                          .authenticationService
-                                          .currentUser()!
-                                          .id)
-                                  ? state.chats![index].users
-                                          .where((u) =>
-                                              u.id !=
-                                              AuthenticationRepository()
-                                                  .authenticationService
-                                                  .currentUser()!
-                                                  .id)
-                                          .first
-                                          .onlineSessions >
-                                      0
-                                  : state.chats![index].users
-                                          .where((u) =>
-                                              u.id ==
-                                              AuthenticationRepository()
-                                                  .authenticationService
-                                                  .currentUser()!
-                                                  .id)
-                                          .first
-                                          .onlineSessions >
-                                      0,
+                                          .currentUser()!))
+                                  : BlocProvider.of<MessagesBloc>(context).add(
+                                      OpenChatEvent(state.chats![index].users
+                                          .firstWhere((u) => u.id != AuthenticationRepository().authenticationService.currentUser()!.id))),
+                              child: ChatTile(
+                                lastOnline: state.chats![index].users.any((u) =>
+                                        u.id !=
+                                        AuthenticationRepository()
+                                            .authenticationService
+                                            .currentUser()!
+                                            .id)
+                                    ? state.chats![index].users
+                                        .where((u) =>
+                                            u.id !=
+                                            AuthenticationRepository()
+                                                .authenticationService
+                                                .currentUser()!
+                                                .id)
+                                        .first
+                                        .lastOnline!
+                                    : state.chats![index].users
+                                        .where((u) =>
+                                            u.id ==
+                                            AuthenticationRepository()
+                                                .authenticationService
+                                                .currentUser()!
+                                                .id)
+                                        .first
+                                        .lastOnline!,
+                                userIds: state.chats![index].users
+                                    .map((u) => u.id)
+                                    .where((u) =>
+                                        u !=
+                                        AuthenticationRepository()
+                                            .authenticationService
+                                            .currentUser()!
+                                            .id)
+                                    .toList(),
+                                name: state.chats?[index].name ?? '',
+                                message:
+                                    state.chats?[index].messages[0].body ?? '',
+                                time: state.chats?[index].messages.first
+                                        .publishDate
+                                        .toEnglishString() ??
+                                    '',
+                                image: state.chats![index].users.any((u) =>
+                                        u.id !=
+                                        AuthenticationRepository()
+                                            .authenticationService
+                                            .currentUser()!
+                                            .id)
+                                    ? state.chats![index].users
+                                            .where((u) =>
+                                                u.id !=
+                                                AuthenticationRepository()
+                                                    .authenticationService
+                                                    .currentUser()!
+                                                    .id)
+                                            .first
+                                            .photoUrl ??
+                                        'https://via.placeholder.com/150'
+                                    : state.chats![index].users
+                                            .where((u) =>
+                                                u.id ==
+                                                AuthenticationRepository()
+                                                    .authenticationService
+                                                    .currentUser()!
+                                                    .id)
+                                            .first
+                                            .photoUrl ??
+                                        'https://via.placeholder.com/150',
+                                verified: state.chats![index].users.any((u) =>
+                                        u.id !=
+                                        AuthenticationRepository()
+                                            .authenticationService
+                                            .currentUser()!
+                                            .id)
+                                    ? state.chats![index].users
+                                        .where((u) =>
+                                            u.id !=
+                                            AuthenticationRepository()
+                                                .authenticationService
+                                                .currentUser()!
+                                                .id)
+                                        .first
+                                        .verified
+                                    : state.chats![index].users
+                                        .where((u) =>
+                                            u.id ==
+                                            AuthenticationRepository()
+                                                .authenticationService
+                                                .currentUser()!
+                                                .id)
+                                        .first
+                                        .verified,
+                                isOnline: state.chats![index].users.any((u) =>
+                                        u.id !=
+                                        AuthenticationRepository()
+                                            .authenticationService
+                                            .currentUser()!
+                                            .id)
+                                    ? state.chats![index].users
+                                            .where((u) =>
+                                                u.id !=
+                                                AuthenticationRepository()
+                                                    .authenticationService
+                                                    .currentUser()!
+                                                    .id)
+                                            .first
+                                            .onlineSessions >
+                                        0
+                                    : state.chats![index].users
+                                            .where((u) =>
+                                                u.id ==
+                                                AuthenticationRepository()
+                                                    .authenticationService
+                                                    .currentUser()!
+                                                    .id)
+                                            .first
+                                            .onlineSessions >
+                                        0,
+                              ),
                             ),
                           )
                         : const Center(

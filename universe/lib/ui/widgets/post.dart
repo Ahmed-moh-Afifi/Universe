@@ -235,128 +235,127 @@ class PostContent extends StatelessWidget {
                               width: MediaQuery.of(context).size.width * 0.8,
                               height: MediaQuery.of(context).size.height * 0.5,
                               padding: const EdgeInsets.only(
-                                  left: 10, right: 10, top: 5, bottom: 5),
+                                  left: 10, right: 10, top: 10, bottom: 10),
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(30, 30, 30, 1),
-                                borderRadius: BorderRadius.circular(25),
+                                color: Theme.of(context).colorScheme.surface,
+                                borderRadius: BorderRadius.circular(30),
                                 border: Border.all(
                                   color:
                                       Theme.of(context).colorScheme.secondary,
                                 ),
                               ),
-                              child: SingleChildScrollView(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 10),
-                                        child: SizedBox(
-                                          height: 300,
-                                          child: TextField(
-                                            expands: true,
-                                            maxLines: null,
-                                            minLines: null,
-                                            controller: postController,
-                                            textAlignVertical:
-                                                TextAlignVertical.top,
-                                            decoration: InputDecoration(
-                                              border: const OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(20),
-                                                ),
-                                                borderSide: BorderSide.none,
+                              child: Padding(
+                                padding: const EdgeInsets.all(0),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                    0.5 -
+                                                98,
+                                        child: TextField(
+                                          expands: true,
+                                          maxLines: null,
+                                          minLines: null,
+                                          controller: postController,
+                                          textAlignVertical:
+                                              TextAlignVertical.top,
+                                          decoration: InputDecoration(
+                                            border: const OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(20),
                                               ),
-                                              filled: true,
-                                              fillColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                              hintText: "What's on your mind?",
+                                              borderSide: BorderSide.none,
                                             ),
+                                            filled: true,
+                                            fillColor: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                            hintText: "What's on your mind?",
                                           ),
                                         ),
                                       ),
-                                      LoadingBtn(
-                                        height: 66,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        borderRadius: 10,
-                                        animate: true,
-                                        loader: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          child: const Center(
-                                            child: SpinKitDoubleBounce(
-                                              color: Colors.black,
-                                            ),
+                                    ),
+                                    Spacer(),
+                                    LoadingBtn(
+                                      height: 66,
+                                      width: MediaQuery.of(context).size.width,
+                                      borderRadius: 20,
+                                      animate: true,
+                                      loader: Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: const Center(
+                                          child: SpinKitDoubleBounce(
+                                            color: Colors.black,
                                           ),
                                         ),
-                                        onTap: (startLoading, stopLoading,
-                                            btnState) {
-                                          if (btnState == ButtonState.idle &&
-                                              state.state !=
-                                                  PostStates.loading) {
-                                            startLoading();
-                                            BlocProvider.of<PostBloc>(context)
-                                                .add(
-                                              ShareClicked(
-                                                Post(
-                                                  title: '',
-                                                  body: postController.text,
-                                                  author:
-                                                      AuthenticationRepository()
-                                                          .authenticationService
-                                                          .currentUser()!,
-                                                  images: [],
-                                                  videos: [],
-                                                  audios: [],
-                                                  widgets: [],
-                                                  replyToPostId: -1,
-                                                  childPostId: -1,
-                                                  publishDate: DateTime.now(),
-                                                  reactionsCount: 0,
-                                                  repliesCount: 0,
-                                                  reactedToByCaller: false,
-                                                ),
-                                                stopLoading,
+                                      ),
+                                      onTap: (startLoading, stopLoading,
+                                          btnState) {
+                                        if (btnState == ButtonState.idle &&
+                                            state.state != PostStates.loading) {
+                                          startLoading();
+                                          BlocProvider.of<PostBloc>(context)
+                                              .add(
+                                            ShareClicked(
+                                              Post(
+                                                title: '',
+                                                body: postController.text,
+                                                author:
+                                                    AuthenticationRepository()
+                                                        .authenticationService
+                                                        .currentUser()!,
+                                                images: [],
+                                                videos: [],
+                                                audios: [],
+                                                widgets: [],
+                                                replyToPostId: -1,
+                                                childPostId: -1,
+                                                publishDate: DateTime.now(),
+                                                reactionsCount: 0,
+                                                repliesCount: 0,
+                                                reactedToByCaller: false,
                                               ),
-                                            );
-                                          }
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            state.state == PostStates.loading
-                                                ? Center(
-                                                    child: SizedBox(
-                                                      width: 30,
-                                                      height: 30,
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .secondary,
-                                                      ),
-                                                    ),
-                                                  )
-                                                : SvgPicture.asset(
-                                                    'lib/assets/icons/share.svg',
-                                                    colorFilter:
-                                                        ColorFilter.mode(
-                                                            Theme.of(context)
-                                                                .primaryColor,
-                                                            BlendMode.srcIn),
-                                                  ),
-                                            const Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Text('Share'),
+                                              stopLoading,
                                             ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                          );
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          state.state == PostStates.loading
+                                              ? Center(
+                                                  child: SizedBox(
+                                                    width: 30,
+                                                    height: 30,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary,
+                                                    ),
+                                                  ),
+                                                )
+                                              : SvgPicture.asset(
+                                                  'lib/assets/icons/share.svg',
+                                                  colorFilter: ColorFilter.mode(
+                                                      Theme.of(context)
+                                                          .primaryColor,
+                                                      BlendMode.srcIn),
+                                                ),
+                                          const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text('Share'),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
