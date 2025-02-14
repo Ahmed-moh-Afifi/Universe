@@ -1,0 +1,2 @@
+/home/ahmedafifi/projects/Universe/universe/android/app/.cxx/Debug/2tul4567/x86/CMakeFiles/edit_cache.dir
+/home/ahmedafifi/projects/Universe/universe/android/app/.cxx/Debug/2tul4567/x86/CMakeFiles/rebuild_cache.dir

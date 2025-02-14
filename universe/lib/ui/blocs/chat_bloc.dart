@@ -187,6 +187,7 @@ class ChatBloc extends Bloc<Object, ChatState> {
 
     on<SendMessage>(
       (event, emit) {
+        add(UpdateStatusEvent(typing: false));
         log('Sending message: ${event.message}', name: 'NotificationsBloc');
         MessagingHub().invoke('SendToUserAsync', [event.userId, event.message]);
         add(NewMessageEvent(event.message));
@@ -194,8 +195,8 @@ class ChatBloc extends Bloc<Object, ChatState> {
     );
 
     on<UpdateStatusEvent>(
-      (event, emit) {
-        MessagingHub().invoke('SendUserStatus', [
+      (event, emit) async {
+        await MessagingHub().invoke('SendUserStatus', [
           UserStatus(
             status: event.typing ? 'Typing' : 'Online',
             lastOnline: DateTime.now(),
@@ -235,28 +236,33 @@ class ChatBloc extends Bloc<Object, ChatState> {
         AuthenticationRepository().authenticationService.currentUser()!.id,
         chat.id);
 
-    MessagingHub().invoke("SubscribeToUsersStatus", [
+    await MessagingHub().invoke("SubscribeToUsersStatus", [
       [user.id]
     ]);
     onHubReceive = (arguments) {
       log("Message received from hub: ${arguments?[0]}", name: "ChatBloc");
-      add(
-        NewMessageEvent(
-          Message.fromJson(arguments?[0] as Map<String, dynamic>),
-        ),
-      );
+      var message = Message.fromJson(arguments?[0] as Map<String, dynamic>);
+      if (message.authorId == user.id) {
+        add(
+          NewMessageEvent(
+            message,
+          ),
+        );
+      }
     };
     onStatusChanged = (arguments) {
       log('User status updated: ${arguments?[0]}', name: "ChatBloc");
-      var userStatus =
-          UserStatus.fromJson(arguments?[1] as Map<String, dynamic>);
-      add(
-        StatusUpdatedEvent(
-          isTyping: userStatus.status == "Typing",
-          isOnline: userStatus.status != "Offline",
-          lastOnline: userStatus.lastOnline,
-        ),
-      );
+      if (arguments?[0] as String == user.id) {
+        var userStatus =
+            UserStatus.fromJson(arguments?[1] as Map<String, dynamic>);
+        add(
+          StatusUpdatedEvent(
+            isTyping: userStatus.status == "Typing",
+            isOnline: userStatus.status != "Offline",
+            lastOnline: userStatus.lastOnline,
+          ),
+        );
+      }
     };
     MessagingHub().on("MessageReceived", onHubReceive);
     MessagingHub().on("UpdateUserStatus", onStatusChanged);
@@ -274,6 +280,9 @@ class ChatBloc extends Bloc<Object, ChatState> {
   Future<void> close() async {
     MessagingHub().off("MessageReceived", onHubReceive);
     MessagingHub().off("UpdateUserStatus", onStatusChanged);
+    await MessagingHub().invoke("UnsubscribeFromUsersStatus", [
+      [user.id]
+    ]);
     RouteGenerator.openedChat = null;
     await super.close();
   }

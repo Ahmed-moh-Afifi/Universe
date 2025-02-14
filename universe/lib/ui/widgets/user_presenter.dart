@@ -14,6 +14,7 @@ class UserPresenter extends StatelessWidget {
   final bool showFollowButton;
   final bool loading;
   final String subtitle;
+  final Widget? subtitleWidget;
 
   const UserPresenter({
     required this.user,
@@ -22,6 +23,7 @@ class UserPresenter extends StatelessWidget {
     this.showFollowButton = false,
     this.loading = false,
     this.subtitle = '',
+    this.subtitleWidget,
     super.key,
   });
 
@@ -73,11 +75,17 @@ class UserPresenter extends StatelessWidget {
                     ),
             ],
           ),
-          subtitle: subtitle.isNotEmpty
-              ? Text(subtitle,
-                  style: TextStyles.subtitleStyle.copyWith(fontSize: 10))
-              : Text('@${user.userName}',
-                  style: TextStyles.subtitleStyle.copyWith(fontSize: 10)),
+          subtitle: Row(
+            spacing: 3,
+            children: [
+              subtitle.isNotEmpty
+                  ? Text(subtitle,
+                      style: TextStyles.subtitleStyle.copyWith(fontSize: 10))
+                  : Text('@${user.userName}',
+                      style: TextStyles.subtitleStyle.copyWith(fontSize: 10)),
+              subtitleWidget != null ? subtitleWidget! : SizedBox.shrink(),
+            ],
+          ),
           subtitleTextStyle: TextStyles.subtitleStyle.copyWith(fontSize: 10),
           leading: SizedBox(
             width: 34,

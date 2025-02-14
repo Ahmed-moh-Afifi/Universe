@@ -10,6 +10,7 @@ import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/chats_repository.dart';
 import 'package:universe/ui/blocs/chat_bloc.dart';
 import 'package:universe/ui/widgets/message.dart';
+import 'package:universe/ui/widgets/typing_indicator.dart';
 import 'package:universe/ui/widgets/user_presenter.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -64,10 +65,23 @@ class _ChatContentState extends State<ChatContent> {
               subtitle: state.isOnline != null
                   ? !state.isOnline!
                       ? "Offline"
-                      : state.isTyping != null && state.isTyping!
-                          ? "Typing..."
-                          : "Online"
+                      :
+                      // state.isTyping != null && state.isTyping!
+                      //     ? "Typing..."
+                      //     :
+                      "Online"
                   : '',
+              subtitleWidget: state.isOnline != null && state.isOnline!
+                  ? Container(
+                      height: 5,
+                      width: 5,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 0, 255, 64),
+                        shape: BoxShape.circle,
+                        // border: Border.all(color: Colors.black, width: 2),
+                      ),
+                    )
+                  : null,
             );
           },
         ),
@@ -140,6 +154,18 @@ class _ChatContentState extends State<ChatContent> {
           ),
           // Text('ahmedafifi took a screenshot.',
           //     style: TextStyles.subtitleStyle),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: BlocBuilder<ChatBloc, ChatState>(
+              builder: (context, state) => state.isTyping != null &&
+                      state.isTyping!
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, left: 8.0),
+                      child: TypingIndicator(widget.user),
+                    )
+                  : SizedBox.shrink(),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

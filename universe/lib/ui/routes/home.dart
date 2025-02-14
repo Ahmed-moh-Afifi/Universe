@@ -8,7 +8,6 @@ import 'package:universe/ui/blocs/home_bloc.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/ui/blocs/notifications_bloc.dart';
 import 'package:universe/ui/routes/new_post.dart';
-import 'package:universe/ui/widgets/universe_appbar.dart';
 
 class HomePage extends StatefulWidget {
   final HomeBloc bloc;
@@ -126,86 +125,81 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             bottomNavigationBar: BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) => Container(
+                height: 90,
+                padding: EdgeInsets.all(20),
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                ),
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.white.withAlpha(50)),
                 margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                  child: UniverseBottomAppBar(
-                    color: Colors.transparent,
-                    positionInHorizontal: -20.0,
-                    notchMargin: 0,
-                    height: 80,
-                    shape: const CircularNotchedRectangle(),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: SvgPicture.asset(
-                            state.homeIcon,
-                            colorFilter: ColorFilter.mode(
-                                Theme.of(context).primaryIconTheme.color!,
-                                BlendMode.srcIn),
-                          ),
-                          onPressed: () => widget.bloc
-                              .add(const Navigate(RouteGenerator.feed)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          state.homeIcon,
+                          colorFilter: ColorFilter.mode(
+                              Theme.of(context).primaryIconTheme.color!,
+                              BlendMode.srcIn),
                         ),
-                        IconButton(
-                          icon: SvgPicture.asset(
-                            state.searchIcon,
-                            colorFilter: ColorFilter.mode(
-                                Theme.of(context).primaryIconTheme.color!,
-                                BlendMode.srcIn),
-                          ),
-                          onPressed: () => widget.bloc
-                              .add(const Navigate(RouteGenerator.search)),
+                        onPressed: () => widget.bloc
+                            .add(const Navigate(RouteGenerator.feed)),
+                      ),
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          state.searchIcon,
+                          colorFilter: ColorFilter.mode(
+                              Theme.of(context).primaryIconTheme.color!,
+                              BlendMode.srcIn),
                         ),
-                        IconButton(
-                          onPressed: () => showModalBottomSheet(
-                            context: context,
-                            builder: (context) =>
-                                LayoutBuilder(builder: (context, constraints) {
-                              return SizedBox(
-                                height: constraints.maxHeight,
-                                child: NewPost(),
-                              );
-                            }),
-                            enableDrag: true,
-                            useSafeArea: true,
-                            showDragHandle: true,
-                            isScrollControlled: true,
-                          ),
-                          icon: SvgPicture.asset(
-                            state.newPostIcon,
-                            colorFilter: ColorFilter.mode(
-                                Theme.of(context).primaryIconTheme.color!,
-                                BlendMode.srcIn),
-                          ),
+                        onPressed: () => widget.bloc
+                            .add(const Navigate(RouteGenerator.search)),
+                      ),
+                      IconButton(
+                        onPressed: () => showModalBottomSheet(
+                          context: context,
+                          builder: (context) =>
+                              LayoutBuilder(builder: (context, constraints) {
+                            return SizedBox(
+                              height: constraints.maxHeight,
+                              child: NewPost(),
+                            );
+                          }),
+                          enableDrag: true,
+                          useSafeArea: true,
+                          showDragHandle: true,
+                          isScrollControlled: true,
                         ),
-                        IconButton(
-                          icon: SvgPicture.asset(
-                            state.messagesIcon,
-                            colorFilter: ColorFilter.mode(
-                                Theme.of(context).primaryIconTheme.color!,
-                                BlendMode.srcIn),
-                          ),
-                          onPressed: () => widget.bloc
-                              .add(const Navigate(RouteGenerator.messages)),
+                        icon: SvgPicture.asset(
+                          state.newPostIcon,
+                          colorFilter: ColorFilter.mode(
+                              Theme.of(context).primaryIconTheme.color!,
+                              BlendMode.srcIn),
                         ),
-                        IconButton(
-                          icon: SvgPicture.asset(
-                            state.profileIcon,
-                            colorFilter: ColorFilter.mode(
-                                Theme.of(context).primaryIconTheme.color!,
-                                BlendMode.srcIn),
-                          ),
-                          onPressed: () => widget.bloc.add(
-                              const Navigate(RouteGenerator.personalProfile)),
+                      ),
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          state.messagesIcon,
+                          colorFilter: ColorFilter.mode(
+                              Theme.of(context).primaryIconTheme.color!,
+                              BlendMode.srcIn),
                         ),
-                      ],
-                    ),
+                        onPressed: () => widget.bloc
+                            .add(const Navigate(RouteGenerator.messages)),
+                      ),
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          state.profileIcon,
+                          colorFilter: ColorFilter.mode(
+                              Theme.of(context).primaryIconTheme.color!,
+                              BlendMode.srcIn),
+                        ),
+                        onPressed: () => widget.bloc.add(
+                            const Navigate(RouteGenerator.personalProfile)),
+                      ),
+                    ],
                   ),
                 ),
               ),
