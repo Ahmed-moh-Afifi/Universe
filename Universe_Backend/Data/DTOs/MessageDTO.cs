@@ -5,6 +5,7 @@ namespace Universe_Backend.Data.DTOs
     public class MessageDTO
     {
         public required int Id { get; set; }
+        public required string Uid { get; set; }
         public required string Body { get; set; }
         public List<string> Images { get; set; } = [];
         public List<string> Videos { get; set; } = [];

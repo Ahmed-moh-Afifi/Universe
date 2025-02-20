@@ -2,12 +2,14 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:universe/models/data/chat.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/models/data/widget.dart';
+import 'package:uuid/uuid.dart';
 
 part 'message.g.dart';
 
 @JsonSerializable()
 class Message {
   final int id;
+  String? uid;
   final String body;
   final List<String> images;
   final List<String> videos;
@@ -25,6 +27,7 @@ class Message {
 
   Message({
     required this.id,
+    this.uid,
     required this.body,
     required this.images,
     required this.videos,
@@ -39,7 +42,9 @@ class Message {
     required this.chatId,
     this.chat,
     this.author,
-  });
+  }) {
+    uid ??= const Uuid().v4();
+  }
 
   factory Message.fromJson(Map<String, dynamic> json) =>
       _$MessageFromJson(json);

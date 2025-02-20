@@ -7,16 +7,17 @@ namespace Universe_Backend.Controllers
 {
     [ApiController]
     [Route("{userId}/[controller]")]
-    public class ChatsController(IChatsRepository chatsRepository, ILogger<ChatsRepository> logger) : ControllerBase
+    public class ChatsController(IChatsRepository chatsRepository, IUsersRepository usersRepository, NotificationService.NotificationService notificationService, ILogger<ChatsRepository> logger) : ControllerBase
     {
         [HttpPost]
         [Route("{name}")]
-        public async Task<ActionResult<Chat>> CreateChatAsync(string userId, string name, [FromBody] StringListWrapper userIds)
+        public async Task<ActionResult<ChatDTO>> CreateChatAsync(string userId, string name, [FromBody] StringListWrapper userIds)
         {
             try
             {
                 var chat = await chatsRepository.CreateChatAsync(name, userIds.Strings);
-                return Ok(chat);
+                userIds.Strings.ForEach(async uid => await notificationService.SubscribeToTopicAsync([.. (await usersRepository.GetNotificationTokens(uid)).Select(nt => nt.Token)], chat.Id.ToString(), NotificationService.Models.Platform.Android));
+                return Ok(chat.ToDTO());
             }
             catch (Exception e)
             {

@@ -27,7 +27,7 @@ namespace Universe_Backend.Repositories
             var chats = await dbContext.Chats
                 .OrderByDescending(c => c.LastEdited)
                 .Where(chat => chat.Users.Any(user => user.Id == userId))
-                .Where(chat => chat.Messages.Count() > 0)
+                .Where(chat => chat.Messages.Count() > 0 || chat.Users.Count > 2)
                 .Include(c => c.Users)
                 .Select(c => new ChatDTO()
                 {
@@ -42,6 +42,7 @@ namespace Universe_Backend.Repositories
             chats.AsParallel().Where(c => c.Users.Count <= 2).ForAll(c =>
             {
                 c.Name = c.Users.Where(u => u.Id != userId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{c.Users.First().FirstName} {c.Users.First().LastName}";
+                c.PhotoUrl = c.Users.Where(u => u.Id != userId).Select(u => u.PhotoUrl).FirstOrDefault() ?? c.Users.First().PhotoUrl;
             });
 
             return chats;
@@ -59,6 +60,25 @@ namespace Universe_Backend.Repositories
             if (chat.Users.Count <= 2)
             {
                 chat.Name = chat.Users.Where(u => u.Id != callerId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{chat.Users.First().FirstName} {chat.Users.First().LastName}";
+                chat.PhotoUrl = chat.Users.Where(u => u.Id != callerId).Select(u => u.PhotoUrl).FirstOrDefault() ?? chat.Users.First().PhotoUrl;
+            }
+
+            return chat;
+        }
+
+        public async Task<ChatDTO> GetChatForOtherAsync(string callerId, int chatId)
+        {
+            var chat = await dbContext.Chats
+                .Where(c => c.Id == chatId)
+                .Include(chat => chat.Users)
+                .Include(chat => chat.Messages)
+                .Select(c => c.ToDTO())
+                .FirstOrDefaultAsync() ?? throw new ArgumentException("Chat not found.");
+
+            if (chat.Users.Count <= 2)
+            {
+                chat.Name = chat.Users.Where(u => u.Id == callerId).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault() ?? $"{chat.Users.First().FirstName} {chat.Users.First().LastName}";
+                chat.PhotoUrl = chat.Users.Where(u => u.Id == callerId).Select(u => u.PhotoUrl).FirstOrDefault() ?? chat.Users.First().PhotoUrl;
             }
 
             return chat;

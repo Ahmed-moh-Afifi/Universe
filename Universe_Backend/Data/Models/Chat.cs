@@ -13,6 +13,7 @@ namespace Universe_Backend.Data.Models
         public int Id { get; set; }
         public required string Name { get; set; }
         public required DateTime LastEdited { get; set; }
+        public string? PhotoUrl { get; set; }
 
         public virtual ICollection<User> Users { get; set; } = [];
         public virtual ICollection<Message> Messages { get; set; } = [];
@@ -23,6 +24,7 @@ namespace Universe_Backend.Data.Models
             {
                 Id = Id,
                 Name = Name,
+                PhotoUrl = PhotoUrl,
                 LastEdited = LastEdited,
                 Users = Users.Select(u => u.ToDTO()).ToList(),
                 Messages = Messages.Select(m => m.ToDTO()).ToList(),

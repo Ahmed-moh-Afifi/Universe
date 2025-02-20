@@ -81,202 +81,132 @@ class MessagesContent extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(child: BlocBuilder<MessagesBloc, MessagesState>(
-              builder: (context, state) {
-                return state.state == MessagesStates.loaded
-                    ? state.chats?.length != null && state.chats!.isNotEmpty
-                        ? ListView.builder(
-                            itemCount:
-                                state.chats != null ? state.chats!.length : 0,
-                            itemBuilder: (context, index) => GestureDetector(
-                              onTap: () => state.chats![index].users.every(
-                                      (u) =>
-                                          u.id ==
+            Expanded(
+              child: BlocBuilder<MessagesBloc, MessagesState>(
+                builder: (context, state) {
+                  return state.state == MessagesStates.loaded
+                      ? state.chats?.length != null && state.chats!.isNotEmpty
+                          ? ListView.builder(
+                              itemCount:
+                                  state.chats != null ? state.chats!.length : 0,
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<MessagesBloc>(context).add(
+                                        OpenChatEvent(state.chats![index].id)),
+                                child: ChatTile(
+                                  lastOnline: state.chats![index].users.any(
+                                          (u) =>
+                                              u.id !=
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                      ? state.chats![index].users
+                                          .where((u) =>
+                                              u.id !=
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                          .first
+                                          .lastOnline!
+                                      : state.chats![index].users
+                                          .where((u) =>
+                                              u.id ==
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                          .first
+                                          .lastOnline!,
+                                  userIds: state.chats![index].users
+                                      .map((u) => u.id)
+                                      .where((u) =>
+                                          u !=
                                           AuthenticationRepository()
                                               .authenticationService
                                               .currentUser()!
                                               .id)
-                                  ? BlocProvider.of<MessagesBloc>(context).add(
-                                      OpenChatEvent(AuthenticationRepository()
-                                          .authenticationService
-                                          .currentUser()!))
-                                  : BlocProvider.of<MessagesBloc>(context).add(
-                                      OpenChatEvent(state.chats![index].users
-                                          .firstWhere((u) => u.id != AuthenticationRepository().authenticationService.currentUser()!.id))),
-                              child: ChatTile(
-                                lastOnline: state.chats![index].users.any((u) =>
-                                        u.id !=
-                                        AuthenticationRepository()
-                                            .authenticationService
-                                            .currentUser()!
-                                            .id)
-                                    ? state.chats![index].users
-                                        .where((u) =>
-                                            u.id !=
-                                            AuthenticationRepository()
-                                                .authenticationService
-                                                .currentUser()!
-                                                .id)
-                                        .first
-                                        .lastOnline!
-                                    : state.chats![index].users
-                                        .where((u) =>
-                                            u.id ==
-                                            AuthenticationRepository()
-                                                .authenticationService
-                                                .currentUser()!
-                                                .id)
-                                        .first
-                                        .lastOnline!,
-                                userIds: state.chats![index].users
-                                    .map((u) => u.id)
-                                    .where((u) =>
-                                        u !=
-                                        AuthenticationRepository()
-                                            .authenticationService
-                                            .currentUser()!
-                                            .id)
-                                    .toList(),
-                                name: state.chats?[index].name ?? '',
-                                message:
-                                    state.chats?[index].messages[0].body ?? '',
-                                time: state.chats?[index].messages.first
-                                        .publishDate
-                                        .toEnglishString() ??
-                                    '',
-                                image: state.chats![index].users.any((u) =>
-                                        u.id !=
-                                        AuthenticationRepository()
-                                            .authenticationService
-                                            .currentUser()!
-                                            .id)
-                                    ? state.chats![index].users
-                                            .where((u) =>
-                                                u.id !=
-                                                AuthenticationRepository()
-                                                    .authenticationService
-                                                    .currentUser()!
-                                                    .id)
-                                            .first
-                                            .photoUrl ??
-                                        'https://via.placeholder.com/150'
-                                    : state.chats![index].users
-                                            .where((u) =>
-                                                u.id ==
-                                                AuthenticationRepository()
-                                                    .authenticationService
-                                                    .currentUser()!
-                                                    .id)
-                                            .first
-                                            .photoUrl ??
-                                        'https://via.placeholder.com/150',
-                                verified: state.chats![index].users.any((u) =>
-                                        u.id !=
-                                        AuthenticationRepository()
-                                            .authenticationService
-                                            .currentUser()!
-                                            .id)
-                                    ? state.chats![index].users
-                                        .where((u) =>
-                                            u.id !=
-                                            AuthenticationRepository()
-                                                .authenticationService
-                                                .currentUser()!
-                                                .id)
-                                        .first
-                                        .verified
-                                    : state.chats![index].users
-                                        .where((u) =>
-                                            u.id ==
-                                            AuthenticationRepository()
-                                                .authenticationService
-                                                .currentUser()!
-                                                .id)
-                                        .first
-                                        .verified,
-                                isOnline: state.chats![index].users.any((u) =>
-                                        u.id !=
-                                        AuthenticationRepository()
-                                            .authenticationService
-                                            .currentUser()!
-                                            .id)
-                                    ? state.chats![index].users
-                                            .where((u) =>
-                                                u.id !=
-                                                AuthenticationRepository()
-                                                    .authenticationService
-                                                    .currentUser()!
-                                                    .id)
-                                            .first
-                                            .onlineSessions >
-                                        0
-                                    : state.chats![index].users
-                                            .where((u) =>
-                                                u.id ==
-                                                AuthenticationRepository()
-                                                    .authenticationService
-                                                    .currentUser()!
-                                                    .id)
-                                            .first
-                                            .onlineSessions >
-                                        0,
+                                      .toList(),
+                                  name: state.chats?[index].name ?? '',
+                                  message: state.chats != null &&
+                                          state
+                                              .chats![index].messages.isNotEmpty
+                                      ? (state.chats?[index].messages[0].body ??
+                                          '')
+                                      : '',
+                                  time: state.chats != null &&
+                                          state
+                                              .chats![index].messages.isNotEmpty
+                                      ? (state.chats?[index].messages.first
+                                              .publishDate
+                                              .toEnglishString() ??
+                                          '')
+                                      : '',
+                                  image: state.chats![index].photoUrl,
+                                  verified: state.chats![index].users.any((u) =>
+                                          u.id !=
+                                          AuthenticationRepository()
+                                              .authenticationService
+                                              .currentUser()!
+                                              .id)
+                                      ? state.chats![index].users
+                                          .where((u) =>
+                                              u.id !=
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                          .first
+                                          .verified
+                                      : state.chats![index].users
+                                          .where((u) =>
+                                              u.id ==
+                                              AuthenticationRepository()
+                                                  .authenticationService
+                                                  .currentUser()!
+                                                  .id)
+                                          .first
+                                          .verified,
+                                  isOnline: state.chats![index].users.any((u) =>
+                                          u.id !=
+                                          AuthenticationRepository()
+                                              .authenticationService
+                                              .currentUser()!
+                                              .id)
+                                      ? state.chats![index].users
+                                              .where((u) =>
+                                                  u.id !=
+                                                  AuthenticationRepository()
+                                                      .authenticationService
+                                                      .currentUser()!
+                                                      .id)
+                                              .first
+                                              .onlineSessions >
+                                          0
+                                      : state.chats![index].users
+                                              .where((u) =>
+                                                  u.id ==
+                                                  AuthenticationRepository()
+                                                      .authenticationService
+                                                      .currentUser()!
+                                                      .id)
+                                              .first
+                                              .onlineSessions >
+                                          0,
+                                ),
                               ),
-                            ),
-                          )
-                        : const Center(
-                            child: Text('No chats yet!'),
-                          )
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      );
-              },
-            )
-                // ListView(
-                //   children: const [
-                //     ChatTile(
-                //       name: 'Donna Gray',
-                //       message: 'Hey! I saw you like hiking...',
-                //       time: '3m ago',
-                //       image:
-                //           'https://via.placeholder.com/150', // Placeholder for avatar
-                //       isOnline: true,
-                //     ),
-                //     ChatTile(
-                //       name: 'Luciana Garcia',
-                //       message: 'Your dog is adorable. What’s his name?',
-                //       time: '7m ago',
-                //       image: 'https://via.placeholder.com/150',
-                //       isOnline: false,
-                //     ),
-                //     ChatTile(
-                //       name: 'Amina Murphy',
-                //       message: 'Hello! I noticed we both love sushi.',
-                //       time: '22h ago',
-                //       image: 'https://via.placeholder.com/150',
-                //       isOnline: false,
-                //     ),
-                //     ChatTile(
-                //       name: 'Aisha Ahmad',
-                //       message: 'Hey there! I see you’re into photography',
-                //       time: '3d ago',
-                //       image: 'https://via.placeholder.com/150',
-                //       isOnline: false,
-                //     ),
-                //   ],
-                // ),
-                ),
-          ],
-        ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 100),
-          child: FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0),
+                            )
+                          : const Center(
+                              child: Text('No chats yet!'),
+                            )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                },
+              ),
             ),
-            onPressed: () {},
-            backgroundColor: Colors.white,
-            child: const Icon(Icons.add, color: Colors.black),
-          ),
+          ],
         ),
       ),
     );

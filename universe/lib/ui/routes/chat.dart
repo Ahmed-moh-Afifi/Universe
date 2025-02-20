@@ -1,38 +1,34 @@
 import 'dart:ui';
-
 import 'package:auto_direction/auto_direction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/models/data/chat.dart';
 import 'package:universe/models/data/message.dart';
-import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/chats_repository.dart';
 import 'package:universe/ui/blocs/chat_bloc.dart';
+import 'package:universe/ui/widgets/chat_presenter.dart';
 import 'package:universe/ui/widgets/message.dart';
 import 'package:universe/ui/widgets/typing_indicator.dart';
-import 'package:universe/ui/widgets/user_presenter.dart';
 
 class ChatScreen extends StatelessWidget {
   final Chat chat;
-  final User user;
 
-  const ChatScreen(this.user, this.chat, {super.key});
+  const ChatScreen(this.chat, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ChatBloc(chat, user, ChatsRepository()),
-      child: ChatContent(user, chat),
+      create: (context) => ChatBloc(chat, ChatsRepository()),
+      child: ChatContent(chat),
     );
   }
 }
 
 class ChatContent extends StatefulWidget {
   final Chat chat;
-  final User user;
 
-  const ChatContent(this.user, this.chat, {super.key});
+  const ChatContent(this.chat, {super.key});
 
   @override
   State<ChatContent> createState() => _ChatContentState();
@@ -59,8 +55,21 @@ class _ChatContentState extends State<ChatContent> {
         ),
         title: BlocBuilder<ChatBloc, ChatState>(
           builder: (context, state) {
-            return UserPresenter(
-              user: widget.user,
+            return ChatPresenter(
+              verified: (widget.chat.users.length == 2 &&
+                      widget.chat.users
+                          .singleWhere(
+                            (element) =>
+                                element.id !=
+                                AuthenticationRepository()
+                                    .authenticationService
+                                    .currentUser()!
+                                    .id,
+                          )
+                          .verified) ||
+                  (widget.chat.users.length == 1 &&
+                      widget.chat.users.first.verified),
+              chat: widget.chat,
               contentPadding: EdgeInsets.all(0),
               subtitle: state.isOnline != null
                   ? !state.isOnline!
@@ -121,7 +130,11 @@ class _ChatContentState extends State<ChatContent> {
                               : null;
                       Message? nextMessage =
                           index - 1 >= 0 ? state.messages![index - 1] : null;
-                      message!.author = widget.user;
+                      // message!.author = widget.user;
+                      message!.author = widget.chat.users.singleWhere(
+                        (element) =>
+                            element.id == state.messages![index].authorId,
+                      );
                       if (previousMessage != null) {
                         return MessageWidget(
                           message,
@@ -132,6 +145,12 @@ class _ChatContentState extends State<ChatContent> {
                                       5) ||
                               nextMessage.authorId != message.authorId,
                           previousMessage.authorId != message.authorId,
+                          message.authorId !=
+                                  AuthenticationRepository()
+                                      .authenticationService
+                                      .currentUser()!
+                                      .id &&
+                              message.authorId != previousMessage.authorId,
                         );
                       } else {
                         return MessageWidget(
@@ -142,7 +161,12 @@ class _ChatContentState extends State<ChatContent> {
                                             .inMinutes >=
                                         5) ||
                                 nextMessage.authorId != message.authorId,
-                            true);
+                            true,
+                            message.authorId !=
+                                AuthenticationRepository()
+                                    .authenticationService
+                                    .currentUser()!
+                                    .id);
                       }
                     },
                   );
@@ -161,7 +185,7 @@ class _ChatContentState extends State<ChatContent> {
                       state.isTyping!
                   ? Padding(
                       padding: const EdgeInsets.only(bottom: 8.0, left: 8.0),
-                      child: TypingIndicator(widget.user),
+                      child: TypingIndicator(state.typingUser!),
                     )
                   : SizedBox.shrink(),
             ),
@@ -218,7 +242,8 @@ class _ChatContentState extends State<ChatContent> {
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    BlocProvider.of<ChatBloc>(context).add(SendMessage(
+                    BlocProvider.of<ChatBloc>(context).add(
+                      SendMessage(
                         Message(
                           id: 0,
                           body: _messageController.text,
@@ -234,7 +259,8 @@ class _ChatContentState extends State<ChatContent> {
                           repliesCount: 0,
                           chatId: widget.chat.id,
                         ),
-                        widget.user.id));
+                      ),
+                    );
                     _messageController.clear();
                   },
                 ),

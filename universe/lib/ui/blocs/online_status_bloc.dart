@@ -33,9 +33,9 @@ class OnlineStatusBloc extends Bloc<Object?, UserState> {
           log('Received UpdateUserStatus event', name: 'OnlineStatusBloc');
           log('args: $args', name: 'OnlineStatusBloc');
           log('userIds: $userIds', name: 'OnlineStatusBloc');
-          if (userIds.contains((args![0] as String))) {
+          if (userIds.contains((args![1] as String))) {
             var userStatus =
-                UserStatus.fromJson(args[1] as Map<String, dynamic>);
+                UserStatus.fromJson(args[2] as Map<String, dynamic>);
             add(UpdateOnlineStateEvent(userStatus.status,
                 lastOnline: userStatus.lastOnline));
             log('User status updated', name: 'OnlineStatusBloc');

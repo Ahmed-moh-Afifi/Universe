@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:loading_btn/loading_btn.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
@@ -88,25 +89,28 @@ class CompleteAccountContent extends StatelessWidget {
                     clipBehavior: Clip.antiAlias,
                     child: BlocBuilder<EditProfileBloc, EditProfileState>(
                       builder: (context, state) {
-                        return ExpandableImageProvider(
-                            (state.image != null
+                        return AuthenticationRepository()
+                                    .authenticationService
+                                    .currentUser()!
+                                    .photoUrl !=
+                                null
+                            ? ExpandableImageProvider(
+                                (state.image != null
                                     ? FileImage(File(state.image!.path))
                                     : CachedNetworkImageProvider(
                                         AuthenticationRepository()
-                                                .authenticationService
-                                                .currentUser()!
-                                                .photoUrl ??
-                                            'https://via.placeholder.com/150'))
-                                as ImageProvider,
-                            'pf',
-                            state.image != null
-                                ? Image.file(File(state.image!.path))
-                                : CachedNetworkImage(
-                                    imageUrl: AuthenticationRepository()
                                             .authenticationService
                                             .currentUser()!
-                                            .photoUrl ??
-                                        'https://via.placeholder.com/150'));
+                                            .photoUrl!)) as ImageProvider,
+                                'pf',
+                                state.image != null
+                                    ? Image.file(File(state.image!.path))
+                                    : CachedNetworkImage(
+                                        imageUrl: AuthenticationRepository()
+                                            .authenticationService
+                                            .currentUser()!
+                                            .photoUrl!))
+                            : SvgPicture.asset('lib/assets/icons/user.svg');
                       },
                     ),
                   ),

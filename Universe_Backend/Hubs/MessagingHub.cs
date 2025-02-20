@@ -22,6 +22,7 @@ namespace Universe_Backend.Hubs
             message.Id = 0;
             await dbContext.Messages.AddAsync(message);
             var chat = await chatsRepository.GetChatAsync(userId, message.ChatId);
+            chat.LastEdited = message.PublishDate;
             await dbContext.SaveChangesAsync();
 
             if (sender != userId)
@@ -53,9 +54,43 @@ namespace Universe_Backend.Hubs
             }
         }
 
+        public async Task SendToChatAsync(Message message)
+        {
+            string sender = Context.User!.FindFirstValue("uid")!;
+            logger.LogDebug($"User {sender} sending to chat {message.ChatId}");
+
+            message.Id = 0;
+            await dbContext.Messages.AddAsync(message);
+            var chat = await chatsRepository.GetChatForOtherAsync(sender, message.ChatId);
+            chat.LastEdited = message.PublishDate;
+            await dbContext.SaveChangesAsync();
+
+            logger.LogDebug("Sending signalr...");
+            await Clients.Group(message.ChatId.ToString()).SendAsync("MessageReceived", message.ToDTO());
+
+            logger.LogDebug("Sending firebase...");
+            var notification = new SingleUserNotification()
+            {
+                Recipient = message.ChatId.ToString(),
+                RecipientType = RecipientType.Topic,
+                Sender = sender,
+                Title = $"{chat?.Name}",
+                Body = message.Body,
+                Platform = Platform.Android,
+            };
+
+            await notificationService.SendNotificationAsync(notification);
+        }
+
         public async Task SendUserStatus(UserStatus status)
         {
-            await Clients.Group(Context.User!.FindFirstValue("uid")!).SendAsync("UpdateUserStatus", Context.User!.FindFirstValue("uid")!, status);
+            await Clients.Group(Context.User!.FindFirstValue("uid")!).SendAsync("UpdateUserStatus", "-1", Context.User!.FindFirstValue("uid")!, status);
+        }
+
+        public async Task SendTypingStatus(string chatId, UserStatus status)
+        {
+            logger.LogDebug($"Received a typing status from {Context.User!.FindFirstValue("uid")!} in chat {chatId}");
+            await Clients.Group(chatId).SendAsync("UpdateUserStatus", chatId, Context.User!.FindFirstValue("uid")!, status);
         }
 
         public async Task SubscribeToUsersStatus(List<string> userIds)
@@ -72,6 +107,23 @@ namespace Universe_Backend.Hubs
             foreach (string uid in userIds)
             {
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, uid);
+            }
+        }
+
+        public async Task SubscribeToChats(List<string> chatIds)
+        {
+            logger.LogDebug($"Subscribing to chats: {chatIds.Count}");
+            foreach (string chatId in chatIds)
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, chatId);
+            }
+        }
+
+        public async Task UnsubscribeFromChats(List<string> chatIds)
+        {
+            foreach (string chatId in chatIds)
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, chatId);
             }
         }
 
@@ -135,7 +187,7 @@ namespace Universe_Backend.Hubs
             {
                 user.OnlineSessions++;
                 await dbContext.SaveChangesAsync();
-                await Clients.Group(sender).SendAsync("UpdateUserStatus", sender, new UserStatus() { Status = "Online", LastOnline = DateTime.Now });
+                await Clients.Group(sender).SendAsync("UpdateUserStatus", "-1", sender, new UserStatus() { Status = "Online", LastOnline = DateTime.Now });
             }
             else
             {
@@ -158,7 +210,7 @@ namespace Universe_Backend.Hubs
                 await dbContext.SaveChangesAsync();
                 if (user.OnlineSessions == 0)
                 {
-                    await Clients.Group(sender).SendAsync("UpdateUserStatus", sender, new UserStatus() { Status = "Offline", LastOnline = DateTime.Now });
+                    await Clients.Group(sender).SendAsync("UpdateUserStatus", "-1", sender, new UserStatus() { Status = "Offline", LastOnline = DateTime.Now });
                 }
             }
 

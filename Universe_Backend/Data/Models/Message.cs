@@ -5,6 +5,7 @@ namespace Universe_Backend.Data.Models
     public class Message
     {
         public required int Id { get; set; }
+        public required string Uid { get; set; }
         public required string Body { get; set; }
         public List<string> Images { get; set; } = [];
         public List<string> Videos { get; set; } = [];
@@ -28,6 +29,7 @@ namespace Universe_Backend.Data.Models
             return new MessageDTO
             {
                 Id = Id,
+                Uid = Uid,
                 Body = Body,
                 Images = Images,
                 Videos = Videos,

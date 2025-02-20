@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +27,7 @@ class ChatState {
   final bool? isOnline;
   final DateTime? lastOnline;
   final String? error;
+  final User? typingUser;
 
   ChatState({
     required this.state,
@@ -33,6 +36,7 @@ class ChatState {
     this.isOnline,
     this.lastOnline,
     this.error,
+    this.typingUser,
   });
 
   factory ChatState.initial({bool online = false}) {
@@ -61,6 +65,7 @@ class ChatState {
     bool isTyping,
     bool isOnline,
     DateTime lastOnline,
+    User? typingUser,
   ) {
     return ChatState(
       state: ChatStates.loaded,
@@ -69,6 +74,7 @@ class ChatState {
       isOnline: isOnline,
       lastOnline: lastOnline,
       error: '',
+      typingUser: typingUser,
     );
   }
 
@@ -77,6 +83,7 @@ class ChatState {
     bool isTyping,
     bool isOnline,
     DateTime lastOnline,
+    User? typingUser,
   ) {
     return ChatState(
       state: ChatStates.newMessage,
@@ -85,6 +92,7 @@ class ChatState {
       isOnline: isOnline,
       lastOnline: lastOnline,
       error: '',
+      typingUser: typingUser,
     );
   }
 
@@ -96,6 +104,7 @@ class ChatState {
       isOnline: oldState.isOnline,
       lastOnline: oldState.lastOnline,
       error: error,
+      typingUser: oldState.typingUser,
     );
   }
 }
@@ -112,11 +121,13 @@ class StatusUpdatedEvent {
   final bool isTyping;
   final bool isOnline;
   final DateTime lastOnline;
+  final User user;
 
   const StatusUpdatedEvent({
     required this.isTyping,
     required this.isOnline,
     required this.lastOnline,
+    required this.user,
   });
 }
 
@@ -128,23 +139,25 @@ class UpdateStatusEvent {
 
 class SendMessage {
   final Message message;
-  final String userId;
 
-  SendMessage(this.message, this.userId);
+  SendMessage(this.message);
 }
 
 class TextChangedEvent {}
 
 class ChatBloc extends Bloc<Object, ChatState> {
-  final Chat chat;
-  final User user;
+  Chat chat;
   final IChatsRepository _chatsRepository;
   late void Function(List<Object?>?) onHubReceive;
   late void Function(List<Object?>?) onStatusChanged;
   DateTime? lastTyped;
+  HashSet<String> sentMessages = HashSet();
+  Queue<User> typingUsers = Queue();
+  late Timer typingIndicatorTimer;
 
-  ChatBloc(this.chat, this.user, this._chatsRepository)
-      : super(ChatState.initial(online: user.onlineSessions > 0)) {
+  ChatBloc(this.chat, this._chatsRepository)
+      : super(ChatState.initial(
+            online: chat.users.any((u) => u.onlineSessions > 0))) {
     RouteGenerator.openedChat = chat;
 
     on<InitChatEvent>(
@@ -158,17 +171,20 @@ class ChatBloc extends Bloc<Object, ChatState> {
       (event, emit) {
         log("New message received: ${event.message.toJson()}",
             name: "ChatBloc");
-        emit(
-          ChatState.newMessage(
-            [
-              event.message,
-              ...?state.messages,
-            ],
-            state.isTyping ?? false,
-            state.isOnline ?? false,
-            state.lastOnline ?? DateTime.now(),
-          ),
-        );
+        if (!sentMessages.remove(event.message.uid!)) {
+          emit(
+            ChatState.newMessage(
+              [
+                event.message,
+                ...?state.messages,
+              ],
+              state.isTyping ?? false,
+              state.isOnline ?? false,
+              state.lastOnline ?? DateTime.now(),
+              state.typingUser,
+            ),
+          );
+        }
       },
     );
 
@@ -180,28 +196,25 @@ class ChatBloc extends Bloc<Object, ChatState> {
             event.isTyping,
             event.isOnline,
             event.lastOnline,
+            event.user,
           ),
         );
       },
     );
 
     on<SendMessage>(
-      (event, emit) {
-        add(UpdateStatusEvent(typing: false));
+      (event, emit) async {
+        await updateStatus(false);
         log('Sending message: ${event.message}', name: 'NotificationsBloc');
-        MessagingHub().invoke('SendToUserAsync', [event.userId, event.message]);
+        sentMessages.add(event.message.uid!);
         add(NewMessageEvent(event.message));
+        MessagingHub().invoke('SendToChatAsync', [event.message]);
       },
     );
 
     on<UpdateStatusEvent>(
       (event, emit) async {
-        await MessagingHub().invoke('SendUserStatus', [
-          UserStatus(
-            status: event.typing ? 'Typing' : 'Online',
-            lastOnline: DateTime.now(),
-          )
-        ]);
+        await updateStatus(event.typing);
       },
     );
 
@@ -232,17 +245,25 @@ class ChatBloc extends Bloc<Object, ChatState> {
 
   Future<ChatState> initialize() async {
     log("Initializing ChatBloc", name: "ChatBloc");
-    var cht = await _chatsRepository.getChat(
+    chat = await _chatsRepository.getChat(
         AuthenticationRepository().authenticationService.currentUser()!.id,
         chat.id);
 
     await MessagingHub().invoke("SubscribeToUsersStatus", [
-      [user.id]
+      chat.users
+          .map(
+            (e) => e.id,
+          )
+          .toList()
     ]);
+    await MessagingHub().invoke("SubscribeToChats", [
+      [chat.id.toString()]
+    ]);
+
     onHubReceive = (arguments) {
       log("Message received from hub: ${arguments?[0]}", name: "ChatBloc");
       var message = Message.fromJson(arguments?[0] as Map<String, dynamic>);
-      if (message.authorId == user.id) {
+      if (message.chatId == chat.id) {
         add(
           NewMessageEvent(
             message,
@@ -252,28 +273,79 @@ class ChatBloc extends Bloc<Object, ChatState> {
     };
     onStatusChanged = (arguments) {
       log('User status updated: ${arguments?[0]}', name: "ChatBloc");
-      if (arguments?[0] as String == user.id) {
+      if ((arguments?[0] as String == chat.id.toString() ||
+              arguments?[0] as String == "-1") &&
+          arguments?[1] !=
+              AuthenticationRepository()
+                  .authenticationService
+                  .currentUser()!
+                  .id) {
         var userStatus =
-            UserStatus.fromJson(arguments?[1] as Map<String, dynamic>);
-        add(
-          StatusUpdatedEvent(
-            isTyping: userStatus.status == "Typing",
-            isOnline: userStatus.status != "Offline",
-            lastOnline: userStatus.lastOnline,
-          ),
-        );
+            UserStatus.fromJson(arguments?[2] as Map<String, dynamic>);
+        if (userStatus.status == "Typing") {
+          typingUsers.add(
+              chat.users.singleWhere((u) => u.id == arguments?[1] as String));
+        } else {
+          typingUsers.removeWhere(
+            (u) => u.id == arguments?[1] as String,
+          );
+        }
+        if (userStatus.status == "Typing" || typingUsers.isEmpty) {
+          add(
+            StatusUpdatedEvent(
+                isTyping: userStatus.status == "Typing",
+                isOnline: userStatus.status != "Offline",
+                lastOnline: userStatus.lastOnline,
+                user: chat.users
+                    .singleWhere((u) => u.id == arguments?[1] as String)),
+          );
+        }
       }
     };
     MessagingHub().on("MessageReceived", onHubReceive);
     MessagingHub().on("UpdateUserStatus", onStatusChanged);
+
+    typingIndicatorTimer = Timer.periodic(
+      const Duration(seconds: 2),
+      (timer) {
+        log('Typing timer tick.', name: "ChatBloc");
+        if (typingUsers.isNotEmpty) {
+          log('Typing Users Queue is not empty.', name: "ChatBloc");
+
+          add(
+            StatusUpdatedEvent(
+              isTyping: true,
+              isOnline: true,
+              lastOnline: DateTime.now(),
+              user: typingUsers.first,
+            ),
+          );
+          typingUsers.add(typingUsers.first);
+          typingUsers.removeFirst();
+        }
+      },
+    );
+
     log("ChatBloc initialized", name: "ChatBloc");
+    log("Users count in chat: ${chat.users.length}", name: "ChatBloc");
 
     return ChatState.loaded(
-      cht.messages.reversed.toList(),
+      chat.messages.reversed.toList(),
       false,
       state.isOnline!,
       DateTime.now(),
+      state.typingUser,
     );
+  }
+
+  Future<void> updateStatus(bool typing) async {
+    await MessagingHub().invoke('SendTypingStatus', [
+      chat.id.toString(),
+      UserStatus(
+        status: typing ? 'Typing' : 'Online',
+        lastOnline: DateTime.now(),
+      )
+    ]);
   }
 
   @override
@@ -281,7 +353,14 @@ class ChatBloc extends Bloc<Object, ChatState> {
     MessagingHub().off("MessageReceived", onHubReceive);
     MessagingHub().off("UpdateUserStatus", onStatusChanged);
     await MessagingHub().invoke("UnsubscribeFromUsersStatus", [
-      [user.id]
+      chat.users
+          .map(
+            (e) => e.id,
+          )
+          .toList()
+    ]);
+    await MessagingHub().invoke("UnsubscribeFromChats", [
+      [chat.id.toString()]
     ]);
     RouteGenerator.openedChat = null;
     await super.close();

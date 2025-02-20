@@ -8,6 +8,7 @@ part of 'message.dart';
 
 Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       id: (json['id'] as num).toInt(),
+      uid: json['uid'] as String?,
       body: json['body'] as String,
       images:
           (json['images'] as List<dynamic>).map((e) => e as String).toList(),
@@ -35,6 +36,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
 
 Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
       'id': instance.id,
+      'uid': instance.uid,
       'body': instance.body,
       'images': instance.images,
       'videos': instance.videos,

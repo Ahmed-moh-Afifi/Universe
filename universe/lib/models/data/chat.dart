@@ -9,6 +9,7 @@ class Chat {
   int id;
   String name;
   DateTime lastEdited;
+  String? photoUrl;
   List<Message> messages = [];
   List<User> users = [];
 
@@ -16,6 +17,7 @@ class Chat {
     required this.id,
     required this.name,
     required this.lastEdited,
+    this.photoUrl,
     this.messages = const [],
     this.users = const [],
   });

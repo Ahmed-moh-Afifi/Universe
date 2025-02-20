@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universe/models/data/chat.dart';
-import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/chats_repository.dart';
 import 'package:universe/repositories/users_repository.dart';
@@ -35,9 +34,9 @@ class MessagesState {
 class GetChatsEvent {}
 
 class OpenChatEvent {
-  final User user;
+  final int chatId;
 
-  const OpenChatEvent(this.user);
+  const OpenChatEvent(this.chatId);
 }
 
 class MessagesBloc extends Bloc<Object?, MessagesState> {
@@ -53,9 +52,12 @@ class MessagesBloc extends Bloc<Object?, MessagesState> {
                   .currentUser()!
                   .id);
 
-          chats.sort((a, b) => b
-              .messages.first.publishDate.millisecondsSinceEpoch
-              .compareTo(a.messages.first.publishDate.millisecondsSinceEpoch));
+          chats.sort((a, b) => (b.messages.isNotEmpty
+                  ? b.messages.first.publishDate.millisecondsSinceEpoch
+                  : b.lastEdited.millisecondsSinceEpoch)
+              .compareTo(a.messages.isNotEmpty
+                  ? a.messages.first.publishDate.millisecondsSinceEpoch
+                  : a.lastEdited.millisecondsSinceEpoch));
 
           emit(MessagesState.loaded(chats));
         } on Exception {
@@ -66,16 +68,16 @@ class MessagesBloc extends Bloc<Object?, MessagesState> {
 
     on<OpenChatEvent>(
       (event, emit) async {
-        final chat = await chatsRepository.getChatByParticipants(
+        final chat = await chatsRepository.getChat(
           AuthenticationRepository().authenticationService.currentUser()!.id,
-          event.user.id,
+          event.chatId,
         );
 
         // RouteGenerator.mainNavigatorkey.currentState!.pop();
-        var user = await usersRepository.getUser(event.user.id);
+        // var user = await usersRepository.getUser(event.user.id);
         RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
           RouteGenerator.chat,
-          arguments: [user, chat],
+          arguments: [chat],
         );
       },
     );

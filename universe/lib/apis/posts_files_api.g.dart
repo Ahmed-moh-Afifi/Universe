@@ -9,11 +9,7 @@ part of 'posts_files_api.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
 class _PostsFilesApi implements PostsFilesApi {
-  _PostsFilesApi(
-    this._dio, {
-    this.baseUrl,
-    this.errorLogger,
-  });
+  _PostsFilesApi(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -31,23 +27,21 @@ class _PostsFilesApi implements PostsFilesApi {
     final _headers = <String, dynamic>{};
     final _data = FormData();
     _data.files.addAll(images.map((i) => MapEntry('images', i)));
-    final _options = _setStreamType<List<String>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-      contentType: 'multipart/form-data',
-    )
-        .compose(
-          _dio.options,
-          '/${postUid}/Files/Images/Upload',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
+    final _options = _setStreamType<List<String>>(
+      Options(
+        method: 'POST',
+        headers: _headers,
+        extra: _extra,
+        contentType: 'multipart/form-data',
+      )
+          .compose(
+            _dio.options,
+            '/${postUid}/Files/Images/Upload',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<String> _value;
     try {
@@ -69,23 +63,21 @@ class _PostsFilesApi implements PostsFilesApi {
     final _headers = <String, dynamic>{};
     final _data = FormData();
     _data.files.addAll(videos.map((i) => MapEntry('videos', i)));
-    final _options = _setStreamType<List<String>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-      contentType: 'multipart/form-data',
-    )
-        .compose(
-          _dio.options,
-          '/${postUid}/Files/Videos/Upload',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
+    final _options = _setStreamType<List<String>>(
+      Options(
+        method: 'POST',
+        headers: _headers,
+        extra: _extra,
+        contentType: 'multipart/form-data',
+      )
+          .compose(
+            _dio.options,
+            '/${postUid}/Files/Videos/Upload',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<String> _value;
     try {
@@ -107,23 +99,21 @@ class _PostsFilesApi implements PostsFilesApi {
     final _headers = <String, dynamic>{};
     final _data = FormData();
     _data.files.addAll(audios.map((i) => MapEntry('audios', i)));
-    final _options = _setStreamType<List<String>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-      contentType: 'multipart/form-data',
-    )
-        .compose(
-          _dio.options,
-          '/${postUid}/Files/Audios/Upload',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
+    final _options = _setStreamType<List<String>>(
+      Options(
+        method: 'POST',
+        headers: _headers,
+        extra: _extra,
+        contentType: 'multipart/form-data',
+      )
+          .compose(
+            _dio.options,
+            '/${postUid}/Files/Audios/Upload',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<String> _value;
     try {
@@ -148,10 +138,7 @@ class _PostsFilesApi implements PostsFilesApi {
     return requestOptions;
   }
 
-  String _combineBaseUrls(
-    String dioBaseUrl,
-    String? baseUrl,
-  ) {
+  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
     if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }

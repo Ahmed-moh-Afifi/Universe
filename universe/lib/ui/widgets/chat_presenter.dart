@@ -1,15 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:universe/models/data/user.dart';
+import 'package:universe/models/data/chat.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/ui/styles/text_styles.dart';
 import 'package:universe/ui/widgets/fading_circle_progress_indicator.dart';
-import 'package:universe/ui/widgets/follow_button.dart';
 import 'package:universe/ui/widgets/verified_badge.dart';
 
-class UserPresenter extends StatelessWidget {
-  final User user;
+class ChatPresenter extends StatelessWidget {
+  final Chat chat;
+  final bool verified;
   final EdgeInsets? contentPadding;
   final EdgeInsets? margin;
   final bool showFollowButton;
@@ -17,8 +17,9 @@ class UserPresenter extends StatelessWidget {
   final String subtitle;
   final Widget? subtitleWidget;
 
-  const UserPresenter({
-    required this.user,
+  const ChatPresenter({
+    required this.chat,
+    this.verified = false,
     this.contentPadding,
     this.margin,
     this.showFollowButton = false,
@@ -46,7 +47,7 @@ class UserPresenter extends StatelessWidget {
           ),
         ),
         onPressed: () => RouteGenerator.mainNavigatorkey.currentState!
-            .pushNamed(RouteGenerator.profile, arguments: user),
+            .pushNamed(RouteGenerator.profile, arguments: chat),
         child: ListTile(
           contentPadding: contentPadding,
           dense: true,
@@ -60,9 +61,9 @@ class UserPresenter extends StatelessWidget {
                 softWrap: false,
                 maxLines: 1,
                 style: TextStyle(fontSize: 12),
-                '${user.firstName} ${user.lastName}',
+                chat.name,
               ),
-              user.verified
+              verified
                   ? const Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: VerifiedBadge(
@@ -79,11 +80,8 @@ class UserPresenter extends StatelessWidget {
           subtitle: Row(
             spacing: 3,
             children: [
-              subtitle.isNotEmpty
-                  ? Text(subtitle,
-                      style: TextStyles.subtitleStyle.copyWith(fontSize: 10))
-                  : Text('@${user.userName}',
-                      style: TextStyles.subtitleStyle.copyWith(fontSize: 10)),
+              Text(subtitle,
+                  style: TextStyles.subtitleStyle.copyWith(fontSize: 10)),
               subtitleWidget != null ? subtitleWidget! : SizedBox.shrink(),
             ],
           ),
@@ -99,11 +97,11 @@ class UserPresenter extends StatelessWidget {
                       ),
                       Align(
                         alignment: Alignment.center,
-                        child: user.photoUrl != null
+                        child: chat.photoUrl != null
                             ? CircleAvatar(
                                 radius: 15,
                                 foregroundImage:
-                                    CachedNetworkImageProvider(user.photoUrl!),
+                                    CachedNetworkImageProvider(chat.photoUrl!),
                               )
                             : SvgPicture.asset('lib/assets/icons/user.svg',
                                 width: 30,
@@ -113,11 +111,11 @@ class UserPresenter extends StatelessWidget {
                       ),
                     ],
                   )
-                : user.photoUrl != null
+                : chat.photoUrl != null
                     ? CircleAvatar(
                         radius: 15,
                         foregroundImage:
-                            CachedNetworkImageProvider(user.photoUrl!),
+                            CachedNetworkImageProvider(chat.photoUrl!),
                       )
                     : SvgPicture.asset('lib/assets/icons/user.svg',
                         width: 30,
@@ -125,21 +123,6 @@ class UserPresenter extends StatelessWidget {
                         colorFilter:
                             ColorFilter.mode(Colors.white, BlendMode.srcIn)),
           ),
-          // Container(
-          //   width: 50,
-          //   height: 50,
-          //   clipBehavior: Clip.antiAlias,
-          //   decoration: const BoxDecoration(
-          //     borderRadius: BorderRadius.all(
-          //       Radius.circular(27.5),
-          //     ),
-          //   ),
-          //   child: CachedNetworkImage(
-          //       imageUrl: user.photoUrl ?? 'https://via.placeholder.com/150'),
-          // ),
-          trailing: showFollowButton
-              ? SizedBox(width: 110, child: FollowButton(user))
-              : const SizedBox(),
         ),
       ),
     );

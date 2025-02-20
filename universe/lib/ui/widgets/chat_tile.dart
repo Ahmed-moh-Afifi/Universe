@@ -2,6 +2,7 @@ import 'package:auto_direction/auto_direction.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:universe/ui/blocs/online_status_bloc.dart';
 import 'package:universe/ui/styles/text_styles.dart';
 import 'package:universe/ui/widgets/verified_badge.dart';
@@ -10,7 +11,7 @@ class ChatTile extends StatelessWidget {
   final String name;
   final String message;
   final String time;
-  final String image;
+  final String? image;
   final bool isOnline;
   final DateTime lastOnline;
   final bool verified;
@@ -50,7 +51,7 @@ class ChatTileContent extends StatelessWidget {
   final String name;
   final String message;
   final String time;
-  final String image;
+  final String? image;
   final bool verified;
 
   const ChatTileContent({
@@ -69,10 +70,18 @@ class ChatTileContent extends StatelessWidget {
         return ListTile(
           leading: Stack(
             children: [
-              CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(image),
-                radius: 25,
-              ),
+              image != null
+                  ? CircleAvatar(
+                      backgroundImage: CachedNetworkImageProvider(image!),
+                      radius: 25,
+                    )
+                  : SvgPicture.asset(
+                      'lib/assets/icons/user.svg',
+                      width: 50,
+                      height: 50,
+                      colorFilter:
+                          ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    ),
               if (state.state != 'Offline')
                 Positioned(
                   bottom: 0,

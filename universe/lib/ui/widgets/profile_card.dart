@@ -1,6 +1,7 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:universe/models/data/user.dart';
 import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/repositories/chats_repository.dart';
@@ -103,9 +104,15 @@ class _ProfileCardState extends State<ProfileCard> {
                       borderRadius: BorderRadius.circular(60),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: ExpandableImage(
-                      widget.user.photoUrl ?? 'https://via.placeholder.com/150',
-                    ),
+                    child: widget.user.photoUrl != null
+                        ? ExpandableImage(
+                            widget.user.photoUrl!,
+                          )
+                        : SvgPicture.asset('lib/assets/icons/user.svg',
+                            width: 30,
+                            height: 30,
+                            colorFilter: ColorFilter.mode(
+                                Colors.white, BlendMode.srcIn)),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
