@@ -71,25 +71,25 @@ class _ChatContentState extends State<ChatContent> {
                       widget.chat.users.first.verified),
               chat: widget.chat,
               contentPadding: EdgeInsets.all(0),
-              subtitle: state.isOnline != null
-                  ? !state.isOnline!
-                      ? "Offline"
-                      :
-                      // state.isTyping != null && state.isTyping!
-                      //     ? "Typing..."
-                      //     :
-                      "Online"
+              subtitle: widget.chat.users.length > 1
+                  ? state.isOnline != null
+                      ? !state.isOnline!
+                          ? "Offline"
+                          : "Online"
+                      : ''
                   : '',
-              subtitleWidget: state.isOnline != null && state.isOnline!
-                  ? Container(
-                      height: 5,
-                      width: 5,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 0, 255, 64),
-                        shape: BoxShape.circle,
-                        // border: Border.all(color: Colors.black, width: 2),
-                      ),
-                    )
+              subtitleWidget: widget.chat.users.length > 1
+                  ? state.isOnline != null && state.isOnline!
+                      ? Container(
+                          height: 5,
+                          width: 5,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 0, 255, 64),
+                            shape: BoxShape.circle,
+                            // border: Border.all(color: Colors.black, width: 2),
+                          ),
+                        )
+                      : null
                   : null,
             );
           },

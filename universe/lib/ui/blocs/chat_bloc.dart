@@ -157,7 +157,13 @@ class ChatBloc extends Bloc<Object, ChatState> {
 
   ChatBloc(this.chat, this._chatsRepository)
       : super(ChatState.initial(
-            online: chat.users.any((u) => u.onlineSessions > 0))) {
+            online: chat.users.any((u) =>
+                AuthenticationRepository()
+                        .authenticationService
+                        .currentUser()!
+                        .id !=
+                    u.id &&
+                u.onlineSessions > 0))) {
     RouteGenerator.openedChat = chat;
 
     on<InitChatEvent>(

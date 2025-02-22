@@ -169,31 +169,12 @@ class MessagesContent extends StatelessWidget {
                                           .first
                                           .verified,
                                   isOnline: state.chats![index].users.any((u) =>
-                                          u.id !=
+                                      u.id !=
                                           AuthenticationRepository()
                                               .authenticationService
                                               .currentUser()!
-                                              .id)
-                                      ? state.chats![index].users
-                                              .where((u) =>
-                                                  u.id !=
-                                                  AuthenticationRepository()
-                                                      .authenticationService
-                                                      .currentUser()!
-                                                      .id)
-                                              .first
-                                              .onlineSessions >
-                                          0
-                                      : state.chats![index].users
-                                              .where((u) =>
-                                                  u.id ==
-                                                  AuthenticationRepository()
-                                                      .authenticationService
-                                                      .currentUser()!
-                                                      .id)
-                                              .first
-                                              .onlineSessions >
-                                          0,
+                                              .id &&
+                                      u.onlineSessions > 0),
                                 ),
                               ),
                             )

@@ -88,16 +88,19 @@ class ProfileCardBloc extends Bloc<Object, ProfileCardState> {
     on<ChatEvent>(
       (event, emit) async {
         // emit(state..state = ProfileStates.loading);
-        final chat = await chatsRepository.getChatByParticipants(
+        var chat = await chatsRepository.getChatByParticipants(
           AuthenticationRepository().authenticationService.currentUser()!.id,
           user.id,
         );
 
-        // RouteGenerator.mainNavigatorkey.currentState!.pop();
-        user = await usersRepository.getUser(user.id);
+        chat = await chatsRepository.getChat(
+          AuthenticationRepository().authenticationService.currentUser()!.id,
+          chat.id,
+        );
+
         RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
           RouteGenerator.chat,
-          arguments: [user, chat],
+          arguments: [chat],
         );
       },
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:universe/models/data/chat.dart';
+import 'package:universe/repositories/authentication_repository.dart';
 import 'package:universe/route_generator.dart';
 import 'package:universe/ui/styles/text_styles.dart';
 import 'package:universe/ui/widgets/fading_circle_progress_indicator.dart';
@@ -46,8 +47,19 @@ class ChatPresenter extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () => RouteGenerator.mainNavigatorkey.currentState!
-            .pushNamed(RouteGenerator.profile, arguments: chat),
+        onPressed: chat.users.length == 2
+            ? () => RouteGenerator.mainNavigatorkey.currentState!.pushNamed(
+                  RouteGenerator.profile,
+                  arguments: chat.users.singleWhere(
+                    (u) =>
+                        u.id !=
+                        AuthenticationRepository()
+                            .authenticationService
+                            .currentUser()!
+                            .id,
+                  ),
+                )
+            : null,
         child: ListTile(
           contentPadding: contentPadding,
           dense: true,

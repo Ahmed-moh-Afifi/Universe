@@ -90,10 +90,11 @@ class CompleteAccountContent extends StatelessWidget {
                     child: BlocBuilder<EditProfileBloc, EditProfileState>(
                       builder: (context, state) {
                         return AuthenticationRepository()
-                                    .authenticationService
-                                    .currentUser()!
-                                    .photoUrl !=
-                                null
+                                        .authenticationService
+                                        .currentUser()!
+                                        .photoUrl !=
+                                    null ||
+                                state.image != null
                             ? ExpandableImageProvider(
                                 (state.image != null
                                     ? FileImage(File(state.image!.path))
