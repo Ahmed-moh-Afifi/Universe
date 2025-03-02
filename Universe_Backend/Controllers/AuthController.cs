@@ -14,7 +14,7 @@ namespace Universe_Backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthController(UserManager<User> userManager, TokenService tokenService, NotificationService.NotificationService notificationService, IUsersRepository usersRepository, IChatsRepository chatsRepository, ApplicationDbContext context, IConfiguration configuration, ILogger<AuthController> logger) : ControllerBase
+public class AuthController(UserManager<User> userManager, TokenService tokenService, NotificationService.Interfaces.INotificationService notificationService, IUsersRepository usersRepository, IChatsRepository chatsRepository, ApplicationDbContext context, IConfiguration configuration, ILogger<AuthController> logger) : ControllerBase
 {
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -156,11 +156,8 @@ public class AuthController(UserManager<User> userManager, TokenService tokenSer
         }
 
         List<string> notificationTokens = [.. (await usersRepository.GetNotificationTokens(model.UserId)).Select(nt => nt.Token)];
-
         (await chatsRepository.GetUserChatsAsync(model.UserId)).ForEach(async chat => await notificationService.SubscribeToTopicAsync(notificationTokens, chat.Id.ToString(), Platform.Android));
-
         await context.SaveChangesAsync();
-
         return Ok();
     }
 }

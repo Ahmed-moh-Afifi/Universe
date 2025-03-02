@@ -13,7 +13,7 @@ namespace Universe_Backend.Controllers;
 
 [ApiController]
 [Route("{userId}/[controller]")]
-public class PostsController(IPostsRepository postsRepository, IPostReactionsRepository reactionsRepository, IUsersRepository usersRepository, IAuthorizationService authorizationService, NotificationService.NotificationService notificationService, ILogger<PostsController> logger) : ControllerBase
+public class PostsController(IPostsRepository postsRepository, IPostReactionsRepository reactionsRepository, IUsersRepository usersRepository, IAuthorizationService authorizationService, NotificationService.Interfaces.INotificationService notificationService, ILogger<PostsController> logger) : ControllerBase
 {
     [HttpGet]
     [Route("")]
@@ -257,7 +257,7 @@ public class PostsController(IPostsRepository postsRepository, IPostReactionsRep
     [HttpPost]
     [Route("{postId}/Reactions")]
     [Authorize()]
-    public async Task<ActionResult<int>> AddReaction([FromBody] PostReactionDTO reaction, string userId, int postId, [FromServices] IHubContext<ReactionsCountHub> hubContext, [FromServices] NotificationService.NotificationService notificationService)
+    public async Task<ActionResult<int>> AddReaction([FromBody] PostReactionDTO reaction, string userId, int postId, [FromServices] IHubContext<ReactionsCountHub> hubContext, [FromServices] NotificationService.Interfaces.INotificationService notificationService)
     {
         logger.LogDebug("ReactionsController.AddReaction: Adding reaction {@Reaction}", reaction);
         // Validate route parameters.

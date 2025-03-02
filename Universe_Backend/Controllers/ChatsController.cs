@@ -7,7 +7,7 @@ namespace Universe_Backend.Controllers
 {
     [ApiController]
     [Route("{userId}/[controller]")]
-    public class ChatsController(IChatsRepository chatsRepository, IUsersRepository usersRepository, NotificationService.NotificationService notificationService, ILogger<ChatsRepository> logger) : ControllerBase
+    public class ChatsController(IChatsRepository chatsRepository, IUsersRepository usersRepository, NotificationService.Interfaces.INotificationService notificationService, ILogger<ChatsRepository> logger) : ControllerBase
     {
         [HttpPost]
         [Route("{name}")]

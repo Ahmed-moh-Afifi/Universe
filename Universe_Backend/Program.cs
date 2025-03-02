@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NotificationService.Interfaces;
 using Universe_Backend.Data;
 using Universe_Backend.Data.Models;
 using Universe_Backend.Hubs;
@@ -106,6 +107,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddSingleton(notificationService);
+builder.Services.AddSingleton<INotificationService>(notificationService);
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IPostsRepository, PostsRepository>();

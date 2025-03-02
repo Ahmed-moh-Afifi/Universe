@@ -24,13 +24,6 @@ public class TokenService(IConfiguration configuration, ILogger<TokenService> lo
             SigningCredentials = creds
         };
 
-        // var token = new JwtSecurityToken(
-        //     issuer: configuration["Jwt:Issuer"],
-        //     audience: configuration["Jwt:Audience"],
-        //     claims: claims,
-        //     expires: DateTime.Now.AddMinutes(double.Parse(configuration["Jwt:ExpiresInMinutes"]!)),
-        //     signingCredentials: creds);
-
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }

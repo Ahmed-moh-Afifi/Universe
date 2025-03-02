@@ -12,7 +12,7 @@ using Universe_Backend.Repositories;
 namespace Universe_Backend.Hubs
 {
     [Authorize]
-    public class MessagingHub(ILogger<MessagingHub> logger, ApplicationDbContext dbContext, NotificationService.NotificationService notificationService, IUsersRepository usersRepository, IChatsRepository chatsRepository) : Hub
+    public class MessagingHub(ILogger<MessagingHub> logger, ApplicationDbContext dbContext, NotificationService.Interfaces.INotificationService notificationService, IUsersRepository usersRepository, IChatsRepository chatsRepository) : Hub
     {
         public async Task SendToUserAsync(string userId, Message message)
         {

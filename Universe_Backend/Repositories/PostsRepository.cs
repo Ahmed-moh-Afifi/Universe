@@ -13,6 +13,8 @@ public class PostsRepository(ApplicationDbContext dbContext, ILogger<PostsReposi
         try
         {
             post.Id = 0;
+            post.ChildPostId = post.ChildPostId == -1 ? null : post.ChildPostId;
+            post.ReplyToPostId = post.ReplyToPostId == -1 ? null : post.ReplyToPostId;
             await dbContext.Posts.AddAsync(post.ToModel());
             await dbContext.SaveChangesAsync();
             return post.Id;

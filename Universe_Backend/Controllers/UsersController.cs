@@ -8,7 +8,7 @@ namespace Universe_Backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UsersController(IUsersRepository usersRepository, NotificationService.NotificationService notificationService, ILogger<UsersController> logger) : ControllerBase
+public class UsersController(IUsersRepository usersRepository, NotificationService.Interfaces.INotificationService notificationService, ILogger<UsersController> logger) : ControllerBase
 {
     [HttpGet]
     [Route("{userId}")]
